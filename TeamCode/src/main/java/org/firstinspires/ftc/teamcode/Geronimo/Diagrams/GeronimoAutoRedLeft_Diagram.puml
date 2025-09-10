@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+"Auto OpMode" --> "Geronimo" : Initialize Robot
+Geronimo --> "Geronimo" : Configure Drive Motors, Servos, etc...
+"Auto OpMode" --> "Road Runner" : Set Start Position
+
+== Specimen Hang ==
+       "Auto OpMode" --> "Road Runner" : Drive to Position-1 (Submersible)
+       activate "Road Runner"
+       "Road Runner" --> "Auto OpMode" : Position-1 achieved
+       deactivate "Road Runner"
+       "Auto OpMode" --> "Geronimo" : Hang Specimen Action & Reset Arm
+== Sample Delivery ==
+        "Auto OpMode" --> "Geronimo": Pick up sample
+        "Geronimo" --> "Auto OpMode": Sample Grabbed
+        "Auto OpMode" --> "Road Runner" : Drive to Basket
+        activate "Geronimo"
+        "Geronimo" --> "Geronimo": Lift arm to basket height
+        deactivate "Geronimo"
+        "Road Runner" --> "Auto OpMode": Basket Position reached
+        "Auto OpMode" --> "Geronimo": Deliver sample into basket and reset arm
+
+
+
+@enduml

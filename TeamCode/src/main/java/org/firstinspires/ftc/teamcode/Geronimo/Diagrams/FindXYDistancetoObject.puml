@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+Geronimo --> "Geronimo" : Configure Drive Motors, Servos, etc...
+"Geronimo" --> "Geronimo" : Find Current Position
+"Geronimo" --> "Geronimo" : Current Position found
+==Limelight XY Distance Algorithm ==
+"Geronimo" --> "Limelight" : Search for object
+"Limelight" --> "Geronimo" : Object detected
+"Geronimo" --> "Limelight" : Find X and Y Distance to Object
+"Limelight" --> "Geronimo" : Object X and Y Distance Calculated
+"Geronimo" --> "Limelight" : Find angle to object
+"Limelight" --> "Geronimo" : Find current robot heading
+"Geronimo" --> "Limelight" : Current heading found
+"Limelight" --> "Geronimo" : Find mounted height of Limelight
+"Geronimo" --> "Limelight": Found mounting height
+"Limelight" --> "Geronimo" : Object XY Distance and Angle to Object Calculated
+
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+"Auto OpMode" --> "Geronimo" : Initialize Robot
+Geronimo --> "Geronimo" : Configure Drive Motors, Servos, etc...
+"Auto OpMode" --> "Road Runner" : Set Start Position
+"Auto OpMode" --> "Geronimo": Set intakeLeft and intakeRight motors to sample intake Position
+@enduml

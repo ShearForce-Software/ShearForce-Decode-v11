@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+@startuml
+
+"Auto OpMode" --> "Geronimo" : Initialize Robot
+Geronimo --> "Geronimo" : Configure Drive Motors, Servos, etc...
+"Auto OpMode" --> "Road Runner" : Set Start Position
+"Auto OpMode" --> "Road Runner" : Drive to Position 1 (wall)
+"Road Runner" --> "Auto OpMode" : Position 1 achieved
+activate "Auto OpMode"
+"Auto OpMode" --> "Geronimo" : clawServo, open servo so ready to grab
+"Auto OpMode" --> "Geronimo" : rightRotator & leftRotator, rotate slides to wall angle
+"Auto OpMode" --> "Geronimo" : slideLeft & slideRight, extend slides to wall edge
+deactivate "Auto OpMode"
+"Auto OpMode" --> "Geronimo" : intakeRotator, rotate intake level to wall edge
+"Auto OpMode" --> "Geronimo" : clawServo, close servo around specimen on the wall edge
+activate "Auto OpMode"
+"Auto OpMode" --> "Road Runner" : Drive to Position 2 (Submersible)
+"Auto OpMode" --> "Geronimo" :  SpecimenHangAction
+"Auto OpMode" --> "Geronimo" : rightRotator & leftRotator, reset slides rotation
+"Auto OpMode" --> "Geronimo" : slideLeft & slideRight, reset slide position
+deactivate "Auto OpMode"
+
+@enduml

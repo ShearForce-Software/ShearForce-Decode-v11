@@ -1,0 +1,66 @@
+++++++@startuml
+
+
+package ControlHub #Tan {
+  package Motors #LightGrey {
+    [Motor0] -- [Motor1]
+    [Motor1] -- [Motor2]
+    [Motor2] -- [Motor3]
+  }
+
+  package Servos #LightGrey {
+   [Servo-0] -- [Servo-1]
+   [Servo-1] -- [Servo-2]
+   [Servo-2] -- [Servo-3]
+   [Servo-3] -- [Servo-4]
+   [Servo-4] -- [Servo-5]
+  }
+
+  package Analog #LightGrey {
+   [Analog_0_1] -- [Analog_2_3]
+  }
+
+  package Digital #LightGrey {
+   [Digital_0_1] -- [Digital_2_3]
+   [Digital_2_3] -- [Digital_4_5]
+   [Digital_4_5] -- [Digital_6_7]
+  }
+
+  package I2C #LightGrey {
+   [I2C_0] -- [I2C_1]
+   [I2C_1] -- [I2C_2]
+   [I2C_2] -- [I2C_3]
+
+  }
+}
+
+package MotorNames #LightGreen {
+  () "leftFront_leftOdometry" --> [Motor0] : 0
+  () "rightFront_centerOdometry" --> [Motor1] : 1
+  () "leftRear" --> [Motor2] : 2
+  () "rightRear_rightOdometry" --> [Motor3] : 3
+}
+
+package ServoNames #Orange {
+  () "intakeHangerLeft" --> [Servo-0] : 0
+  () "intakeHangerRight" --> [Servo-1] : 1
+  () "clawServo" --> [Servo-2] : wire 6
+  () "intakeRotater" --> [Servo-3] : wire 4
+  () "intakeStar/urchinServo" --> [Servo-4] : wire 1
+}
+
+package DigitalNames #Pink {
+  () "sensor_touchRightRotator" --> [Digital_0_1] : 3
+  () "sensor_touchLeftRotator" --> [Digital_2_3] : 1
+  () "sensor_touchLeft" --> [Digital_4_5] : 5
+  () "sensor_touchRight" --> [Digital_6_7] : 6-7
+}
+
+package I2C_Names #LightBlue {
+  () "imu" --> [I2C_0] : 0
+  () "ColorSensorLeft" --> [I2C_1] : wire x
+  () "ColorSensorRight" --> [I2C_2] : 2
+
+}
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+
+package ExpansionHub #Tan {
+  package Motors #LightGrey {
+    [Motor0] -- [Motor1]
+    [Motor1] -- [Motor2]
+    [Motor2] -- [Motor3]
+  }
+
+  package Servos #LightGrey {
+   [Servo-0] -- [Servo-1]
+   [Servo-1] -- [Servo-2]
+   [Servo-2] -- [Servo-3]
+   [Servo-3] -- [Servo-4]
+   [Servo-4] -- [Servo-5]
+  }
+
+  package Analog #LightGrey {
+   [Analog_0_1] -- [Analog_2_3]
+  }
+
+  package Digital #LightGrey {
+   [Digital_0_1] -- [Digital_2_3]
+   [Digital_2_3] -- [Digital_4_5]
+   [Digital_4_5] -- [Digital_6_7]
+  }
+
+  package I2C #LightGrey {
+   [I2C_0] -- [I2C_1]
+   [I2C_1] -- [I2C_2]
+   [I2C_2] -- [I2C_3]
+
+  }
+}
+
+package ServoNames #Orange {
+  () "swiper"  --> [Servo-4]
+  () "RevBLinkinLedDriver" --> [Servo-5]
+}
+package MotorNames #LightGreen {
+  () "leftRotater" --> [Motor0] : 0
+  () "rightRotater" --> [Motor1] : 1
+  () "slideLeft" --> [Motor2] : 2
+  () "slideRight" --> [Motor3] : 3
+}
+
+
+@enduml

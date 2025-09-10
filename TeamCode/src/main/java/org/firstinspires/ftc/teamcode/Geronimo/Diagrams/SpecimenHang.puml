@@ -1,0 +1,15 @@
+@startuml
+== Specimen Hang ==
+"Auto OpMode" --> "Road Runner" : Drive to Position-1 (submersible)
+"Road Runner" --> "Auto OpMode" : Position-1 achieved
+activate "Auto OpMode"
+"Auto OpMode" --> "Geronimo" : rightRotator+leftRotator, rotate slides to submerible bar angle
+"Auto OpMode" --> "Geronimo" : slideLeft+slideRight, extend slides to submerisble bar height
+deactivate "Auto OpMode"
+"Auto OpMode" --> "Geronimo" : intakeRotator, rotate intake level to submerible bar
+"Auto OpMode" --> "Geronimo" : clawServo, release specimen onto bar
+activate "Auto OpMode"
+"Auto OpMode" --> "Geronimo" : rightRotator+leftRotator, reset slides rotation
+"Auto OpMode" --> "Geronimo" : slideLeft+slideRight, reset slide position
+deactivate "Auto OpMode"
+@enduml
