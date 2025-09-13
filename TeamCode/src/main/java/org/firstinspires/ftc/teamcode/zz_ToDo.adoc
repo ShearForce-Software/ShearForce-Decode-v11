@@ -1,0 +1,66 @@
+= Shear Force Software Team To-Do List:
+
+== Initial Repository Set-up Activities
+
+- [x] Setup Decode Repository in Github with latest FTC SDK and roadrunner
+- [ ] Update the summerChassis config file, make sure works with Test_Servo, and Test_CR_Servo
+- [ ] Setup configuration file storage in Android Studio
+  * Config files get stored at:  TeamCode/res/xml/
+  * Reference article: https://ftc9929.com/2019/12/16/stress-free-ftc-hardware-configurations/
+- [ ] Create initial Robot Hardware class for the season, copying key functions from last year
+  * Robot needs a name
+- [ ] Setup initial manual control class to use for this year that provides drive controls
+- [ ] Setup simple test opMode to run a motor
+- [x] Setup simple test opMode to run a servo
+- [x] Setup simple test opMode to run a CRservo
+
+== Setup Laptops and Accounts
+
+- [ ] Verify latest Android Studio installed on SF laptops
+- [ ] Setup 3 SF laptops with new decode repos
+- [ ] Verify Tong has laptop setup with Decode repo
+- [ ] Verify Tong has a GitHub account
+- [ ] Verify Akshay has laptop setup with Decode repo
+- [ ] Verify Gianna has laptop setup with Decode repo
+- [ ] Verify Gianna has her GitHub account setup
+- [ ] Verify Shrey has his GitHub account setup
+
+== Vision System Tasks
+
+- [ ] Research Limelight April-Tag (Tong)
+  * [ ] Develop Limelight test program to detect april tags and report what it sees
+  * [ ] Develop Limelight test program to report angles to turn to align to April-Tag
+  * [ ] Develop Limelight test program to report distance to the april-tag
+- [ ] Research HuskyLens April-Tag (Akshay)
+  * [ ] Develop HuskyLens test program to detect april tags and report what it sees
+  * [ ] Develop HuskyLens test program to report angles to turn to align to April-Tag
+  * [ ] Develop HuskyLens test program to report distance to the april-tag
+- [ ] Research Webcam April-Tag (Gianna)
+  * [ ] Develop Webcam test program to detect april tags and report what it sees
+  * [ ] Develop Webcam test program to report angles to turn to align to April-Tag
+  * [ ] Develop Webcam test program to report distance to the april-tag
+- [ ] Create decision matrix and compare and select the Vision System to use
+
+== Odometry Assessment Related Tasks
+
+- [ ] Calibrate Summer Chassis
+- [ ] Develop a test path plan to use to assess odometry pods
+- [ ] Conduct tests of the different odometry pods and compare results
+
+== Autonomous Tasks
+
+- [ ] Create Initial auto path plans in MeepMeep for each of the three AprilTag options
+- [ ] Experiment with the new blackboard concept to store auto settings for manual usage
+
+== Color Sensor / LED Tasks
+
+- [ ] Develop test program to assess color sensor usage on balls, document best color ranges to use
+- [ ] Create test program to try out the new LED light system
+
+== Shooter System Tasks
+
+- [ ] Develop function to convert distance + angle to launch speed
+  * Consider using PID control for launch speed
+- [ ] Develop function to command a rotating turret to stay aligned with an april tag
+  * Consider using PID control
+- [ ] Develop function to calculate the optimum launcher ramp height

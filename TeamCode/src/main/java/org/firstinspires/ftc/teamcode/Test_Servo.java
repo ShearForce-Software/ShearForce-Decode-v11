@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 /*
  * This OpMode scans a single servo back and forward until Stop is pressed.
@@ -49,43 +48,65 @@ import com.qualcomm.robotcore.hardware.CRServo;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@TeleOp(name = "Test CR Servo", group = "Test")
+@TeleOp(name = "Test_Servo", group = "Test")
 //@Disabled
-public class Test_CR_Servo extends LinearOpMode {
+public class Test_Servo extends LinearOpMode {
 
     // Define class members
-    CRServo   servo;
-
+    Servo servo;
+    static final double INCREMENT   = 0.05;
+    static final double MAX_POS     =  1.0;
+    static final double MIN_POS     =  0.0;
 
     @Override
     public void runOpMode() {
 
         // Connect to servo (Assume Robot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(CRServo.class, "crservo-port4");
+        servo = hardwareMap.get(Servo.class, "servo-port2");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start " );
         telemetry.update();
         waitForStart();
-
+        double position = 0.5;
 
         // Scan servo till stop pressed.
         while(opModeIsActive()){
 
-            if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
-                servo.setPower(gamepad2.left_stick_y);
+            if (gamepad2.triangle) {
+                position = MAX_POS;
             }
-            else
+            else if (gamepad2.cross)
             {
-                servo.setPower(0);
+                position = MIN_POS;
             }
-
+            else if (gamepad2.circle)
+            {
+                position = position + INCREMENT;
+                if (position > MAX_POS) {
+                    position = MAX_POS;
+                }
+            }
+            else if (gamepad2.square)
+            {
+                position = position - INCREMENT;
+                if (position < MIN_POS)
+                {
+                    position = MIN_POS;
+                }
+            }
+            servo.setPosition(position);
+            sleep(50);
 
             // Display the current value
-            telemetry.addData("Servo Power", "%5.2f", servo.getPower());
-            telemetry.addData(">", "servo is plugged into control hub port 4." );
-            telemetry.addData(">", "Uses gamepad 2 leftstick Y." );
+            telemetry.addData("Servo Position", "%5.2f", position);
+            telemetry.addData(">", "Servo plugged into control hub port 2." );
+            telemetry.addData(">", "Servo is operated by gamepad 2." );
+            telemetry.addData(">", "Press triangle to increase position to max." );
+            telemetry.addData(">", "Press X to decrease position to min." );
+            telemetry.addData(">", "Press circle to increase by increments." );
+            telemetry.addData(">", "Press square to decrease by increments." );
             telemetry.update();
 
         }
