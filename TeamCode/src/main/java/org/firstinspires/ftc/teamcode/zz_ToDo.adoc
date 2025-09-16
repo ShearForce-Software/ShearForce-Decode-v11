@@ -20,7 +20,7 @@
 - [ ] Setup 3 SF laptops with new decode repos
 - [ ] Verify Tong has laptop setup with Decode repo
 - [x] Verify Tong has a GitHub account
-- [ ] Verify Akshay has laptop setup with Decode repo
+- [x] Verify Akshay has laptop setup with Decode repo
 - [ ] Verify Gianna has laptop setup with Decode repo
 - [ ] Verify Gianna has her GitHub account setup
 - [ ] Verify Shrey has his GitHub account setup
