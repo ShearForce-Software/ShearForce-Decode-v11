@@ -19,7 +19,7 @@
 - [ ] Verify latest Android Studio installed on SF laptops
 - [ ] Setup 3 SF laptops with new decode repos
 - [ ] Verify Tong has laptop setup with Decode repo
-- [ ] Verify Tong has a GitHub account
+- [x] Verify Tong has a GitHub account
 - [ ] Verify Akshay has laptop setup with Decode repo
 - [ ] Verify Gianna has laptop setup with Decode repo
 - [ ] Verify Gianna has her GitHub account setup
