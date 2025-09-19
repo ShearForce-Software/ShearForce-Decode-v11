@@ -3,7 +3,6 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -32,14 +31,11 @@ import java.util.List;
 @TeleOp(name = "Sensor: Limelight3A", group = "Sensor")
 public class Test_AprilTaglimelight extends LinearOpMode {
 
-    private Limelight3A limelight;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-
+        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
         telemetry.setMsTransmissionInterval(11);
-
+        limelight.setPollRateHz(100);
         limelight.pipelineSwitch(0);
 
         /*
@@ -82,7 +78,10 @@ public class Test_AprilTaglimelight extends LinearOpMode {
                 for (LLResultTypes.FiducialResult fr : fiducialResults) {
                     telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
                 }
+                telemetry.addData("Limelight", "No data available");
             }
+            telemetry.update();
         }
+        limelight.stop();
     }
 }
