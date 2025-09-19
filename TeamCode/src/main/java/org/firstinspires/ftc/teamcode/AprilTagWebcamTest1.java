@@ -40,6 +40,13 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+/*
+The camera 6 inches off the ground can detect from atleast 3 feet away accurately if the bottom of the april tag is 1 foot in the air.
+However if it is even with the camera then it can detect the april tags no matter the distance
+
+On the FTC Baskets for this season we used the red basket the camera (6 inches off the ground) was only able to see the april tag from atleast 6 feet away. This april tag is about 24 inches off the ground.
+The Camera (Logitech) is limited by its field of view. When the angle was adjusted we were able to view it from closer distances.
+ */
 
 /*
  * This OpMode illustrates the basics of AprilTag recognition and pose estimation,
