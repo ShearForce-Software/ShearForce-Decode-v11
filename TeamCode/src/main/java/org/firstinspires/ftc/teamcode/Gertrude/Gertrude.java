@@ -1104,7 +1104,7 @@ public class Gertrude {
             }
             else if ((xVal > leftSpikeBound) && (xVal < rightSpikeBound)){
                 autoPosition = 2;
-                DESIRED_TAG_ID = 2;
+                DESIRED_TAG_ID = 2;  // Desired_Tag_ID
             }
             else if (xVal >= rightSpikeBound)
             {
