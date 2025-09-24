@@ -21,13 +21,7 @@ public class huskylens extends LinearOpMode {
     private static final int CY = IMG_H / 2;   // 120
 
 
-
-
-
-
     private static final double TAG_HEIGHT_METERS = 0.10;
-
-
 
 
     private static final double FOCAL_PX = 520.0;
@@ -53,6 +47,14 @@ public class huskylens extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+
+        if (!hl.knock()) {
+           telemetry.addData(">>", "Problem communicating with " + hl.getDeviceName());
+        } else {
+           telemetry.addData(">>", "knock failed");
+        }
+        hl.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+            telemetry.update();
 
         while (opModeIsActive()) {
             HuskyLens.Block[] blocks = hl.blocks();
