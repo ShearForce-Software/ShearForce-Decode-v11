@@ -3,8 +3,9 @@ package org.firstinspires.ftc.teamcode.summerChassis;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Autonomous(name="HL_TagNumbers_All", group="Vision")
+@TeleOp(name="HL_TagNumbers_All", group="Test")
 public class huskylens extends LinearOpMode {
 
 
