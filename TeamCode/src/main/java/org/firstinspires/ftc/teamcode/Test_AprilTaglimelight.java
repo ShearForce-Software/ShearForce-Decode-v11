@@ -4,11 +4,9 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Geronimo.MecanumDrive_Geronimo;
@@ -63,63 +61,46 @@ public class Test_AprilTaglimelight extends LinearOpMode {
             telemetry.addData("Pipeline", "Index: %d, Type: %s",
                     status.getPipelineIndex(), status.getPipelineType());
 
-            LLResult result = limelight.getLatestResult();
-            if (result.isValid()) {
-                // Access general information
-                Pose3D botpose = result.getBotpose();
-                double captureLatency = result.getCaptureLatency();
-                double targetingLatency = result.getTargetingLatency();
-                double parseLatency = result.getParseLatency();
-                //telemetry.addData("LL Latency", captureLatency + targetingLatency);
-                //telemetry.addData("Parse Latency", parseLatency);
-                //telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+                DistanceSensor sensorDistance;
 
-                telemetry.addData("tx", result.getTx());
-                telemetry.addData("txnc", result.getTxNC());
-                telemetry.addData("ty", result.getTy());
-                telemetry.addData("tync", result.getTyNC());
-                class SensorREV2mDistance extends LinearOpMode {
+                // you can use this as a regular DistanceSensor.
+                    sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
 
-                    private DistanceSensor sensorDistance;
+                    // generic DistanceSensor methods.
+                    telemetry.addData("deviceName", sensorDistance.getDeviceName());
+                    telemetry.addData("range", String.format("%.01f mm", sensorDistance.getDistance(DistanceUnit.MM)));
+                    telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
+                    telemetry.addData("range", String.format("%.01f m", sensorDistance.getDistance(DistanceUnit.METER)));
+                    telemetry.addData("range", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
 
-                    public void runOpMode() {
-                        // you can use this as a regular DistanceSensor.
-                        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
+                    LLResult result = limelight.getLatestResult();
+                    if (result.isValid()) {
+                        // Access general information
+                        Pose3D botpose = result.getBotpose();
+                        double captureLatency = result.getCaptureLatency();
+                        double targetingLatency = result.getTargetingLatency();
+                        double parseLatency = result.getParseLatency();
+                        //telemetry.addData("LL Latency", captureLatency + targetingLatency);
+                        //telemetry.addData("Parse Latency", parseLatency);
+                        //telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
 
-                        // you can also cast this to a Rev2mDistanceSensor if you want to use added
-                        // methods associated with the Rev2mDistanceSensor class.
-                        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor) sensorDistance;
+                        telemetry.addData("tx", result.getTx());
+                        telemetry.addData("txnc", result.getTxNC());
+                        telemetry.addData("ty", result.getTy());
+                        telemetry.addData("tync", result.getTyNC());
 
-                        waitForStart();
-                        while(opModeIsActive()) {
-                            // generic DistanceSensor methods.
-                            telemetry.addData("deviceName", sensorDistance.getDeviceName() );
-                            telemetry.addData("range", String.format("%.01f mm", sensorDistance.getDistance(DistanceUnit.MM)));
-                            telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
-                            telemetry.addData("range", String.format("%.01f m", sensorDistance.getDistance(DistanceUnit.METER)));
-                            telemetry.addData("range", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
+                        // telemetry.addData("Botpose", botpose.toString());
+                        // Access fiducial results
+                        List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+                        for (LLResultTypes.FiducialResult fr : fiducialResults) {
 
-                            // Rev2mDistanceSensor specific methods.
-                            telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
-                            telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
-
-                            telemetry.update();
+                            telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
                         }
+                        telemetry.addData("Limelight", "No data available");
                     }
+                    telemetry.update();
 
+                    limelight.stop();
                 }
-
-               // telemetry.addData("Botpose", botpose.toString());
-                // Access fiducial results
-                List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-                for (LLResultTypes.FiducialResult fr : fiducialResults) {
-
-                    telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                }
-                telemetry.addData("Limelight", "No data available");
             }
-            telemetry.update();
         }
-        limelight.stop();
-    }
-}
