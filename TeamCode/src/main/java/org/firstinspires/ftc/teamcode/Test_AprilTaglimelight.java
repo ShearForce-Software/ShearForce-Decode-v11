@@ -54,53 +54,49 @@ public class Test_AprilTaglimelight extends LinearOpMode {
 
         while (opModeIsActive()) {
             LLStatus status = limelight.getStatus();
-            telemetry.addData("Name", "%s",
-                    status.getName());
-            telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-                    status.getTemp(), status.getCpu(), (int) status.getFps());
-            telemetry.addData("Pipeline", "Index: %d, Type: %s",
-                    status.getPipelineIndex(), status.getPipelineType());
+//            telemetry.addData("Name", "%s",
+//                    status.getName());
+//            telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+//                    status.getTemp(), status.getCpu(), (int) status.getFps());
+//            telemetry.addData("Pipeline", "Index: %d, Type: %s",
+//                    status.getPipelineIndex(), status.getPipelineType());
 
-                DistanceSensor sensorDistance;
 
-                // you can use this as a regular DistanceSensor.
-                    sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
+            LLResult result = limelight.getLatestResult();
+            if (result.isValid()) {
+                // Access general information
+                Pose3D botpose = result.getBotpose();
+                double captureLatency = result.getCaptureLatency();
+                double targetingLatency = result.getTargetingLatency();
+                double parseLatency = result.getParseLatency();
+                //telemetry.addData("LL Latency", captureLatency + targetingLatency);
+                //telemetry.addData("Parse Latency", parseLatency);
+                //telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
 
-                    // generic DistanceSensor methods.
-                    telemetry.addData("deviceName", sensorDistance.getDeviceName());
-                    telemetry.addData("range", String.format("%.01f mm", sensorDistance.getDistance(DistanceUnit.MM)));
-                    telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
-                    telemetry.addData("range", String.format("%.01f m", sensorDistance.getDistance(DistanceUnit.METER)));
-                    telemetry.addData("range", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
+//                        telemetry.addData("tx", result.getTx());
+//                        telemetry.addData("txnc", result.getTxNC());
+//                        telemetry.addData("ty", result.getTy());
+//                        telemetry.addData("tync", result.getTyNC());
 
-                    LLResult result = limelight.getLatestResult();
-                    if (result.isValid()) {
-                        // Access general information
-                        Pose3D botpose = result.getBotpose();
-                        double captureLatency = result.getCaptureLatency();
-                        double targetingLatency = result.getTargetingLatency();
-                        double parseLatency = result.getParseLatency();
-                        //telemetry.addData("LL Latency", captureLatency + targetingLatency);
-                        //telemetry.addData("Parse Latency", parseLatency);
-                        //telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+                // telemetry.addData("Botpose", botpose.toString());
+                // Access fiducial results
+                List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+                for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                    // Calculate Distance to AprilTag:  ref: https://docs.limelightvision.io/docs/docs-limelight/tutorials/tutorial-estimating-distance
+                    // Need to double check these numbers derived from diagrams in game manual:
+                    //      Blue (ID: 20) and Red (ID: 24) Goals: 29.5 inches high (center of april tag)
+                    //      Obelisk (ID: 21, 22, 23): 18.9375 inches high (center of april tag) (might be a couple of inches high)
 
-                        telemetry.addData("tx", result.getTx());
-                        telemetry.addData("txnc", result.getTxNC());
-                        telemetry.addData("ty", result.getTy());
-                        telemetry.addData("tync", result.getTyNC());
-
-                        // telemetry.addData("Botpose", botpose.toString());
-                        // Access fiducial results
-                        List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-                        for (LLResultTypes.FiducialResult fr : fiducialResults) {
-
-                            telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
-                        }
-                        telemetry.addData("Limelight", "No data available");
-                    }
-                    telemetry.update();
-
-                    limelight.stop();
+                    telemetry.addData("AprilTag ", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
                 }
             }
-        }
+            else {
+                telemetry.addData("Limelight", "No data available");
+            }
+            telemetry.update();
+
+        } // end while (opModeIsActive())
+
+        limelight.stop();
+    }
+}

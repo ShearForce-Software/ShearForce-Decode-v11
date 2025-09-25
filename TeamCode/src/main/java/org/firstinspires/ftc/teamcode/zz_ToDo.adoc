@@ -10,7 +10,7 @@
 - [ ] Create initial Robot Hardware class for the season, copying key functions from last year
   * Robot needs a name
 - [ ] Setup initial manual control class to use for this year that provides drive controls
-- [ ] Setup simple test opMode to run a motor
+- [*] Setup simple test opMode to run a motor
 - [x] Setup simple test opMode to run a servo
 - [x] Setup simple test opMode to run a CRservo
 
@@ -24,21 +24,24 @@
 - [x] Verify Gianna has laptop setup with Decode repo
 - [x] Verify Gianna has her GitHub account setup
 - [x] Verify Shrey has his GitHub account setup
+- [ ] Verify Shrey has his laptop setup correctly
 
 == Vision System Tasks
 
-- [ ] Research Limelight April-Tag (Tong)
-  * [ ] Develop Limelight test program to detect april tags and report what it sees
+- [*] Research Limelight April-Tag (Tong)
+  * [*] Develop Limelight test program to detect april tags and report what it sees
   * [ ] Develop Limelight test program to report angles to turn to align to April-Tag
   * [ ] Develop Limelight test program to report distance to the april-tag
-- [ ] Research HuskyLens April-Tag (Akshay)
-  * [ ] Develop HuskyLens test program to detect april tags and report what it sees
-  * [ ] Develop HuskyLens test program to report angles to turn to align to April-Tag
-  * [ ] Develop HuskyLens test program to report distance to the april-tag
-- [ ] Research Webcam April-Tag (Gianna)
-  * [ ] Develop Webcam test program to detect april tags and report what it sees
-  * [ ] Develop Webcam test program to report angles to turn to align to April-Tag
-  * [ ] Develop Webcam test program to report distance to the april-tag
+    ** Reference:  https://docs.limelightvision.io/docs/docs-limelight/tutorials/tutorial-estimating-distance
+- [x] Research HuskyLens April-Tag (Akshay)
+  * [x] Develop HuskyLens test program to detect april tags and report what it sees
+  * [X] [.line-through]#Develop HuskyLens test program to report angles to turn to align to April-Tag#
+  * [X] [.line-through]#Develop HuskyLens test program to report distance to the april-tag#
+- [x] Research Webcam April-Tag (Gianna)
+  * [x] Develop Webcam test program to detect april tags and report what it sees
+  * [x] Develop Webcam test program to report angles to turn to align to April-Tag
+  * [x] Develop Webcam test program to report distance to the april-tag
+- [ ] Create Test OpMode that runs Webcam and Limelight at the same time so can compare detections and distances at the same time
 - [ ] Create decision matrix and compare and select the Vision System to use
 
 == Odometry Assessment Related Tasks
@@ -49,7 +52,14 @@
 
 == Autonomous Tasks
 
-- [ ] Create Initial auto path plans in MeepMeep for each of the three AprilTag options
+- [ ] Create Initial auto path in MeepMeep for ID 21 (G P P) from top start location
+- [ ] Create Initial auto path in MeepMeep for ID 22 (P G P) from top start location
+- [ ] Create Initial auto path in MeepMeep for ID 23 (P P G) from top start location
+
+- [ ] Create Initial auto path in MeepMeep for ID 21 (G P P) from bottom start location
+- [ ] Create Initial auto path in MeepMeep for ID 22 (P G P) from bottom start location
+- [ ] Create Initial auto path in MeepMeep for ID 23 (P P G) from bottom start location
+
 - [ ] Experiment with the new blackboard concept to store auto settings for manual usage
 
 == Color Sensor / LED Tasks
