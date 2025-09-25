@@ -6,22 +6,12 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-/**
- * Limelight AprilTag Tracker (minimal)
- * - Outputs left/right offset (in) and forward distance (in) to the detected AprilTag.
- * - Uses Limelight tx/ty plus your camera geometry.
- *
- * Setup:
- * 1) Add the Limelight 3/3A in the RC configuration as "limelight".
- * 2) Ensure your Limelight pipeline detects AprilTags (set in the LL web UI).
- * 3) Tune the constants below for your robot/field.
- */
+
 @TeleOp(name = "LL_AprilTag_Tracker_Minimal", group = "Vision")
 @Config
 public class akshaylimelightdecode extends LinearOpMode {
 
-    // ====== TUNE FOR YOUR ROBOT/FIELD ======
-    // Camera (lens center) height from floor, inches
+
     public static double CAMERA_HEIGHT_IN = 14.0;
 
     // Tag center height from floor, inches (set for your FTC prop/tag height)
