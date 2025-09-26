@@ -12,13 +12,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class akshaylimelightdecode extends LinearOpMode {
 
 
-    public static double CAMERA_HEIGHT_IN = 14.0;
+    public static double CAMERA_HEIGHT_IN = 5.625;
 
     // Tag center height from floor, inches (set for your FTC prop/tag height)
-    public static double TAG_HEIGHT_IN = 18.0;
+    public static double TAG_HEIGHT_IN = 29.5;
 
     // Camera pitch relative to floor, degrees (positive = tilted up)
-    public static double CAMERA_PITCH_DEG = 15.0;
+    public static double CAMERA_PITCH_DEG = 0;
 
     // Limelight pipeline index that detects AprilTags
     public static int APRILTAG_PIPELINE = 0;
@@ -32,6 +32,8 @@ public class akshaylimelightdecode extends LinearOpMode {
 
         // Direct pipeline switch (no try/catch)
         limelight.pipelineSwitch(APRILTAG_PIPELINE);
+
+        limelight.start();
 
         telemetry.setMsTransmissionInterval(50);
         telemetry.addLine("Limelight AprilTag Tracker (minimal) ready");
