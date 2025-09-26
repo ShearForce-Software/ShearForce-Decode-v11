@@ -30,8 +30,8 @@
 
 - [*] Research Limelight April-Tag (Tong)
   * [*] Develop Limelight test program to detect april tags and report what it sees
-  * [ ] Develop Limelight test program to report angles to turn to align to April-Tag
-  * [ ] Develop Limelight test program to report distance to the april-tag
+  * [*] Develop Limelight test program to report angles to turn to align to April-Tag
+  * [*] Develop Limelight test program to report distance to the april-tag
     ** Reference:  https://docs.limelightvision.io/docs/docs-limelight/tutorials/tutorial-estimating-distance
 - [x] Research HuskyLens April-Tag (Akshay)
   * [x] Develop HuskyLens test program to detect april tags and report what it sees
@@ -41,8 +41,7 @@
   * [x] Develop Webcam test program to detect april tags and report what it sees
   * [x] Develop Webcam test program to report angles to turn to align to April-Tag
   * [x] Develop Webcam test program to report distance to the april-tag
-- [ ] Create Test OpMode that runs Webcam and Limelight at the same time so can compare detections and distances at the same time
-- [ ] Create decision matrix and compare and select the Vision System to use
+- [*] Create Test OpMode that runs Webcam and Limelight at the same time so can compare detections and distances at the same time
 
 == Odometry Assessment Related Tasks
 
