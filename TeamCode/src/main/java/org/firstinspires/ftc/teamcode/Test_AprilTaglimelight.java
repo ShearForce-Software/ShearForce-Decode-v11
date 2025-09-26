@@ -86,8 +86,25 @@ public class Test_AprilTaglimelight extends LinearOpMode {
                     // Need to double check these numbers derived from diagrams in game manual:
                     //      Blue (ID: 20) and Red (ID: 24) Goals: 29.5 inches high (center of april tag)
                     //      Obelisk (ID: 21, 22, 23): 18.9375 inches high (center of april tag) (might be a couple of inches high)
+                    //double targetOffsetAngle_Vertical = fr.getTargetYDegrees();
 
-                    telemetry.addData("AprilTag ", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees());
+                    double targetOffsetAngle_Vertical = result.getTy();
+                    // how many degrees back is your limelight rotated from perfectly vertical?
+                    double limelightMountAngleDegrees = 0;
+
+                    // distance from the center of the Limelight lens to the floor
+                    double limelightLensHeightInches = 5.5;
+
+                    // distance from the target to the floor
+                    double goalHeightInches = 29.5;
+
+                    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+                    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+                    //calculate distance
+                    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+                    telemetry.addData("AprilTag ", "ID: %d, Family: %s, X: %.2f, Y: %.2f, ty: %.2f", fr.getFiducialId(), fr.getFamily(), fr.getTargetXDegrees(), fr.getTargetYDegrees(), targetOffsetAngle_Vertical);
+                    telemetry.addData("Distance", distanceFromLimelightToGoalInches);
                 }
             }
             else {
