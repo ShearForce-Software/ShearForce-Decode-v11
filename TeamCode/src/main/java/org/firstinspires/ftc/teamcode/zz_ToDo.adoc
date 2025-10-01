@@ -51,13 +51,13 @@
 
 == Autonomous Tasks
 
-- [ ] Create Initial auto path in MeepMeep for ID 21 (G P P) from top start location
-- [ ] Create Initial auto path in MeepMeep for ID 22 (P G P) from top start location
-- [ ] Create Initial auto path in MeepMeep for ID 23 (P P G) from top start location
+- [x] Create Initial auto path in MeepMeep for ID 21 (G P P) from top start location
+- [x] Create Initial auto path in MeepMeep for ID 22 (P G P) from top start location
+- [x] Create Initial auto path in MeepMeep for ID 23 (P P G) from top start location
 
-- [ ] Create Initial auto path in MeepMeep for ID 21 (G P P) from bottom start location
-- [ ] Create Initial auto path in MeepMeep for ID 22 (P G P) from bottom start location
-- [ ] Create Initial auto path in MeepMeep for ID 23 (P P G) from bottom start location
+- [x] Create Initial auto path in MeepMeep for ID 21 (G P P) from bottom start location
+- [x] Create Initial auto path in MeepMeep for ID 22 (P G P) from bottom start location
+- [x] Create Initial auto path in MeepMeep for ID 23 (P P G) from bottom start location
 
 - [ ] Experiment with the new blackboard concept to store auto settings for manual usage
 
