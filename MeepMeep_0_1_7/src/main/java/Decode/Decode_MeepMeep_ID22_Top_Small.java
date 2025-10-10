@@ -5,7 +5,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class Decode_Test_MeepMeep_ID22_Top_Small {
+public class Decode_MeepMeep_ID22_Top_Small {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
@@ -15,10 +15,6 @@ public class Decode_Test_MeepMeep_ID22_Top_Small {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, 12, 0))
-
-                //.lineToX(11.5)
-                //.turn(Math.toRadians(90))
-               // .lineToY(48)
                 .lineToX(11.5)
                 .turn(Math.toRadians(90))
                 .lineToY(48)
