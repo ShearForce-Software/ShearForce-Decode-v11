@@ -3,11 +3,11 @@
 == Initial Repository Set-up Activities
 
 - [x] Setup Decode Repository in Github with latest FTC SDK and roadrunner
-- [ ] Update the summerChassis config file, make sure works with Test_Servo, and Test_CR_Servo
-- [ ] Setup configuration file storage in Android Studio
+- [x] Update the summerChassis config file, make sure works with Test_Servo, and Test_CR_Servo
+- [x] Setup configuration file storage in Android Studio
   * Config files get stored at:  TeamCode/res/xml/
   * Reference article: https://ftc9929.com/2019/12/16/stress-free-ftc-hardware-configurations/
-- [ ] Create initial Robot Hardware class for the season, copying key functions from last year
+- [x] Create initial Robot Hardware class for the season, copying key functions from last year
   * Robot needs a name
 - [ ] Setup initial manual control class to use for this year that provides drive controls
 - [*] Setup simple test opMode to run a motor
