@@ -9,7 +9,7 @@
   * Reference article: https://ftc9929.com/2019/12/16/stress-free-ftc-hardware-configurations/
 - [x] Create initial Robot Hardware class for the season, copying key functions from last year
   * Robot needs a name
-- [ ] Setup initial manual control class to use for this year that provides drive controls
+- [x] Setup initial manual control class to use for this year that provides drive controls
 - [*] Setup simple test opMode to run a motor
 - [x] Setup simple test opMode to run a servo
 - [x] Setup simple test opMode to run a CRservo
