@@ -73,7 +73,7 @@ public class Test_CR_Servo extends LinearOpMode {
         // Scan servo till stop pressed.
         while(opModeIsActive()){
 
-            if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
+            if (gamepad2.cross) {
                 servo.setPower(gamepad2.left_stick_y);
             }
             else

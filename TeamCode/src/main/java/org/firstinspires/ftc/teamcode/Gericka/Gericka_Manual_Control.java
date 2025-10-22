@@ -17,8 +17,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
     private boolean dpadDownPrev = false;
     //boolean intakeStarPowerApplied = false;
 
+    float turretRotationAngle = 0.0f;
 
-
+    final float TURRET_ROTATION_ANGLE_INCREMENT = 5.0f;
     // Scrimmage Meet Ideas:
     // Press intake button, have claw grab the sample
     // Have claw go down when slides extend forward?
@@ -86,6 +87,52 @@ public class Gericka_Manual_Control extends LinearOpMode {
              *************************************************
              */
 
+            if (gamepad2.triangleWasPressed()) {
+                //Turn intake on
+
+            }
+            else if (gamepad2.circleWasPressed()){
+                //Turn outake on
+
+            }
+            else if (gamepad2.squareWasPressed()){
+                //Turn intake system off
+
+            }
+
+            if (gamepad2.rightBumperWasPressed()){
+                //Set lifter position to up
+
+            }
+            else if (gamepad2.leftBumperWasPressed()){
+                //Set lifter position to down
+
+            }
+
+            if (gamepad2.right_trigger>0.4){
+                //Turn Turret clockwise
+                turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
+            }
+            else if (gamepad2.left_trigger>0.4){
+               //Turn Turret counterclockwise
+                turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
+            }
+
+            if (gamepad2.dpadUpWasPressed()){
+                //Set shooter wheel speed to 0
+
+            }
+            else if (gamepad2.dpadLeftWasPressed()){
+                //Set shooter speed to 25
+
+            }
+            else if (gamepad2.dpadDownWasPressed()){
+                //Set shooter speed to 50
+            }
+            else if (gamepad2.dpadRightWasPressed()){
+                //Set shooter speed to 100
+
+            }
 
             theRobot.ShowTelemetry();
         } // end while (opModeIsActive())

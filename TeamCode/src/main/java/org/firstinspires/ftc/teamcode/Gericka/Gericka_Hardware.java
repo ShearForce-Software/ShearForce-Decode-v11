@@ -56,6 +56,12 @@ public class Gericka_Hardware {
     DcMotor rightFront;
     DcMotor rightRear;
 
+    DcMotor intakeMotor;
+    DcMotor shooterMotorRight;
+    DcMotor shooterMotorLeft;
+    DcMotor turretMotor;
+    Servo lifterServo;
+
     //pidf rotator variables
     public static boolean pidfEnabled = false;
     public static double p = 0.004, i = 0, d = 0, f = 0.007; //0.0001 > p was .005
@@ -76,6 +82,14 @@ public class Gericka_Hardware {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
+    final double INTAKE_POWER = 0.75;
+
+    final float LIFTER_UP_POSITION = 1.0f;
+
+    final float LIFTER_DOWN_POSISTION = 0.0f;
+
+    final double YELLOW_JACKET_51_TICKS = 1425.1;
+    final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_51_TICKS; // 133/24 is the gear ratio
 
 
 
@@ -141,10 +155,38 @@ public class Gericka_Hardware {
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear_rightOdometry");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront_centerOdometry");
 
+
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
+
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        shooterMotorLeft = hardwareMap.get(DcMotorEx.class, "shooterMotorLeft");
+        shooterMotorRight = hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
+
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        shooterMotorLeft.setDirection(DcMotor.Direction.REVERSE);
+        shooterMotorRight.setDirection(DcMotor.Direction.FORWARD);
+        turretMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        shooterMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shooterMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeMotor.setPower(0.0);
+        shooterMotorLeft.setPower(0.0);
+        shooterMotorRight.setPower(0.0);
+        turretMotor.setPower(0.0);
+
+        lifterServo = hardwareMap.get(Servo.class, "lifterServo");
 
 
         // ********** Color Sensors ********************
@@ -494,7 +536,20 @@ public class Gericka_Hardware {
     //    blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(1625));
     //}
 
+    public void SetIntakeMotor(boolean on,boolean intake){
+        if (on && intake) {
+            intakeMotor.setPower(INTAKE_POWER);
+        }
+        else if (!on){
+            intakeMotor.setPower(0);
+        }
+        else {
+            intakeMotor.setPower(-INTAKE_POWER);
+        }
+    }
+    public void SetTurretRotationAngle(double degrees){
 
+    }
     public void ShowTelemetry(){
 
         opMode.telemetry.addData("Auto Last Time Left: ", autoTimeLeft);
