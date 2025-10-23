@@ -1,47 +1,37 @@
 = Shear Force Software Team To-Do List:
 
-== Initial Repository Set-up Activities
+== To prepare for first meet
 
-- [x] Setup Decode Repository in Github with latest FTC SDK and roadrunner
-- [x] Update the summerChassis config file, make sure works with Test_Servo, and Test_CR_Servo
-- [x] Setup configuration file storage in Android Studio
-  * Config files get stored at:  TeamCode/res/xml/
-  * Reference article: https://ftc9929.com/2019/12/16/stress-free-ftc-hardware-configurations/
-- [x] Create initial Robot Hardware class for the season, copying key functions from last year
-  * Robot needs a name
-- [x] Setup initial manual control class to use for this year that provides drive controls
-- [*] Setup simple test opMode to run a motor
-- [x] Setup simple test opMode to run a servo
-- [x] Setup simple test opMode to run a CRservo
+- [ ] Setup code-based config file for Gericka with all motors and servos
+- [ ] Verify full manual control of all motors and servos
+- [ ] Update telemetry to show all motor and servo data
+- [ ] Calibrate Gericka roadrunner
+- [ ] Implement at least one autonomous route for Red side, that can shoot 3 pre-loaded balls
+- [ ] Implement at least one autonomous route for Blue side, that can shoot 3 pre-loaded balls
+- [ ] Experiment and Verify the new blackboard concept to store auto settings for manual usage
+- [ ] Setup the control hub and driver station wifi to pass inspection
+
+== Next Level Stuff
+
+- [ ] Integrate April tag tracking with the turret rotator for manual control
+- [ ] Integrate April tag detection to the Autonomous routes, change intake based on detected
+- [ ] Setup PID controller for shooter motors
+- [ ] Setup PID controller for turret rotator
+- [ ] Develop lots of autonomous options and test them
+
+== Advanced Shooter System Tasks
+
+- [ ] Develop function to convert distance + angle to launch speed
+- [ ] Develop function to calculate the optimum launcher ramp height
+
+== Color Sensor / LED Tasks
+
+- [ ] Develop test program to assess color sensor usage on balls, document best color ranges to use
+- [ ] Integrate the new LED light system
 
 == Setup Laptops and Accounts
 
-- [ ] Verify latest Android Studio installed on SF laptops
-- [ ] Setup 3 SF laptops with new decode repos
-- [x] Verify Tong has laptop setup with Decode repo
-- [x] Verify Tong has a GitHub account
-- [x] Verify Akshay has laptop setup with Decode repo
-- [x] Verify Gianna has laptop setup with Decode repo
-- [x] Verify Gianna has her GitHub account setup
-- [x] Verify Shrey has his GitHub account setup
 - [ ] Verify Shrey has his laptop setup correctly
-
-== Vision System Tasks
-
-- [*] Research Limelight April-Tag (Tong)
-  * [*] Develop Limelight test program to detect april tags and report what it sees
-  * [*] Develop Limelight test program to report angles to turn to align to April-Tag
-  * [*] Develop Limelight test program to report distance to the april-tag
-    ** Reference:  https://docs.limelightvision.io/docs/docs-limelight/tutorials/tutorial-estimating-distance
-- [x] Research HuskyLens April-Tag (Akshay)
-  * [x] Develop HuskyLens test program to detect april tags and report what it sees
-  * [X] [.line-through]#Develop HuskyLens test program to report angles to turn to align to April-Tag#
-  * [X] [.line-through]#Develop HuskyLens test program to report distance to the april-tag#
-- [x] Research Webcam April-Tag (Gianna)
-  * [x] Develop Webcam test program to detect april tags and report what it sees
-  * [x] Develop Webcam test program to report angles to turn to align to April-Tag
-  * [x] Develop Webcam test program to report distance to the april-tag
-- [*] Create Test OpMode that runs Webcam and Limelight at the same time so can compare detections and distances at the same time
 
 == Odometry Assessment Related Tasks
 
@@ -49,27 +39,4 @@
 - [ ] Develop a test path plan to use to assess odometry pods
 - [ ] Conduct tests of the different odometry pods and compare results
 
-== Autonomous Tasks
 
-- [x] Create Initial auto path in MeepMeep for ID 21 (G P P) from top start location
-- [x] Create Initial auto path in MeepMeep for ID 22 (P G P) from top start location
-- [x] Create Initial auto path in MeepMeep for ID 23 (P P G) from top start location
-
-- [x] Create Initial auto path in MeepMeep for ID 21 (G P P) from bottom start location
-- [x] Create Initial auto path in MeepMeep for ID 22 (P G P) from bottom start location
-- [x] Create Initial auto path in MeepMeep for ID 23 (P P G) from bottom start location
-
-- [ ] Experiment with the new blackboard concept to store auto settings for manual usage
-
-== Color Sensor / LED Tasks
-
-- [ ] Develop test program to assess color sensor usage on balls, document best color ranges to use
-- [ ] Create test program to try out the new LED light system
-
-== Shooter System Tasks
-
-- [ ] Develop function to convert distance + angle to launch speed
-  * Consider using PID control for launch speed
-- [ ] Develop function to command a rotating turret to stay aligned with an april tag
-  * Consider using PID control
-- [ ] Develop function to calculate the optimum launcher ramp height
