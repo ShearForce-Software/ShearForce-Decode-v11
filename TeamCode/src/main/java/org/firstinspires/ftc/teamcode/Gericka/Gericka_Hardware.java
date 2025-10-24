@@ -84,13 +84,18 @@ public class Gericka_Hardware {
 
     final double INTAKE_POWER = 0.75;
 
-    final float LIFTER_UP_POSITION = 1.0f;
-
-    final float LIFTER_DOWN_POSISTION = 0.0f;
-
+    public final float LIFTER_UP_POSITION = 1.0f;
+    public final float LIFTER_DOWN_POSITION = 0.0f;
+    final float MAX_SHOOTER_SPEED = 1.0f;
+    final float MIN_SHOOTER_SPEED = 0.0f;
+    final float MAX_TURRET_ANGLE = 179;
+    final float MIN_TURRET_ANGLE = -179;
     final double YELLOW_JACKET_51_TICKS = 1425.1;
     final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_51_TICKS; // 133/24 is the gear ratio
-
+    int turretTargetTicks = 0;
+    double turretTargetAngle = 0.0;
+    double lifterTargetPosition = 0.0;
+    double shooterTargetSpeed = 0.0;
 
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
@@ -548,7 +553,23 @@ public class Gericka_Hardware {
         }
     }
     public void SetTurretRotationAngle(double degrees){
-
+        turretTargetAngle = Math.min(degrees,MAX_TURRET_ANGLE);
+        turretTargetAngle = Math.max(degrees,MIN_TURRET_ANGLE);
+        turretTargetTicks = Math.round((float)turretTargetAngle * (float)TURRET_TICKS_IN_DEGREES);
+        turretMotor.setTargetPosition(turretTargetTicks);
+        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turretMotor.setPower(1.0);
+    }
+    public void SetLifterPosition(float position){
+        lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
+        lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
+        lifterServo.setPosition(lifterTargetPosition);
+    }
+    public void SetShooterSpeed(float percent){
+        shooterTargetSpeed = Math.min(percent,MAX_SHOOTER_SPEED);
+        shooterTargetSpeed = Math.max(percent,MIN_SHOOTER_SPEED);
+        shooterMotorRight.setPower(shooterTargetSpeed);
+        shooterMotorLeft.setPower(shooterTargetSpeed);
     }
     public void ShowTelemetry(){
 

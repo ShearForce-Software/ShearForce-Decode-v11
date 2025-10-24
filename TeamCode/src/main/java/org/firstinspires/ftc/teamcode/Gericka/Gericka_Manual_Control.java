@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Gericka;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
 
@@ -89,49 +90,53 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
             if (gamepad2.triangleWasPressed()) {
                 //Turn intake on
+                theRobot.SetIntakeMotor(true,true);
 
             }
             else if (gamepad2.circleWasPressed()){
                 //Turn outake on
-
+                theRobot.SetIntakeMotor(true, false);
             }
             else if (gamepad2.squareWasPressed()){
                 //Turn intake system off
-
+                theRobot.SetIntakeMotor(false,false);
             }
 
             if (gamepad2.rightBumperWasPressed()){
                 //Set lifter position to up
-
+                theRobot.SetLifterPosition(theRobot.LIFTER_UP_POSITION);
             }
             else if (gamepad2.leftBumperWasPressed()){
                 //Set lifter position to down
-
+                theRobot.SetLifterPosition(theRobot.LIFTER_DOWN_POSITION);
             }
 
-            if (gamepad2.right_trigger>0.4){
+            if (gamepad1.dpadRightWasPressed()){
                 //Turn Turret clockwise
                 turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
+                theRobot.SetTurretRotationAngle(turretRotationAngle);
             }
-            else if (gamepad2.left_trigger>0.4){
+            else if (gamepad1.dpadLeftWasPressed()){
                //Turn Turret counterclockwise
                 turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
+                theRobot.SetTurretRotationAngle(turretRotationAngle);
             }
 
             if (gamepad2.dpadUpWasPressed()){
                 //Set shooter wheel speed to 0
-
+                theRobot.SetShooterSpeed(0.0f);
             }
             else if (gamepad2.dpadLeftWasPressed()){
                 //Set shooter speed to 25
-
+                theRobot.SetShooterSpeed(0.25f);
             }
             else if (gamepad2.dpadDownWasPressed()){
                 //Set shooter speed to 50
+                theRobot.SetShooterSpeed(0.5f);
             }
             else if (gamepad2.dpadRightWasPressed()){
                 //Set shooter speed to 100
-
+                theRobot.SetShooterSpeed(1.0f);
             }
 
             theRobot.ShowTelemetry();
