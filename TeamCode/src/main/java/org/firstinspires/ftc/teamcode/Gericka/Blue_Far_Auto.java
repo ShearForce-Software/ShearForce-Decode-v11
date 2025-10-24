@@ -28,6 +28,7 @@ public class Blue_Far_Auto extends LinearOpMode {
     Gericka_Hardware control = new Gericka_Hardware(true, false,this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
+    public static final String ALLIANCE_KEY = "Alliance";
 
     // Trajectories
 
@@ -37,10 +38,10 @@ public class Blue_Far_Auto extends LinearOpMode {
 
     public void runOpMode(){
         startPose = new Pose2d(9,-64, Math.toRadians(270));
-
         /* Initialize the Robot */
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
-        control.Init(hardwareMap);
+        control.Init(hardwareMap, "BLUE");
+        blackboard.put(ALLIANCE_KEY, "BLUE");
         //  -- need to adjust this starting position to keep the specimen out of the wall Check
         //control.AutoStartPosition();
         //control.HooksReleased();

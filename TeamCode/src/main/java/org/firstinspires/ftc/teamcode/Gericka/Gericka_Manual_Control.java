@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
 
+import java.util.Objects;
+
 @TeleOp(name = "Gericka 1 Manual Control")
 //@Disabled
 public class Gericka_Manual_Control extends LinearOpMode {
@@ -14,6 +16,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
     boolean slidePowerApplied = false;
 
     boolean alignBusy = false;
+    public static final String ALLIANCE_KEY = "Alliance";
 
     private boolean dpadDownPrev = false;
     //boolean intakeStarPowerApplied = false;
@@ -29,8 +32,12 @@ public class Gericka_Manual_Control extends LinearOpMode {
     public void runOpMode() {
         theRobot = new Gericka_Hardware(true, true, this);
         telemetry.setMsTransmissionInterval(11);
-
-        theRobot.Init(this.hardwareMap);
+        Object allianceColor = blackboard.get(ALLIANCE_KEY);
+        if (Objects.equals(allianceColor, "RED")) {
+            theRobot.Init(this.hardwareMap, "RED");
+        } else{
+            theRobot.Init(this.hardwareMap, "BLUE");
+        }
         theRobot.ShowTelemetry();
         telemetry.update();
         theRobot.InitRoadRunner(hardwareMap);

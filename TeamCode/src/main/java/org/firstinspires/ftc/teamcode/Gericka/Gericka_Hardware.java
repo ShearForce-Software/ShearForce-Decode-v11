@@ -33,6 +33,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -153,7 +154,7 @@ public class Gericka_Hardware {
         this.IsFieldCentric = isFieldCentric;
         this.opMode = opMode;
     }
-    public void Init (HardwareMap hardwareMap) {
+    public void Init (HardwareMap hardwareMap, String allianceColor) {
         // ************* Drive MOTORS ****************
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront_leftOdometry");
         leftRear= hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -200,7 +201,11 @@ public class Gericka_Hardware {
         //rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
         //leftColorSensor.enableLed(false);
         //rightColorSensor.enableLed(false);
-
+        if (Objects.equals(allianceColor, "RED")) {
+            //do something
+        } else {
+            //do something different
+        }
 
          //limelightbox = hardwareMap.get(Limelight3A.class, "limelight");
         //InitBlinkin(hardwareMap);
@@ -576,7 +581,11 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Auto Last Time Left: ", autoTimeLeft);
         opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         ;
-
+        opMode.telemetry.addData("Intake Motor Position:", intakeMotor.getCurrentPosition());
+        opMode.telemetry.addData("Right Shooter Motor Position:", shooterMotorRight.getCurrentPosition());
+        opMode.telemetry.addData("Left Shooter Motor Position:", shooterMotorLeft.getCurrentPosition());
+        opMode.telemetry.addData("Turret Motor Position:", turretMotor.getCurrentPosition());
+        opMode.telemetry.addData("Lifter Position:", lifterServo.getPosition());
         opMode.telemetry.addData("PIDF Enabled:", pidfEnabled);
 
         opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
