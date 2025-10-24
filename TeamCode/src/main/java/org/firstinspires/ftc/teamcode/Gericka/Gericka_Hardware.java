@@ -588,6 +588,11 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Lifter Position:", lifterServo.getPosition());
         opMode.telemetry.addData("PIDF Enabled:", pidfEnabled);
 
+        opMode.telemetry.addData("Turret Target Ticks:",turretTargetTicks);
+        opMode.telemetry.addData("Turret Target Angle:",turretTargetAngle);
+        opMode.telemetry.addData("Lifter Target Position:",lifterTargetPosition);
+        opMode.telemetry.addData("Shooter Target Speed:",shooterTargetSpeed);
+
         opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
         opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
         opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
