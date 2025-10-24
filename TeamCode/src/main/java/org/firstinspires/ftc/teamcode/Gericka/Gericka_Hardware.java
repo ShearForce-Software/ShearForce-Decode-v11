@@ -97,7 +97,13 @@ public class Gericka_Hardware {
     double turretTargetAngle = 0.0;
     double lifterTargetPosition = 0.0;
     double shooterTargetSpeed = 0.0;
-
+    public Servo indicatorLight = null;
+    final double INDICATOR_BLACK = 0;
+    final double INDICATOR_RED = 0.279;
+    final double INDICATOR_BLUE = 0.611;
+    final double INDICATOR_WHITE = 1;
+    final double INDICATOR_GREEN = 0.500;
+    double indicatorLightValue = 0;
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -155,6 +161,7 @@ public class Gericka_Hardware {
         this.opMode = opMode;
     }
     public void Init (HardwareMap hardwareMap, String allianceColor) {
+        indicatorLight = hardwareMap.get(Servo.class, "IndicatorLight");
         // ************* Drive MOTORS ****************
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront_leftOdometry");
         leftRear= hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -202,9 +209,9 @@ public class Gericka_Hardware {
         //leftColorSensor.enableLed(false);
         //rightColorSensor.enableLed(false);
         if (Objects.equals(allianceColor, "RED")) {
-            //do something
+            indicatorLight.setPosition(INDICATOR_RED);
         } else {
-            //do something different
+            indicatorLight.setPosition(INDICATOR_BLUE);
         }
 
          //limelightbox = hardwareMap.get(Limelight3A.class, "limelight");
@@ -517,7 +524,10 @@ public class Gericka_Hardware {
 
     }
     */
-
+    public void SetIndicatorLight(double colorValue) {
+        indicatorLight.setPosition(colorValue);
+        indicatorLightValue = colorValue;
+    }
     // *********************************************************
     // ****      BLINKIN LED Lights Controls                ****
     // *********************************************************
@@ -587,6 +597,8 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Turret Motor Position:", turretMotor.getCurrentPosition());
         opMode.telemetry.addData("Lifter Position:", lifterServo.getPosition());
         opMode.telemetry.addData("PIDF Enabled:", pidfEnabled);
+
+        opMode.telemetry.addData("Indicator Light Value:", indicatorLightValue);
 
         opMode.telemetry.addData("Turret Target Ticks:",turretTargetTicks);
         opMode.telemetry.addData("Turret Target Angle:",turretTargetAngle);
