@@ -62,7 +62,7 @@ public class Test_CR_Servo extends LinearOpMode {
 
         // Connect to servo (Assume Robot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(CRServo.class, "crservo-port4");
+        servo = hardwareMap.get(CRServo.class, "crservo");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start " );
