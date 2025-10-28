@@ -4,11 +4,11 @@
 
 - [ ] Setup code-based config file for Gericka with all motors and servos
 - [ ] Verify full manual control of all motors and servos
-- [ ] Update telemetry to show all motor and servo data
+- [*] Update telemetry to show all motor and servo data
 - [ ] Calibrate Gericka roadrunner
 - [ ] Implement at least one autonomous route for Red side, that can shoot 3 pre-loaded balls
 - [ ] Implement at least one autonomous route for Blue side, that can shoot 3 pre-loaded balls
-- [ ] Experiment and Verify the new blackboard concept to store auto settings for manual usage
+- [*] Experiment and Verify the new blackboard concept to store auto settings for manual usage
 - [ ] Setup the control hub and driver station wifi to pass inspection
 
 == Next Level Stuff
