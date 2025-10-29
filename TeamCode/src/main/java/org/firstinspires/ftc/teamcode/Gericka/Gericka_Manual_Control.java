@@ -58,16 +58,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // Drive Controls uses left_stick_y, left_stick_x, and right_stick_x
             theRobot.RunDriveControls();
 
-            // 3) then all your other gamepad1 / gamepad2 commands
-            if (gamepad1.triangle && !gamepad1.options) {
-                theRobot.imu.resetYaw();
-            } else if (gamepad1.triangle && gamepad1.options) {
-                theRobot.SetFieldCentricMode(true);
-
-            } else if (gamepad1.square && gamepad1.options) {
-                theRobot.SetFieldCentricMode(false);
-            }
-
             // RESERVED COMBOS    options + cross and options + circle
 
             // Press the triangle button / "y" while facing directly away from the driver to set the IMU correctly for field-centric mode if off
