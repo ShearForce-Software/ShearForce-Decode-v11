@@ -83,7 +83,7 @@ public class Gericka_Hardware {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
-    final double INTAKE_POWER = 0.75;
+    final double INTAKE_POWER = 0.5;
 
     public final float LIFTER_UP_POSITION = 1.0f;
     public final float LIFTER_DOWN_POSITION = 0.0f;
@@ -104,6 +104,9 @@ public class Gericka_Hardware {
     final double INDICATOR_WHITE = 1;
     final double INDICATOR_GREEN = 0.500;
     double indicatorLightValue = 0;
+    public final double FEET_TO_METER = 0.3048;
+    public final double METER_TO_FEET = 3.28084;
+
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -179,14 +182,14 @@ public class Gericka_Hardware {
         shooterMotorRight = hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
 
-        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
-        shooterMotorLeft.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+        shooterMotorLeft.setDirection(DcMotor.Direction.FORWARD);
         shooterMotorRight.setDirection(DcMotor.Direction.FORWARD);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -555,6 +558,21 @@ public class Gericka_Hardware {
     //{
     //    blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(1625));
     //}
+    public double InitialVelocityCalculater(double distanceToGoalInMeters){
+        double speedInmetersPerSecond = 0.0;
+        double topPart = 0.0;
+        double bottomPart = 0.0;
+        topPart = 9.81 * distanceToGoalInMeters;
+        bottomPart = 2 * Math.pow(Math.cos(22.5),2) * (distanceToGoalInMeters * Math.tan(22.5) + 0.98425 - 0.4064 + 0.127);
+        speedInmetersPerSecond = Math.sqrt(topPart/bottomPart);
+        return speedInmetersPerSecond;
+        /*9.81 is gravitational force
+        22.5 is angle of launch
+        0.98425 - 0.4064 + 0.127 is height of goal - height of launch + minimal launch distance
+        https://www.desmos.com/calculator/n9syawsgk2
+         */
+    }
+
 
     public void SetIntakeMotor(boolean on,boolean intake){
         if (on && intake) {
