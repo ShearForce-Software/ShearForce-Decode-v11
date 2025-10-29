@@ -106,7 +106,7 @@ public class Gericka_Hardware {
     double indicatorLightValue = 0;
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
-
+    public final double RADIANS_PER_SECOND_TO_RPM = 9.54929658551; // 60 / (2 * Math.PI)
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -558,12 +558,12 @@ public class Gericka_Hardware {
     //{
     //    blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(1625));
     //}
-    public double InitialVelocityCalculater(double distanceToGoalInMeters){
+    public double initialVelocityCalculator(double distanceToGoalInMeters){
         double speedInmetersPerSecond = 0.0;
         double topPart = 0.0;
         double bottomPart = 0.0;
         topPart = 9.81 * distanceToGoalInMeters;
-        bottomPart = 2 * Math.pow(Math.cos(22.5),2) * (distanceToGoalInMeters * Math.tan(22.5) + 0.98425 - 0.4064 + 0.127);
+        bottomPart = 2 * Math.pow(Math.cos(67.5),2) * (distanceToGoalInMeters * Math.tan(67.5) + 0.98425 - 0.4064 + 0.127);
         speedInmetersPerSecond = Math.sqrt(topPart/bottomPart);
         return speedInmetersPerSecond;
         /*9.81 is gravitational force
@@ -572,7 +572,20 @@ public class Gericka_Hardware {
         https://www.desmos.com/calculator/n9syawsgk2
          */
     }
-
+    public double initialWheelRotationalVelocityCalculator(double initialVelocityInMetersPerSecond){
+        double initalWheelRotationalVelocityInRadiansPerSecond = 0.0;
+        double insideParenthesis = 0.0;
+        double outsideParenthesis = 0.0;
+        insideParenthesis = 1 + ((1 + 0.4) / 4 * 0.5) * 999 / 999;
+        outsideParenthesis = 2 * initialVelocityInMetersPerSecond / 2;
+        initalWheelRotationalVelocityInRadiansPerSecond = insideParenthesis * outsideParenthesis;
+        /* The 0.4 is a estimation for the shape factor of the projectile.
+        The 0.5 is a estimation for the shape factor of the wheel launcher.
+        The two 999s are the mass of the projectile and the mass of the wheel in that order.
+        The last value in outsideParenthesis is the radius of the wheel.
+         */
+        return initalWheelRotationalVelocityInRadiansPerSecond;
+    }
 
     public void SetIntakeMotor(boolean on,boolean intake){
         if (on && intake) {
@@ -598,7 +611,7 @@ public class Gericka_Hardware {
         lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
         lifterServo.setPosition(lifterTargetPosition);
     }
-    public void SetShooterSpeed(float percent){
+    public void SetShooterSpeed(double percent){
         shooterTargetSpeed = Math.min(percent,MAX_SHOOTER_SPEED);
         shooterTargetSpeed = Math.max(percent,MIN_SHOOTER_SPEED);
         shooterMotorRight.setPower(shooterTargetSpeed);
