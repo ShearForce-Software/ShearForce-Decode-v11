@@ -2,8 +2,6 @@
 
 == To prepare for first meet
 
-- [ ] Setup code-based config file for Gericka with all motors and servos
-- [ ] Verify full manual control of all motors and servos
 - [*] Update telemetry to show all motor and servo data
 - [ ] Calibrate Gericka roadrunner
 - [ ] Implement at least one autonomous route for Red side, that can shoot 3 pre-loaded balls
