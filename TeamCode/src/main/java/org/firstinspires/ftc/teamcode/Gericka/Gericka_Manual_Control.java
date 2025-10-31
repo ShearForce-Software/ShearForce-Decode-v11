@@ -121,19 +121,19 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
             if (gamepad2.dpadUpWasPressed()){
                 //Set shooter wheel speed to 0
-                theRobot.SetShooterSpeed(0.0f);
+                theRobot.SetShooterSpeed(0.0);
             }
             else if (gamepad2.dpadLeftWasPressed()){
                 //Set shooter speed to 25
-                theRobot.SetShooterSpeed(0.25f);
+                theRobot.SetShooterSpeed(0.3091);//5ft
             }
             else if (gamepad2.dpadDownWasPressed()){
                 //Set shooter speed to 50
-                theRobot.SetShooterSpeed(0.5f);
+                theRobot.SetShooterSpeed(0.3838);//7ft
             }
             else if (gamepad2.dpadRightWasPressed()){
                 //Set shooter speed to 100
-                theRobot.SetShooterSpeed(1.0f);
+                theRobot.SetShooterSpeed(0.5224);//14ft
             }
 
             theRobot.ShowTelemetry();

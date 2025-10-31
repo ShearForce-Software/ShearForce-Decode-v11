@@ -566,7 +566,8 @@ public class Gericka_Hardware {
         bottomPart = 2 * Math.pow(Math.cos(67.5),2) * (distanceToGoalInMeters * Math.tan(67.5) + 0.98425 - 0.4064 + 0.127);
         speedInmetersPerSecond = Math.sqrt(topPart/bottomPart);
         return speedInmetersPerSecond;
-        /*9.81 is gravitational force
+        /*
+        9.81 is gravitational force
         22.5 is angle of launch
         0.98425 - 0.4064 + 0.127 is height of goal - height of launch + minimal launch distance
         https://www.desmos.com/calculator/n9syawsgk2
@@ -576,12 +577,13 @@ public class Gericka_Hardware {
         double initalWheelRotationalVelocityInRadiansPerSecond = 0.0;
         double insideParenthesis = 0.0;
         double outsideParenthesis = 0.0;
-        insideParenthesis = 1 + ((1 + 0.4) / 4 * 0.5) * 999 / 999;
-        outsideParenthesis = 2 * initialVelocityInMetersPerSecond / 2;
-        initalWheelRotationalVelocityInRadiansPerSecond = insideParenthesis * outsideParenthesis;
-        /* The 0.4 is a estimation for the shape factor of the projectile.
+        insideParenthesis = 1 + ((1 + 0.4) / 4 * 0.5) * 0.0748 / 0.285;
+        outsideParenthesis = 2 * initialVelocityInMetersPerSecond / 0.0508;
+        initalWheelRotationalVelocityInRadiansPerSecond = insideParenthesis * outsideParenthesis / 2;
+        /*
+        The 0.4 is a estimation for the shape factor of the projectile.
         The 0.5 is a estimation for the shape factor of the wheel launcher.
-        The two 999s are the mass of the projectile and the mass of the wheel in that order.
+        The 0.0748 and 0.0185 are a good estimate for the mass of the projectile and the mass of the wheel in that order.
         The last value in outsideParenthesis is the radius of the wheel.
          */
         return initalWheelRotationalVelocityInRadiansPerSecond;

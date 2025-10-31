@@ -114,11 +114,10 @@ public class Test_Initial_Velocity_Calculater extends LinearOpMode {
 
             }
             if (gamepad2.triangleWasPressed()){
-                theRobot.SetShooterSpeed(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 5)) / 312);
-            // The 312 is the MAX no load RPM, will have to develop better number for with load RPM.
+                theRobot.SetShooterSpeed(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 5))/3000);
             }
             if (gamepad2.crossWasPressed()){
-                theRobot.SetShooterSpeed(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 10)) / 312);
+                theRobot.SetShooterSpeed(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 10))/3000);
             }
             theRobot.ShowTelemetry();
         } // end while (opModeIsActive())
