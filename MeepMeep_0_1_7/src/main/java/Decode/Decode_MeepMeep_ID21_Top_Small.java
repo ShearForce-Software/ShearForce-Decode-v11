@@ -15,15 +15,18 @@ public class Decode_MeepMeep_ID21_Top_Small {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-49, 49, Math.toRadians(305)))
-                .strafeToConstantHeading(new Vector2d(-30, 30))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
                 .waitSeconds(2)
-                /*.strafeToLinearHeading(new Vector2d(-27, 55), Math.toRadians(315))
-                .strafeToConstantHeading(new Vector2d(0, 30))
-                .strafeToConstantHeading(new Vector2d(0, 50))
-                .strafeToConstantHeading(new Vector2d(0, 30))
-                .strafeToLinearHeading(new Vector2d(35, 30), Math.toRadians(90))
-                .strafeToConstantHeading(new Vector2d(35, 40))*/
+                .strafeToLinearHeading(new Vector2d(36,35),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(36,50),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(60,12),Math.toRadians(90))
+                .waitSeconds(2)
+                .strafeToConstantHeading(new Vector2d(11.5,30))
+                .strafeToConstantHeading(new Vector2d(11.5,48))
+                //.strafeToConstantHeading(new Vector2d(20,-12))
+                .strafeToConstantHeading(new Vector2d(60,12))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(20,12), Math.toRadians(270))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)
