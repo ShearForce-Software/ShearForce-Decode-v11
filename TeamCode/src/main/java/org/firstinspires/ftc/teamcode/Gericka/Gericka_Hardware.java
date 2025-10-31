@@ -608,6 +608,56 @@ public class Gericka_Hardware {
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(1.0);
     }
+    double getBearingToAprilTag(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        double bearing = 0.0;
+        for (AprilTagDetection detection : detections){
+            if (detection.metadata != null) {
+                if(detection.id == detectionID){
+                    bearing = detection.ftcPose.bearing;
+                    foundit = true;
+
+                }
+            }
+        }
+        return bearing;
+    }
+    boolean getAprilTagVisible(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        for (AprilTagDetection detection : detections){
+            if (detection.metadata != null){
+                foundit = (detection.id == detectionID);
+            }
+        }
+        return foundit;
+    }
+    double getCurrentTurretAngle (){
+        double turretAngle = turretMotor.getCurrentPosition()/TURRET_TICKS_IN_DEGREES;
+
+        return turretAngle;
+    }
+    void adjustTurretToTarget(int detectionID){
+        if (getAprilTagVisible(detectionID)){
+            double x = getBearingToAprilTag(detectionID);
+            double y = getCurrentTurretAngle();
+            SetTurretRotationAngle(x+y);
+        }
+    }
+    double getDistanceToAprilTag(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        double distance = 0.0;
+        for (AprilTagDetection detection : detections){
+            /*if (detection.metadata != null) {
+                distance = detection.ftcPose.
+
+                }*/
+            }
+        return distance;
+    }
+
     public void SetLifterPosition(float position){
         lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
         lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
