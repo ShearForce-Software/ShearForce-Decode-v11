@@ -23,7 +23,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
     float turretRotationAngle = 0.0f;
 
-    final float TURRET_ROTATION_ANGLE_INCREMENT = 5.0f;
+    final float TURRET_ROTATION_ANGLE_INCREMENT = 1.0f;
     // Scrimmage Meet Ideas:
     // Press intake button, have claw grab the sample
     // Have claw go down when slides extend forward?
@@ -125,15 +125,15 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             else if (gamepad2.dpadLeftWasPressed()){
                 //Set shooter speed to 25
-                theRobot.SetShooterSpeed(0.3091);//5ft
+                theRobot.SetShooterSpeed(0.25);
             }
             else if (gamepad2.dpadDownWasPressed()){
                 //Set shooter speed to 50
-                theRobot.SetShooterSpeed(0.3838);//7ft
+                theRobot.SetShooterSpeed(0.5);
             }
             else if (gamepad2.dpadRightWasPressed()){
                 //Set shooter speed to 100
-                theRobot.SetShooterSpeed(0.5224);//14ft
+                theRobot.SetShooterSpeed(1.0);
             }
 
             theRobot.ShowTelemetry();
