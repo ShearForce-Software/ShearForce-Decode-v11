@@ -6,7 +6,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class Decode_MeepMeep_ID23_Bottom_Small {
+public class Decode_MeepMeep_Blue_ID23_Big_Triangle {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
 
