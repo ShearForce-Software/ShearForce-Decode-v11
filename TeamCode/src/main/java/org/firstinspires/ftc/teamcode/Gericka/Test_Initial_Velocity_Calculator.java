@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @TeleOp(name = "Test Initial Velocity Calculator")
 //@Disabled
-public class Test_Initial_Velocity_Calculater extends LinearOpMode {
+public class Test_Initial_Velocity_Calculator extends LinearOpMode {
     Gericka_Hardware theRobot;
     boolean rotatorPowerApplied = false;
     boolean slidePowerApplied = false;
@@ -111,13 +111,13 @@ public class Test_Initial_Velocity_Calculater extends LinearOpMode {
                 theRobot.SetShooterSpeed(0.5);
             } else if (gamepad2.dpadRightWasPressed()) {
                 //Set shooter speed to 100
-
+                theRobot.SetShooterSpeed((1.0));
             }
             if (gamepad2.triangleWasPressed()){
-                theRobot.SetShooterSpeed(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 5))/3000);
+                theRobot.SetMotorToSpecificRPM(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 5)));
             }
             if (gamepad2.crossWasPressed()){
-                theRobot.SetShooterSpeed(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 10))/3000);
+                theRobot.SetMotorToSpecificRPM(theRobot.RADIANS_PER_SECOND_TO_RPM * theRobot.initialWheelRotationalVelocityCalculator(theRobot.initialVelocityCalculator((theRobot.FEET_TO_METER) * 10)));
             }
             theRobot.ShowTelemetry();
         } // end while (opModeIsActive())

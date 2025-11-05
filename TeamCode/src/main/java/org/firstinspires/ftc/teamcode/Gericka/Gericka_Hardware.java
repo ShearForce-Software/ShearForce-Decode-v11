@@ -316,7 +316,9 @@ public class Gericka_Hardware {
         Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
         blinkinLedDriver.setPattern(Blinken_pattern);
     }
-
+    public void SetMotorToSpecificRPM(double desiredRPM){
+        SetShooterSpeed(desiredRPM / 2700);
+    }
     public double initialVelocityCalculator(double distanceToGoalInMeters){
         double speedInmetersPerSecond = 0.0;
         double topPart = 0.0;
@@ -338,7 +340,7 @@ public class Gericka_Hardware {
         double outsideParenthesis = 0.0;
         insideParenthesis = 1 + ((1 + 0.4) / 4 * 0.5) * 0.0748 / 0.285;
         outsideParenthesis = 2 * initialVelocityInMetersPerSecond / 0.0508;
-        initalWheelRotationalVelocityInRadiansPerSecond = insideParenthesis * outsideParenthesis / 2;
+        initalWheelRotationalVelocityInRadiansPerSecond = insideParenthesis * outsideParenthesis;
         /*
         The 0.4 is a estimation for the shape factor of the projectile.
         The 0.5 is a estimation for the shape factor of the wheel launcher.

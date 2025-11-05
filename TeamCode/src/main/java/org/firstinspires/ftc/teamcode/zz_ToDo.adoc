@@ -5,8 +5,8 @@
 - [*] LIFTER: Add small offset to bottom of lifter to prevent dragging on floor
 - [*] LIFTER: Add a half way position, that could be commanded that lifts ball up so more room, without lifting so high that it shoots (will trigger later based on sensors)
 - [*] LIFTER: Change logic to auto return to bottom after lifting up to shooter
-- [ ] SHOOTER: Verify shooter motor directions are correct in code
-- [ ] SHOOTER: Verify shooter RPM calculations working, record max, should be around 5400 RPM, theoretically could be up to 6000 RPM, record average RPMs at 100% power, 50% power, 25% power, and 75% power.  Record AMP pull of motors too.
+- [x] SHOOTER: Verify shooter motor directions are correct in code
+- [ ] SHOOTER: Verify shooter RPM calculations are working, record max, should be around 5400 RPM, theoretically could be up to 6000 RPM, record average RPMs at 100% power, 50% power, 25% power, and 75% power.  Record AMP pull of motors too.
 - [ ] SHOOTER: Create a method to set the velocity of the shooter motors based on desired RPMs, test and see how well it holds that RPM
 - [ ] SHOOTER: Test shooter using different RPMs and different friction walls, document to determine best choice
 - [ ] TURRET: Test and verify if changes are needed to manual turret control or if now using correct tick calculations (will need to disconnect shooter wires if wire management not fully implemented yet)
