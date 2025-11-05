@@ -153,6 +153,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 //blue
             }
 
+            // toggling turret goal centering on/off
             if (gamepad2.share) {
                 theRobot.adjustTurretToTarget(ID);
             }
