@@ -99,13 +99,20 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetIntakeMotor(false,false);
             }
 
-            if (gamepad2.rightBumperWasPressed()){
+            if (gamepad2.rightBumperWasPressed()) {
                 //Set lifter position to up
-                theRobot.SetLifterPosition(theRobot.LIFTER_UP_POSITION);
+                theRobot.SetLifterUp();
+            }
+            else if (gamepad2.rightBumperWasReleased()){
+                theRobot.SetLifterDown();
             }
             else if (gamepad2.leftBumperWasPressed()){
                 //Set lifter position to down
                 theRobot.SetLifterPosition(theRobot.LIFTER_DOWN_POSITION);
+            }
+            else if (gamepad2.left_trigger > 0.2){
+                //Set lifter position to middle
+                theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             }
 
             if (gamepad1.dpadRightWasPressed()){

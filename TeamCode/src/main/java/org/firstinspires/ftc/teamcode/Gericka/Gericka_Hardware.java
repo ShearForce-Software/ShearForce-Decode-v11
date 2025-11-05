@@ -10,6 +10,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -75,8 +76,9 @@ public class Gericka_Hardware {
 
     final double INTAKE_POWER = 0.5;
 
-    public final float LIFTER_UP_POSITION = 1.0f;
-    public final float LIFTER_DOWN_POSITION = 0.0f;
+    public final float LIFTER_UP_POSITION = 0.85f;
+    public final float LIFTER_MID_POSITION = 0.5f;
+    public final float LIFTER_DOWN_POSITION = 0.05f;
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
     final float MAX_TURRET_ANGLE = 179;
@@ -187,7 +189,7 @@ public class Gericka_Hardware {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
 
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
-        shooterMotorLeft.setDirection(DcMotor.Direction.FORWARD);
+        shooterMotorLeft.setDirection(DcMotor.Direction.REVERSE);
         shooterMotorRight.setDirection(DcMotor.Direction.FORWARD);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -419,6 +421,14 @@ public class Gericka_Hardware {
         lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
         lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
         lifterServo.setPosition(lifterTargetPosition);
+    }
+    public void SetLifterUp(){
+        SetLifterPosition(LIFTER_UP_POSITION);
+        //opMode.sleep(10);
+        //SetLifterPosition(LIFTER_DOWN_POSITION);
+    }
+    public void SetLifterDown(){
+        SetLifterPosition(LIFTER_DOWN_POSITION);
     }
     public void SetShooterSpeed(double percent){
         shooterTargetSpeed = Math.min(percent,MAX_SHOOTER_SPEED);
