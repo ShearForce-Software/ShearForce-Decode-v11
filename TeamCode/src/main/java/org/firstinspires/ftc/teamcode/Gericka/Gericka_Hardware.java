@@ -10,7 +10,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -284,11 +283,6 @@ public class Gericka_Hardware {
         }
     }
 
-    double CalculateMotorRPM (double motorVelocity, double motorCountsPerRevolution)
-    {
-        return (motorVelocity / motorCountsPerRevolution) * 60.0;
-    }
-
 
     public void SetIndicatorLight(double colorValue) {
         indicatorLight.setPosition(colorValue);
@@ -315,9 +309,6 @@ public class Gericka_Hardware {
 
         Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
         blinkinLedDriver.setPattern(Blinken_pattern);
-    }
-    public void SetMotorToSpecificRPM(double desiredRPM){
-        SetShooterSpeed(desiredRPM / 2700);
     }
     public double initialVelocityCalculator(double distanceToGoalInMeters){
         double speedInmetersPerSecond = 0.0;
@@ -438,6 +429,18 @@ public class Gericka_Hardware {
         shooterMotorRight.setPower(shooterTargetSpeed);
         shooterMotorLeft.setPower(shooterTargetSpeed);
     }
+
+    double CalculateMotorRPM (double motorVelocity, double motorCountsPerRevolution)
+    {
+        return (motorVelocity / motorCountsPerRevolution) * 60.0;
+    }
+
+    public void SetShooterMotorToSpecificRPM(double desiredRPM){
+        //TODO - this calculation is incorrect, do the reverse of the CalculateMotorRPM calculation, then command it via shooterMotorLeft.setVelocity(velocityValue)
+        //TODO - need to create a class variable called shooterTargetRPMs or something similar to store the command, then add it to ShowTelemetry() routine
+        SetShooterSpeed(desiredRPM / 2700);
+    }
+
     public void ShowTelemetry(){
 
         opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));

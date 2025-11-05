@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.Gericka;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
 
 import java.util.Objects;
 
@@ -18,7 +15,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
     boolean alignBusy = false;
     public static final String ALLIANCE_KEY = "Alliance";
 
-    int ID = 0;
+    int turretTrackingID = 24; // default to Red
 
     private boolean dpadDownPrev = false;
     //boolean intakeStarPowerApplied = false;
@@ -36,8 +33,10 @@ public class Gericka_Manual_Control extends LinearOpMode {
         Object allianceColor = blackboard.get(ALLIANCE_KEY);
         if (Objects.equals(allianceColor, "RED")) {
             theRobot.Init(this.hardwareMap, "RED");
+            turretTrackingID = 24;
         } else{
             theRobot.Init(this.hardwareMap, "BLUE");
+            turretTrackingID = 20;
         }
         theRobot.ShowTelemetry();
         telemetry.update();
@@ -54,7 +53,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
              * Driver Controls (gamepad1)
              *************************************************
              *************************************************
-
              */
             // Drive Controls uses left_stick_y, left_stick_x, and right_stick_x
             theRobot.RunDriveControls();
@@ -86,6 +84,8 @@ public class Gericka_Manual_Control extends LinearOpMode {
              *************************************************
              */
 
+
+            // ********   INTAKE MOTOR CONTROLS ***********************
             if (gamepad2.triangleWasPressed()) {
                 //Turn intake on
                 theRobot.SetIntakeMotor(true,true);
@@ -100,6 +100,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetIntakeMotor(false,false);
             }
 
+
+
+            // ********   LIFTER CONTROLS ***********************
             if (gamepad2.rightBumperWasPressed()) {
                 //Set lifter position to up
                 theRobot.SetLifterUp();
@@ -116,6 +119,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             }
 
+
+
+            // ********   TURRET CONTROLS ***********************
             if (gamepad1.dpadRightWasPressed()){
                 //Turn Turret clockwise
                 turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
@@ -126,7 +132,34 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
                 theRobot.SetTurretRotationAngle(turretRotationAngle);
             }
+            // switch to tracking red target
+            if (gamepad1.dpad_up){
+                turretTrackingID = 24;
+                //red
+            }
+            // switch to tracking blue target
+            else if (gamepad1.dpad_up && gamepad1.options){
+                turretTrackingID = 20;
+                //blue
+            }
+            // toggling turret goal auto centering/tracking on/off
+            //TODO - need an auto tracking mode that can be turned on/off
+            //TODO - need a different button or combo to do this manual adjustment if you really want it, share is common combo button
+            if (gamepad2.share) {
+                theRobot.adjustTurretToTarget(turretTrackingID);
+            }
+            //TODO - WHAT does this do?  Looks like it tells it to do nothing (SetTurret to what the turret is currently set to)
+            else if (gamepad2.share && gamepad2.options) {
+                theRobot.SetTurretRotationAngle(theRobot.getCurrentTurretAngle());
+            }
+            //TODO -- should have simple logic here to auto track all the time, something like:  if (turretAutoMode) { theRobot.adjustTurretToTarget(turretTrackingID); }
 
+
+
+            // ********   SHOOTER MOTOR CONTROLS ***********************
+            //TODO - should create a local variable like double shooterSpeedRPM, and set that value, then just always call SetShooterMotorToSpecificRPM(shooterSpeedRPM), so that can have increment/decrement commands too
+            //TODO - add command combos that can be used to command the shooter speed to change by set increments like 50 RPMs or something
+            //TODO - Need to change to commanding RPMs -- test how well it holds the RPM value, suspect pretty well
             if (gamepad2.dpadUpWasPressed()){
                 //Set shooter wheel speed to 0
                 theRobot.SetShooterSpeed(0.0);
@@ -144,22 +177,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetShooterSpeed(1.0);
             }
 
-            if (gamepad1.dpad_up){
-                ID = 24;
-                //red
-            }
-            else if (gamepad1.dpad_up && gamepad1.options){
-                ID = 20;
-                //blue
-            }
 
-            // toggling turret goal centering on/off
-            if (gamepad2.share) {
-                theRobot.adjustTurretToTarget(ID);
-            }
-            else if (gamepad2.share && gamepad2.options) {
-                theRobot.SetTurretRotationAngle(theRobot.getCurrentTurretAngle());
-            }
 
             theRobot.ShowTelemetry();
         } // end while (opModeIsActive())
