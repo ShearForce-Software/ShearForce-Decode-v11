@@ -2,9 +2,9 @@
 
 == To prepare for first meet
 
-- [ ] LIFTER: Add small offset to bottom of lifter to prevent dragging on floor
-- [ ] LIFTER: Add a half way position, that could be commanded that lifts ball up so more room, without lifting so high that it shoots (will trigger later based on sensors)
-- [ ] LIFTER: Change logic to auto return to bottom after lifting up to shooter
+- [*] LIFTER: Add small offset to bottom of lifter to prevent dragging on floor
+- [*] LIFTER: Add a half way position, that could be commanded that lifts ball up so more room, without lifting so high that it shoots (will trigger later based on sensors)
+- [*] LIFTER: Change logic to auto return to bottom after lifting up to shooter
 - [ ] SHOOTER: Verify shooter motor directions are correct in code
 - [ ] SHOOTER: Verify shooter RPM calculations working, record max, should be around 5400 RPM, theoretically could be up to 6000 RPM, record average RPMs at 100% power, 50% power, 25% power, and 75% power.  Record AMP pull of motors too.
 - [ ] SHOOTER: Create a method to set the velocity of the shooter motors based on desired RPMs, test and see how well it holds that RPM
