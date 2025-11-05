@@ -407,10 +407,10 @@ public class Gericka_Hardware {
         boolean foundit = false;
         double distance = 0.0;
         for (AprilTagDetection detection : detections){
-            /*if (detection.metadata != null) {
-                distance = detection.ftcPose.
+            if (detection.metadata != null) {
+                distance = detection.ftcPose.range;
 
-                }*/
+                }
             }
         return distance;
     }
@@ -437,10 +437,10 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Turret ", "ticks: %d, tgt-Angle: %.1f", turretMotor.getCurrentPosition(),turretTargetAngle);
         opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));
 
-        opMode.telemetry.addData("Intake ", "Pow: %.1f, Vel: %.1f, Amp: %.1f", intakeMotor.getPower(), intakeMotor.getCurrent(CurrentUnit.AMPS));
+        opMode.telemetry.addData("Intake ", "Pow: %.1f, Amp: %.1f", intakeMotor.getPower(), intakeMotor.getCurrent(CurrentUnit.AMPS));
         opMode.telemetry.addData("       ", "Vel: %.1f", intakeMotor.getVelocity());
 
-        opMode.telemetry.addData("Lifter ", "Position: %d", lifterServo.getPosition());
+        opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
 
         opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
@@ -459,7 +459,7 @@ public class Gericka_Hardware {
             opMode.telemetry.addData("Indicator Light Value:", indicatorLight.getPosition());
         }
 
-        telemetryAprilTag();
+        //telemetryAprilTag();
 
         //opMode.telemetry.addData("lastStatusMsg: ", lastStatusMsg);
         //opMode.telemetry.addData("lastErrorMsg: ", lastErrorMsg);
