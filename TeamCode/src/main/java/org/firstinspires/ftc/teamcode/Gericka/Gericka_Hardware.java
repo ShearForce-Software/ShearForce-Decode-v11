@@ -3,35 +3,25 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import static org.firstinspires.ftc.teamcode.Geronimo.MecanumDrive_Geronimo.PARAMS;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Geronimo.MecanumDrive_Geronimo;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -52,15 +42,15 @@ public class Gericka_Hardware {
     boolean IsDriverControl;
     boolean IsFieldCentric;
 
-    DcMotor leftFront;
-    DcMotor leftRear;
-    DcMotor rightFront;
-    DcMotor rightRear;
+    DcMotorEx leftFront;
+    DcMotorEx leftRear;
+    DcMotorEx rightFront;
+    DcMotorEx rightRear;
 
-    DcMotor intakeMotor;
-    DcMotor shooterMotorRight;
-    DcMotor shooterMotorLeft;
-    DcMotor turretMotor;
+    DcMotorEx intakeMotor;
+    DcMotorEx shooterMotorRight;
+    DcMotorEx shooterMotorLeft;
+    DcMotorEx turretMotor;
     Servo lifterServo;
 
     //pidf rotator variables
@@ -91,8 +81,12 @@ public class Gericka_Hardware {
     final float MIN_SHOOTER_SPEED = 0.0f;
     final float MAX_TURRET_ANGLE = 179;
     final float MIN_TURRET_ANGLE = -179;
-    final double YELLOW_JACKET_51_TICKS = 1425.1;
-    final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_51_TICKS; // 133/24 is the gear ratio
+    final double YELLOW_JACKET_19_1_TICKS = 537.7; // 19.2:1 - ticks per motor shaft revolution
+    final double YELLOW_JACKET_1_1_TICKS = 28.0; // 1:1 - ticks per motor shaft revolution
+    final double YELLOW_JACKET_3_1_TICKS = 103.8; // 3.7:1 - ticks per motor shaft revolution
+    final double YELLOW_JACKET_13_1_TICKS = 384.5; // 13.7:1 - ticks per motor shaft revolution
+    final double YELLOW_JACKET_5_1_TICKS = 145.1; // 5.2:1 - ticks per motor shaft revolution
+    final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_5_1_TICKS; // 133/24 is the gear ratio
     int turretTargetTicks = 0;
     double turretTargetAngle = 0.0;
     double lifterTargetPosition = 0.0;
@@ -171,12 +165,22 @@ public class Gericka_Hardware {
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear_rightOdometry");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront_centerOdometry");
 
-
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
 
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // ********** Intake and Shooter System Motors **********************************
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         shooterMotorLeft = hardwareMap.get(DcMotorEx.class, "shooterMotorLeft");
         shooterMotorRight = hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
@@ -187,22 +191,33 @@ public class Gericka_Hardware {
         shooterMotorRight.setDirection(DcMotor.Direction.FORWARD);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooterMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooterMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        turretMotor.setTargetPosition(0);
+
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         intakeMotor.setPower(0.0);
         shooterMotorLeft.setPower(0.0);
         shooterMotorRight.setPower(0.0);
         turretMotor.setPower(0.0);
 
+
+
+        // ****************** SERVOS ******************************************
         lifterServo = hardwareMap.get(Servo.class, "lifterServo");
+
 
 
         // ********** Color Sensors ********************
@@ -232,64 +247,6 @@ public class Gericka_Hardware {
     {
         drive = new Gericka_MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
     }
-
-
-
-    /*
-    public void AlignOnFloorSampleWithPercent() {
-
-        // 1.  Classic pixel-angle based offset
-        double[] offsetInches = GetStrafeOffsetInInches(limelight_targetImageName);
-
-        // 2.  How much of the block is visible right now?
-        double pct = GivePercentOfTarget();              // 0 – 100
-        pct = Math.max(0.0, Math.min(pct, MAX_SEEN_AREA_PCT)); // clamp just in case
-
-        // 3.  Compute the bias term (larger when pct is small, 0 when pct == MAX)
-        double visibilityFactor = (MAX_SEEN_AREA_PCT - pct) / MAX_SEEN_AREA_PCT; // 0 … 1
-        //      ^^^ 1 when nothing seen
-        // Apply the same scaling to X and Y, keeping their directions
-        double biasX = Math.signum(offsetInches[0]) * visibilityFactor * AREA_OFFSET_SCALE_INCH;
-        double biasY = Math.signum(offsetInches[1]) * visibilityFactor * AREA_OFFSET_SCALE_INCH;
-
-        // 4.  Final commanded offsets
-        double finalX = offsetInches[0] + biasX;   // remember: X  = left/right
-        double finalY = offsetInches[1] + biasY;   //            Y  = forward/back
-
-        // 5.  If no target at all (== our -1 flag propagated), skip strafe
-        if (Math.abs(offsetInches[0]) < 0.001 && Math.abs(offsetInches[1]) < 0.001) {
-            opMode.telemetry.addLine("NO TARGET");
-            Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-            blinkinLedDriver.setPattern(Blinken_pattern);
-            return;
-        }
-
-        // 6.  Same LED logic as before
-        switch (limelight_targetImageName) {
-            case "red":
-                Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;   break;
-            case "yellow":
-                Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW; break;
-            case "blue":
-                Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;   break;
-            default:
-                Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;  break;
-        }
-        blinkinLedDriver.setPattern(Blinken_pattern);
-
-        // 7.  Build the Road Runner action
-        drive.updatePoseEstimate();
-        Pose2d  currentPose  = drive.pose;
-        Vector2d targetVector = new Vector2d(-finalY, finalX); // note X/Y swap!
-
-        Action strafeAction = drive.actionBuilder(currentPose)
-                .strafeToConstantHeading(targetVector)
-                .build();
-
-        Actions.runBlocking(strafeAction);
-    }
-*/
-
 
 
    public void WebcamInit (HardwareMap hardwareMap){
@@ -325,208 +282,12 @@ public class Gericka_Hardware {
         }
     }
 
-
-/*
-    public void NavToTag(){
-        desiredTag  = null;
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-        for (AprilTagDetection detection : currentDetections) {
-            if ((detection.metadata != null) && (detection.id == DESIRED_TAG_ID) ){
-                desiredTag = detection;
-                rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                yawError        = desiredTag.ftcPose.yaw;
-                break;  // don't look any further.
-            } else {
-                opMode.telemetry.addData("Unknown Target - ", "No Tag Detected");
-                // set some range and yaw error
-            }
-        }
-    }
-*/
-
-/*
-    public void DriveToTag() {
-        double drive = 0.0;        // Desired forward power/speed (-1 to +1)
-        double strafe = 0.0;        // Desired strafe power/speed (-1 to +1)
-        double turn = 0.0;        // Desired turning power/speed (-1 to +1)
-
-        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-        NavToTag();
-        double headingError = desiredTag.ftcPose.bearing;
-
-        double timeout = opMode.getRuntime() + 5;
-
-        while ((rangeError > DESIRED_DISTANCE) &&
-                ((headingError > 2.0) || (headingError < -2.0)) &&
-                ((yawError > 2.0) || (yawError < -2.0)) && (opMode.getRuntime() < timeout)) {
-            // Determine heading, range and Yaw (tag image rotation) errors
-            NavToTag();
-            headingError = desiredTag.ftcPose.bearing;
-
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            // Speed has been reduced for the AirShow on June 9th
-            drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-            opMode.telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-            opMode.telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
-            opMode.telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
-            opMode.telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
-            opMode.telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-            opMode.telemetry.update();
-
-            // Apply desired axes motions to the drivetrain.
-            moveRobot(drive, strafe, turn);
-            opMode.sleep(10);
-        }
+    double CalculateMotorRPM (double motorVelocity, double motorCountsPerRevolution)
+    {
+        return (motorVelocity / motorCountsPerRevolution) * 60.0;
     }
 
- */
 
-    // *********************************************************
-    // ****      Color Sensor Methods                       ****
-    // *********************************************************
-/*
-    protected void InitColorRevV3Sensor() {
-        float gain = 51;
-        final float[] hsvValues = new float[3];
-        boolean xButtonPreviouslyPressed = false;
-        boolean xButtonCurrentlyPressed = false;
-        if (leftColorSensor instanceof SwitchableLight) {
-            ((SwitchableLight) leftColorSensor).enableLight(true);
-        }
-
-
-    }
- */
-
-    // colorFound loop
-    /*
-    public boolean ColorRevV3SensorChecker(colorEnum targetColor) {
-        boolean colorFound = false;
-        double breakLoop = 10 + opMode.getRuntime();
-        while (!colorFound && opMode.getRuntime() <= breakLoop) {
-            ColorRevV3Sensor();
-            if (colorDetected == targetColor) {
-                colorFound = true;
-            }
-            opMode.sleep(100);
-        }
-        return colorFound;
-    }
-    */
-
-    /*
-    // returns colorEnum color detected
-    float gain = 51;
-    float[] hsvValues = {0,0,0};
-    public colorEnum ColorRevV3Sensor() {
-        leftColorSensor.setGain(gain);
-        NormalizedRGBA colors = leftColorSensor.getNormalizedColors();
-        Color.colorToHSV(colors.toColor(), hsvValues);
-
-        // Red HSV Color ranges
-        // changed
-        double hMinRed = 18.800;
-        double hMaxRed = 128.000;
-        double sMinRed = 0.3;
-        double sMaxRed = 0.7235;
-        double vMinRed = 0.263;
-        double vMaxRed = 0.722;
-
-        // Yellow HSV Color Values
-        double hMinYellow = 59.000;
-        double hMaxYellow = 113.043;
-        double sMinYellow = 0.501;
-        double sMaxYellow = 0.772;
-        double vMinYellow = 0.565;
-        double vMaxYellow = 1.000;
-
-        // Blue HSV Color Values
-        double hMinBlue = 187.152;
-        double hMaxBlue = 219.568;
-        double sMinBlue = 0.741;
-        double sMaxBlue = 0.832;
-        double vMinBlue = 0.514;
-        double vMaxBlue = 1.000;
-
-        // determine if color is blue, red or yellow and show telemetry
-        if (hsvValues[0] >= hMinBlue && hsvValues[1] >= sMinBlue)
-        {
-            colorDetected = colorEnum.blue;
-            Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
-            blinkinLedDriver.setPattern(Blinken_pattern);
-        }
-
-
-        else if (hsvValues[1] <= sMaxYellow && hsvValues[1] >= sMinYellow && hsvValues[0] <= hMaxYellow && hsvValues[0] >= hMinYellow)
-        {
-            colorDetected = colorEnum.yellow;
-            Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-            blinkinLedDriver.setPattern(Blinken_pattern);
-        }
-
-        else if (hsvValues[1] <= sMaxRed && hsvValues[1] >= sMinRed && hsvValues[0] <= hMaxRed && hsvValues[0] >= hMinRed)
-        {
-            colorDetected = colorEnum.red;
-            Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
-            blinkinLedDriver.setPattern(Blinken_pattern);
-        }
-
-        else
-        {
-            colorDetected = colorEnum.noColor;
-            Blinken_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-            blinkinLedDriver.setPattern(Blinken_pattern);
-        }
-
-        return colorDetected;
-
-    }
-
-     */
-
-    /*
-    public void showColorSensorTelemetry(){
-        //int leftColor = leftColorSensor.getNormalizedColors().toColor();
-        //opMode.telemetry.addData("leftColorNorm: ", leftColor);
-        //opMode.telemetry.addData("leftColor: ", "red: %d, green: %d, blue: %d", redLeft, greenLeft, blueLeft);
-        //opMode.telemetry.addData("rightColor: ", "red: %d, green: %d, blue: %d", redRight, greenRight, blueRight);
-        //opMode.telemetry.addData("rightColor: ", rightColor);
-        //opMode.telemetry.addData("leftColorNorm(red): ", leftColorSensor.getNormalizedColors().red);
-        //opMode.telemetry.addData("leftColorNorm(green): ", leftColorSensor.getNormalizedColors().green);
-        //opMode.telemetry.addData("leftColorNorm(blue): ", leftColorSensor.getNormalizedColors().blue);
-
-        int red = leftColorSensor.red();
-        int green = leftColorSensor.green();
-        int blue = leftColorSensor.blue();
-        // Check for White Pixel
-        if(red < 4000 && red > 1000 && green < 6000 && green > 3000 && blue < 7000 && blue > 3000) {
-            opMode.telemetry.addData("Left: ", "is white");
-        }
-        // Check for yellow pixel
-        else if(red < 2500 && red > 1000 && green < 3500 && green > 1500 && blue < 1000 && blue >0 )
-        {
-            opMode.telemetry.addData("Left: ", "is yellow");
-        }
-        // Check for green pixel
-        else if(red < 1000 && red > 0 && green < 6000 && green > 1500 && blue < 1000 && blue >0 )
-        {
-            opMode.telemetry.addData("Left: ", "is green");
-        }
-        // Check for purple pixel
-        else if(red < 3500 && red > 1000 && green < 4000 && green > 2000 && blue < 7000 && blue > 3500 )
-        {
-            opMode.telemetry.addData("Left: ", "is purple");
-        }
-        else {
-            opMode.telemetry.addData("Left: ", "unknown");
-        }
-
-
-    }
-    */
     public void SetIndicatorLight(double colorValue) {
         indicatorLight.setPosition(colorValue);
         indicatorLightValue = colorValue;
@@ -554,10 +315,6 @@ public class Gericka_Hardware {
         blinkinLedDriver.setPattern(Blinken_pattern);
     }
 
-    //public void setBlinken_to5Volt()
-    //{
-    //    blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.fromNumber(1625));
-    //}
     public double initialVelocityCalculator(double distanceToGoalInMeters){
         double speedInmetersPerSecond = 0.0;
         double topPart = 0.0;
@@ -608,6 +365,56 @@ public class Gericka_Hardware {
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(1.0);
     }
+    double getBearingToAprilTag(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        double bearing = 0.0;
+        for (AprilTagDetection detection : detections){
+            if (detection.metadata != null) {
+                if(detection.id == detectionID){
+                    bearing = detection.ftcPose.bearing;
+                    foundit = true;
+
+                }
+            }
+        }
+        return bearing;
+    }
+    boolean getAprilTagVisible(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        for (AprilTagDetection detection : detections){
+            if (detection.metadata != null){
+                foundit = (detection.id == detectionID);
+            }
+        }
+        return foundit;
+    }
+    double getCurrentTurretAngle (){
+        double turretAngle = turretMotor.getCurrentPosition()/TURRET_TICKS_IN_DEGREES;
+
+        return turretAngle;
+    }
+    void adjustTurretToTarget(int detectionID){
+        if (getAprilTagVisible(detectionID)){
+            double x = getBearingToAprilTag(detectionID);
+            double y = getCurrentTurretAngle();
+            SetTurretRotationAngle(x+y);
+        }
+    }
+    double getDistanceToAprilTag(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        double distance = 0.0;
+        for (AprilTagDetection detection : detections){
+            /*if (detection.metadata != null) {
+                distance = detection.ftcPose.
+
+                }*/
+            }
+        return distance;
+    }
+
     public void SetLifterPosition(float position){
         lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
         lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
@@ -621,29 +428,44 @@ public class Gericka_Hardware {
     }
     public void ShowTelemetry(){
 
-        opMode.telemetry.addData("Auto Last Time Left: ", autoTimeLeft);
+        opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));
+        opMode.telemetry.addData("        ", "L-Vel: %.1f, R-Vel: %.1f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
+        opMode.telemetry.addData("        ", "L-Pow: %.1f, R-Pow: %.1f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
+        opMode.telemetry.addData("        ", "L-Amp: %.1f, R-Amp: %.1f" , shooterMotorLeft.getCurrent(CurrentUnit.AMPS), shooterMotorRight.getCurrent(CurrentUnit.AMPS));
+        opMode.telemetry.addData("Shooter Target Speed: ",shooterTargetSpeed);
+
+        opMode.telemetry.addData("Turret ", "ticks: %d, tgt-Angle: %.1f", turretMotor.getCurrentPosition(),turretTargetAngle);
+        opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));
+
+        opMode.telemetry.addData("Intake ", "Pow: %.1f, Vel: %.1f, Amp: %.1f", intakeMotor.getPower(), intakeMotor.getCurrent(CurrentUnit.AMPS));
+        opMode.telemetry.addData("       ", "Vel: %.1f", intakeMotor.getVelocity());
+
+        opMode.telemetry.addData("Lifter ", "Position: %d", lifterServo.getPosition());
+
         opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
-        ;
-        opMode.telemetry.addData("Intake Motor Position:", intakeMotor.getCurrentPosition());
-        opMode.telemetry.addData("Right Shooter Motor Position:", shooterMotorRight.getCurrentPosition());
-        opMode.telemetry.addData("Left Shooter Motor Position:", shooterMotorLeft.getCurrentPosition());
-        opMode.telemetry.addData("Turret Motor Position:", turretMotor.getCurrentPosition());
-        opMode.telemetry.addData("Lifter Position:", lifterServo.getPosition());
-        opMode.telemetry.addData("PIDF Enabled:", pidfEnabled);
-
-        opMode.telemetry.addData("Indicator Light Value:", indicatorLightValue);
-
-        opMode.telemetry.addData("Turret Target Ticks:",turretTargetTicks);
-        opMode.telemetry.addData("Turret Target Angle:",turretTargetAngle);
-        opMode.telemetry.addData("Lifter Target Position:",lifterTargetPosition);
-        opMode.telemetry.addData("Shooter Target Speed:",shooterTargetSpeed);
-
         opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
         opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
         opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
 
-        opMode.telemetry.addData("lastStatusMsg: ", lastStatusMsg);
-        opMode.telemetry.addData("lastErrorMsg: ", lastErrorMsg);
+        if (indicatorLight.getPosition() == INDICATOR_RED)
+        {
+            opMode.telemetry.addData("Alliance: ", "RED");
+        }
+        else if (indicatorLight.getPosition() == INDICATOR_BLUE)
+        {
+            opMode.telemetry.addData("Alliance: ", "BLUE");
+        }
+        else {
+            opMode.telemetry.addData("Indicator Light Value:", indicatorLight.getPosition());
+        }
+
+        telemetryAprilTag();
+
+        //opMode.telemetry.addData("lastStatusMsg: ", lastStatusMsg);
+        //opMode.telemetry.addData("lastErrorMsg: ", lastErrorMsg);
+        //opMode.telemetry.addData("PIDF Enabled:", pidfEnabled);
+
+        //opMode.telemetry.addData("Auto Last Time Left: ", autoTimeLeft);
 
         opMode.telemetry.update();
     }
