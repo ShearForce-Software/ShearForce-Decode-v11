@@ -18,6 +18,8 @@ public class Gericka_Manual_Control extends LinearOpMode {
     boolean alignBusy = false;
     public static final String ALLIANCE_KEY = "Alliance";
 
+    int ID = 0;
+
     private boolean dpadDownPrev = false;
     //boolean intakeStarPowerApplied = false;
 
@@ -89,7 +91,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetIntakeMotor(true,true);
 
             }
-            else if (gamepad2.circleWasPressed()){
+            else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed()){
                 //Turn outake on
                 theRobot.SetIntakeMotor(true, false);
             }
@@ -140,6 +142,22 @@ public class Gericka_Manual_Control extends LinearOpMode {
             else if (gamepad2.dpadRightWasPressed()){
                 //Set shooter speed to 100
                 theRobot.SetShooterSpeed(1.0);
+            }
+
+            if (gamepad1.dpad_up){
+                ID = 24;
+                //red
+            }
+            else if (gamepad1.dpad_up && gamepad1.options){
+                ID = 20;
+                //blue
+            }
+
+            if (gamepad2.share) {
+                theRobot.adjustTurretToTarget(ID);
+            }
+            else if (gamepad2.share && gamepad2.options) {
+                theRobot.SetTurretRotationAngle(theRobot.getCurrentTurretAngle());
             }
 
             theRobot.ShowTelemetry();
