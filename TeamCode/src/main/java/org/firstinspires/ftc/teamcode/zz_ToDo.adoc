@@ -8,6 +8,11 @@
 - [ ] TURRET: Test using webcam to control turret auto tracking
 - [ ] TURRET: Add gamepad controller method to turn auto tracking on/off
 - [ ] TURRET: button choices need adjusting, see TODO notes in Manual Control
+- [ ] AUTO: Integrate Pinpoint Odometry Driver
+  * https://github.com/goBILDA-Official/FtcRobotController-Add-Pinpoint/tree/goBILDA-Odometry-Driver
+  * https://github.com/jdhs-ftc/sparkfun-otos-quickstart/blob/pinpoint/PINPOINT_INSTRUCTIONS.md
+  * https://github.com/jdhs-ftc/sparkfun-otos-quickstart/tree/pinpoint
+  * https://www.gobilda.com/pinpoint-odometry-computer-imu-sensor-fusion-for-2-wheel-odometry/?srsltid=AfmBOork7ACtnP9Hq1BI-8tlrI981HSS56pcYZQ97NpOv8M97TuWrCGL
 - [ ] AUTO: Calibrate Gericka roadrunner
 - [ ] AUTO: Implement at least one autonomous route for Red Large Triangle side, that can shoot 3 pre-loaded balls, and park - (no camera needed)
 - [ ] AUTO: Implement at least one autonomous route for Blue Large Triangle side, that can shoot 3 pre-loaded balls, and park - (no camera needed)
