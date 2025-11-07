@@ -5,9 +5,9 @@
 - [ ] SHOOTER: Create a method to set the velocity of the shooter motors based on desired RPMs, test and see how well it holds that RPM -- use the SetVelocity() method on the motor, see TODO notes
 - [ ] SHOOTER: Test shooter using different RPMs and different friction walls, document to determine best choice
 - [ ] SHOOTER: Add increment / decrement buttons so can easily test a wide variety of speeds without rebuilding
-- [ ] TURRET: Test using webcam to control turret auto tracking
-- [ ] TURRET: Add gamepad controller method to turn auto tracking on/off
-- [ ] TURRET: button choices need adjusting, see TODO notes in Manual Control
+- [*] TURRET: Test using webcam to control turret auto tracking
+- [*] TURRET: Add gamepad controller method to turn auto tracking on/off
+- [*] TURRET: button choices need adjusting, see TODO notes in Manual Control
 - [ ] AUTO: Integrate Pinpoint Odometry Driver
   * https://github.com/goBILDA-Official/FtcRobotController-Add-Pinpoint/tree/goBILDA-Odometry-Driver
   * https://github.com/jdhs-ftc/sparkfun-otos-quickstart/blob/pinpoint/PINPOINT_INSTRUCTIONS.md
