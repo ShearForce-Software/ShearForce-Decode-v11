@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Gericka;
 
-import static org.firstinspires.ftc.teamcode.Geronimo.MecanumDrive_Geronimo.PARAMS;
+import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -99,7 +99,7 @@ public class Gericka_Hardware {
     double turretTargetAngle = 0.0;
     double lifterTargetPosition = 0.0;
     double shooterTargetSpeed = 0.0;
-    public Servo indicatorLight = null;
+    public Servo allianceIndicatorLight = null;
     final double INDICATOR_BLACK = 0;
     final double INDICATOR_RED = 0.279;
     final double INDICATOR_BLUE = 0.611;
@@ -110,7 +110,6 @@ public class Gericka_Hardware {
     public final double METER_TO_FEET = 3.28084;
     public final double RADIANS_PER_SECOND_TO_RPM = 9.54929658551; // 60 / (2 * Math.PI)
 
-    //PinpointLocalizer pinpointLocalizer;
     GoBildaPinpointDriver pinpoint;
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
@@ -169,7 +168,7 @@ public class Gericka_Hardware {
         this.opMode = opMode;
     }
     public void Init (HardwareMap hardwareMap, String allianceColor) {
-        indicatorLight = hardwareMap.get(Servo.class, "IndicatorLight");
+        allianceIndicatorLight = hardwareMap.get(Servo.class, "IndicatorLight");
         // ************* Drive MOTORS ****************
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront_leftOdometry");
         leftRear= hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -192,10 +191,8 @@ public class Gericka_Hardware {
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        //pinpointLocalizer = new PinpointLocalizer(hardwareMap, PARAMS.inPerTick, new Pose2d(0,0,0));
-
+        // GoBilda Pinpoint Odometry computer (reports IMU heading and movement ticks)
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-
 
 
         // ********** Intake and Shooter System Motors **********************************
@@ -245,9 +242,9 @@ public class Gericka_Hardware {
         //leftColorSensor.enableLed(false);
         //rightColorSensor.enableLed(false);
         if (Objects.equals(allianceColor, "RED")) {
-            indicatorLight.setPosition(INDICATOR_RED);
+            allianceIndicatorLight.setPosition(INDICATOR_RED);
         } else {
-            indicatorLight.setPosition(INDICATOR_BLUE);
+            allianceIndicatorLight.setPosition(INDICATOR_BLUE);
         }
 
          //limelightbox = hardwareMap.get(Limelight3A.class, "limelight");
@@ -302,7 +299,7 @@ public class Gericka_Hardware {
 
 
     public void SetIndicatorLight(double colorValue) {
-        indicatorLight.setPosition(colorValue);
+        allianceIndicatorLight.setPosition(colorValue);
         indicatorLightValue = colorValue;
     }
     // *********************************************************
@@ -454,8 +451,6 @@ public class Gericka_Hardware {
     }
 
     public void SetShooterMotorToSpecificRPM(double desiredRPM){
-        //TODO - this calculation is incorrect, do the reverse of the CalculateMotorRPM calculation, then command it via shooterMotorLeft.setVelocity(velocityValue)
-        //TODO - need to create a class variable called shooterTargetRPMs or something similar to store the command, then add it to ShowTelemetry() routine
         shooterTargetRPM = desiredRPM;
         shooterTargetRPM = Math.min(shooterTargetRPM,MAX_SHOOTER_RPM);
         shooterTargetRPM = Math.max(shooterTargetRPM, MIN_SHOOTER_RPM);
@@ -481,20 +476,22 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
 
         opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
-        opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
-        opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
-        opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
+        //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
+        //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
+        //opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
 
-        if (indicatorLight.getPosition() == INDICATOR_RED)
+        //TODO need to add telemetry for the pinpoint imu heading data here so we can compare.
+
+        if (allianceIndicatorLight.getPosition() == INDICATOR_RED)
         {
             opMode.telemetry.addData("Alliance: ", "RED");
         }
-        else if (indicatorLight.getPosition() == INDICATOR_BLUE)
+        else if (allianceIndicatorLight.getPosition() == INDICATOR_BLUE)
         {
             opMode.telemetry.addData("Alliance: ", "BLUE");
         }
         else {
-            opMode.telemetry.addData("Indicator Light Value:", indicatorLight.getPosition());
+            opMode.telemetry.addData("ERROR: Alliance Value:", allianceIndicatorLight.getPosition());
         }
 
         telemetryAprilTag();

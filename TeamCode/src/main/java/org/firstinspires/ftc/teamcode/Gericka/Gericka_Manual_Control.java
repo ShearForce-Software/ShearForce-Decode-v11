@@ -89,19 +89,22 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
 
             // ********   INTAKE MOTOR CONTROLS ***********************
-            if (gamepad2.triangleWasPressed()) {
+            if (gamepad2.triangleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.share) {
                 //Turn intake on
                 theRobot.SetIntakeMotor(true,true);
 
             }
-            else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed()){
-                //Turn outake on
+            else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.share){
+                //Turn outake on (in case of jam?)
                 theRobot.SetIntakeMotor(true, false);
             }
-            else if (gamepad2.squareWasPressed()){
+            else if (gamepad2.squareWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.share){
                 //Turn intake system off
                 theRobot.SetIntakeMotor(false,false);
             }
+            //TODO - create an auto mode (autoIntake) when sensors available, have a button to turn auto on/off
+            //TODO - suggest using (gamepad2.crossWasPressed && !gamepad2.options && !gamepad2.share) for auto intake on/off
+            //TODO - create a method in HW class to utilize sensors to auto turn intake on/off -- call here if (autoIntake)
 
 
 
@@ -113,89 +116,91 @@ public class Gericka_Manual_Control extends LinearOpMode {
             else if (gamepad2.rightBumperWasReleased()){
                 theRobot.SetLifterDown();
             }
+            else if (gamepad1.rightBumperWasPressed()) {
+                //Set lifter position to up
+                theRobot.SetLifterUp();
+            }
+            else if (gamepad1.rightBumperWasReleased()){
+                theRobot.SetLifterDown();
+            }
             else if (gamepad2.leftBumperWasPressed()){
                 //Set lifter position to down
-                theRobot.SetLifterPosition(theRobot.LIFTER_DOWN_POSITION);
+                theRobot.SetLifterDown();
             }
             else if (gamepad2.left_trigger > 0.2){
                 //Set lifter position to middle
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             }
+            //TODO Add method HW class to utilize sensors to auto lift ball to MID position, call here if autoLift mode is true
+            //TODO add combo button to turn auto lift on/off -- suggest (gamepad2.share && gamepad2.right_trigger > 0.2)
 
 
 
             // ********   TURRET CONTROLS ***********************
-            if (gamepad1.dpadRightWasPressed()){
+            if (gamepad2.circleWasPressed() && gamepad2.share){
                 //Turn Turret clockwise
                 turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
                 theRobot.SetTurretRotationAngle(turretRotationAngle);
+                turretAutoMode = false;
             }
-            else if (gamepad1.dpadLeftWasPressed()){
+            else if (gamepad2.squareWasPressed() && gamepad2.share){
                //Turn Turret counterclockwise
                 turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
                 theRobot.SetTurretRotationAngle(turretRotationAngle);
-            }
-            // switch to tracking red target
-            if (gamepad1.dpad_up){
-                turretTrackingID = 24;
-                //red
-            }
-            // switch to tracking blue target
-            else if (gamepad1.dpad_up && gamepad1.options){
-                turretTrackingID = 20;
-                //blue
-            }
-            // toggling turret goal auto centering/tracking on/off
-            //TODO - need an auto tracking mode that can be turned on/off
-            if (gamepad2.share && gamepad2.dpadLeftWasPressed()) {
                 turretAutoMode = false;
             }
-            else if (gamepad2.share && gamepad2.dpadRightWasPressed()){
-                turretAutoMode = true;
+            // switch to tracking red target
+            if (gamepad2.triangleWasPressed() && gamepad2.share){
+                if ( turretTrackingID == 20) {
+                    // switch turret tracking to RED target
+                    turretTrackingID = 24;
+                    turretAutoMode = true;
+                }
+                else {
+                    // switch turret tracking to BLUE target
+                    turretTrackingID = 20;
+                    turretAutoMode = true;
+                }
             }
 
-            //TODO - need a different button or combo to do this manual adjustment if you really want it, share is common combo button
-            if (gamepad2.share && gamepad2.dpadDownWasPressed()) {
-                theRobot.adjustTurretToTarget(turretTrackingID);
+            // toggling turret goal auto centering/tracking on/off
+            if (gamepad2.share && gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() ) {
+                turretAutoMode = !turretAutoMode;
             }
-            //TODO - WHAT does this do?  Looks like it tells it to do nothing (SetTurret to what the turret is currently set to)
-            //else if (gamepad2.share && gamepad2.options) {
-                //theRobot.SetTurretRotationAngle(theRobot.getCurrentTurretAngle());
-            //}
-            //TODO -- should have simple logic here to auto track all the time, something like:  if (turretAutoMode) { theRobot.adjustTurretToTarget(turretTrackingID); }
+
             if (turretAutoMode) {
                 theRobot.adjustTurretToTarget(turretTrackingID);
             }
 
 
+
             // ********   SHOOTER MOTOR CONTROLS ***********************
-            //TODO - should create a local variable like double shooterSpeedRPM, and set that value, then just always call SetShooterMotorToSpecificRPM(shooterSpeedRPM), so that can have increment/decrement commands too
-            //TODO - add command combos that can be used to command the shooter speed to change by set increments like 50 RPMs or something
-            //TODO - Need to change to commanding RPMs -- test how well it holds the RPM value, suspect pretty well
             if (gamepad2.dpadUpWasPressed()){
                 shooterSpeedRPM = 0.0;
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-            else if (gamepad2.dpadLeftWasPressed() && !gamepad2.optionsWasPressed()){
+            else if (gamepad2.dpadLeftWasPressed() && !gamepad2.options){
                 shooterSpeedRPM -= shooterSpeedRPMIncrement;
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-            else if (gamepad2.dpadRightWasPressed() && !gamepad2.optionsWasPressed()){
+            else if (gamepad2.dpadRightWasPressed() && !gamepad2.options){
                 shooterSpeedRPM += shooterSpeedRPMIncrement;
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-            else if (gamepad2.dpadDownWasPressed() && gamepad2.optionsWasPressed()){
-                shooterSpeedRPM = 4500; //3200rpm was about the value observed when the Motor was commanded to 75%.
-                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-            }
-            else if (gamepad2.dpadLeftWasPressed() && gamepad2.optionsWasPressed()){
+             else if (gamepad2.dpadLeftWasPressed() && gamepad2.options){
                 shooterSpeedRPM = 2000; //4500rpm was about the value observed when the Motor was commanded to 100%.
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-            else if (gamepad2.dpadRightWasPressed() && gamepad2.optionsWasPressed()){
+            else if (gamepad2.dpadRightWasPressed() && gamepad2.options){
                 shooterSpeedRPM = 3200; //1950rpm was about the value observed when the Motor was commanded to 50%.
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
+            else if (gamepad2.dpadDownWasPressed() && gamepad2.options){
+                shooterSpeedRPM = 4500; //3200rpm was about the value observed when the Motor was commanded to 75%.
+                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+            }
+            //TODO - add an auto rpm set mode (autoShooterSpeed), turn on/off via button, suggest (gamepad2.dpadDownWasPressed() && !gamepad2.options)
+            //TODO - add a method in HW class to auto set RPM based on webcam distance, call here if (autoShooterSpeed == true)
             /*
             24 inch - 2100rpm
             30 inch - 2200rpm
@@ -209,6 +214,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
             78 inch - 2900rpm
             far launch zone (120 inch) - 3500rpm
              */
+
+
+
             theRobot.ShowTelemetry();
         } // end while (opModeIsActive())
 
