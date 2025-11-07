@@ -18,9 +18,13 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+//import org.firstinspires.ftc.teamcode.PinpointLocalizer;
+//import org.firstinspires.ftc.teamcode.testign123;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -106,6 +110,9 @@ public class Gericka_Hardware {
     public final double METER_TO_FEET = 3.28084;
     public final double RADIANS_PER_SECOND_TO_RPM = 9.54929658551; // 60 / (2 * Math.PI)
 
+    //PinpointLocalizer pinpointLocalizer;
+    GoBildaPinpointDriver pinpoint;
+
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
 
@@ -183,6 +190,13 @@ public class Gericka_Hardware {
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        //pinpointLocalizer = new PinpointLocalizer(hardwareMap, PARAMS.inPerTick, new Pose2d(0,0,0));
+
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+
+
 
         // ********** Intake and Shooter System Motors **********************************
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");

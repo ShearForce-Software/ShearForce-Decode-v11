@@ -30,6 +30,10 @@
             <!-- <BHI260IMU name="imu" bus="0" /> -->
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
 
+
+            <goBILDAPinpoint name="pinpoint" port="0" bus="1"/>
+
+
         </LynxModule>
     </LynxUsbDevice>
 
