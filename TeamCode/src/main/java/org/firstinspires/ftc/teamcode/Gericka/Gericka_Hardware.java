@@ -390,6 +390,7 @@ public class Gericka_Hardware {
 
         return turretAngle;
     }
+
     void adjustTurretToTarget(int detectionID){
         if (getAprilTagVisible(detectionID)){
             double x = getBearingToAprilTag(detectionID);
@@ -474,7 +475,7 @@ public class Gericka_Hardware {
             opMode.telemetry.addData("Indicator Light Value:", indicatorLight.getPosition());
         }
 
-        //telemetryAprilTag();
+        telemetryAprilTag();
 
         //opMode.telemetry.addData("lastStatusMsg: ", lastStatusMsg);
         //opMode.telemetry.addData("lastErrorMsg: ", lastErrorMsg);

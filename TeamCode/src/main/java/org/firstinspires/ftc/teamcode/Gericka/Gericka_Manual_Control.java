@@ -16,7 +16,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
     public static final String ALLIANCE_KEY = "Alliance";
 
     int turretTrackingID = 24; // default to Red
-
+    public boolean turretAutoMode = true;
     private boolean dpadDownPrev = false;
     //boolean intakeStarPowerApplied = false;
 
@@ -38,6 +38,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.Init(this.hardwareMap, "BLUE");
             turretTrackingID = 20;
         }
+        theRobot.WebcamInit(this.hardwareMap);
         theRobot.ShowTelemetry();
         telemetry.update();
         theRobot.InitRoadRunner(hardwareMap);
@@ -144,16 +145,25 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             // toggling turret goal auto centering/tracking on/off
             //TODO - need an auto tracking mode that can be turned on/off
+            if (gamepad2.share && gamepad2.dpadLeftWasPressed()) {
+                turretAutoMode = false;
+            }
+            else if (gamepad2.share && gamepad2.dpadRightWasPressed()){
+                turretAutoMode = true;
+            }
+
             //TODO - need a different button or combo to do this manual adjustment if you really want it, share is common combo button
-            if (gamepad2.share) {
+            if (gamepad2.share && gamepad2.dpadDownWasPressed()) {
                 theRobot.adjustTurretToTarget(turretTrackingID);
             }
             //TODO - WHAT does this do?  Looks like it tells it to do nothing (SetTurret to what the turret is currently set to)
-            else if (gamepad2.share && gamepad2.options) {
-                theRobot.SetTurretRotationAngle(theRobot.getCurrentTurretAngle());
-            }
+            //else if (gamepad2.share && gamepad2.options) {
+                //theRobot.SetTurretRotationAngle(theRobot.getCurrentTurretAngle());
+            //}
             //TODO -- should have simple logic here to auto track all the time, something like:  if (turretAutoMode) { theRobot.adjustTurretToTarget(turretTrackingID); }
-
+            if (turretAutoMode) {
+                theRobot.adjustTurretToTarget(turretTrackingID);
+            }
 
 
             // ********   SHOOTER MOTOR CONTROLS ***********************
