@@ -80,6 +80,9 @@ public class Gericka_Hardware {
     public final float LIFTER_DOWN_POSITION = 0.05f;
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
+    double shooterTargetRPM = 0.0;
+    final float MAX_SHOOTER_RPM = 4500;
+    final float MIN_SHOOTER_RPM = 0;
     final float MAX_TURRET_ANGLE = 179;
     final float MIN_TURRET_ANGLE = -179;
     final double YELLOW_JACKET_19_1_TICKS = 537.7; // 19.2:1 - ticks per motor shaft revolution
@@ -315,7 +318,7 @@ public class Gericka_Hardware {
         double topPart = 0.0;
         double bottomPart = 0.0;
         topPart = 9.81 * distanceToGoalInMeters;
-        bottomPart = 2 * Math.pow(Math.cos(67.5),2) * (distanceToGoalInMeters * Math.tan(67.5) + 0.98425 - 0.4064 + 0.127);
+        bottomPart = 2 * Math.pow(Math.cos(59),2) * (distanceToGoalInMeters * Math.tan(59) + 0.98425 - 0.4064 + 0.127);
         speedInmetersPerSecond = Math.sqrt(topPart/bottomPart);
         return speedInmetersPerSecond;
         /*
@@ -439,7 +442,11 @@ public class Gericka_Hardware {
     public void SetShooterMotorToSpecificRPM(double desiredRPM){
         //TODO - this calculation is incorrect, do the reverse of the CalculateMotorRPM calculation, then command it via shooterMotorLeft.setVelocity(velocityValue)
         //TODO - need to create a class variable called shooterTargetRPMs or something similar to store the command, then add it to ShowTelemetry() routine
-        SetShooterSpeed(desiredRPM / 2700);
+        shooterTargetRPM = desiredRPM;
+        shooterTargetRPM = Math.min(shooterTargetRPM,MAX_SHOOTER_RPM);
+        shooterTargetRPM = Math.max(shooterTargetRPM, MIN_SHOOTER_RPM);
+        shooterMotorLeft.setVelocity(shooterTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
+        shooterMotorRight.setVelocity(shooterTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
     }
 
     public void ShowTelemetry(){
@@ -448,7 +455,8 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("        ", "L-Vel: %.1f, R-Vel: %.1f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
         opMode.telemetry.addData("        ", "L-Pow: %.1f, R-Pow: %.1f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
         opMode.telemetry.addData("        ", "L-Amp: %.1f, R-Amp: %.1f" , shooterMotorLeft.getCurrent(CurrentUnit.AMPS), shooterMotorRight.getCurrent(CurrentUnit.AMPS));
-        opMode.telemetry.addData("Shooter Target Speed: ",shooterTargetSpeed);
+        opMode.telemetry.addData("Shooter Target Speed: ", shooterTargetSpeed);
+        opMode.telemetry.addData("Shooter Target RPM", shooterTargetRPM);
 
         opMode.telemetry.addData("Turret ", "ticks: %d, tgt-Angle: %.1f", turretMotor.getCurrentPosition(),turretTargetAngle);
         opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));

@@ -26,6 +26,8 @@ public class Gericka_Manual_Control extends LinearOpMode {
     // Press intake button, have claw grab the sample
     // Have claw go down when slides extend forward?
     // 1 button to grab specimen off wall (rotate slides, Limelight correction, grab, rotate claw up to get off wall)
+    double shooterSpeedRPM = 0.0;
+    final double shooterSpeedRPMIncrement = 50;
 
     public void runOpMode() {
         theRobot = new Gericka_Hardware(true, true, this);
@@ -171,24 +173,42 @@ public class Gericka_Manual_Control extends LinearOpMode {
             //TODO - add command combos that can be used to command the shooter speed to change by set increments like 50 RPMs or something
             //TODO - Need to change to commanding RPMs -- test how well it holds the RPM value, suspect pretty well
             if (gamepad2.dpadUpWasPressed()){
-                //Set shooter wheel speed to 0
-                theRobot.SetShooterSpeed(0.0);
+                shooterSpeedRPM = 0.0;
+                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-            else if (gamepad2.dpadLeftWasPressed()){
-                //Set shooter speed to 25
-                theRobot.SetShooterSpeed(0.5);
+            else if (gamepad2.dpadLeftWasPressed() && !gamepad2.optionsWasPressed()){
+                shooterSpeedRPM -= shooterSpeedRPMIncrement;
+                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-            else if (gamepad2.dpadDownWasPressed()){
-                //Set shooter speed to 50
-                theRobot.SetShooterSpeed(0.75);
+            else if (gamepad2.dpadRightWasPressed() && !gamepad2.optionsWasPressed()){
+                shooterSpeedRPM += shooterSpeedRPMIncrement;
+                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-            else if (gamepad2.dpadRightWasPressed()){
-                //Set shooter speed to 100
-                theRobot.SetShooterSpeed(1.0);
+            else if (gamepad2.dpadDownWasPressed() && gamepad2.optionsWasPressed()){
+                shooterSpeedRPM = 4500; //3200rpm was about the value observed when the Motor was commanded to 75%.
+                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
-
-
-
+            else if (gamepad2.dpadLeftWasPressed() && gamepad2.optionsWasPressed()){
+                shooterSpeedRPM = 2000; //4500rpm was about the value observed when the Motor was commanded to 100%.
+                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+            }
+            else if (gamepad2.dpadRightWasPressed() && gamepad2.optionsWasPressed()){
+                shooterSpeedRPM = 3200; //1950rpm was about the value observed when the Motor was commanded to 50%.
+                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+            }
+            /*
+            24 inch - 2100rpm
+            30 inch - 2200rpm
+            36 inch - 2300rpm
+            42 inch - 2350rpm
+            48 inch - 2350rpm
+            54 inch - 2400rpm
+            60 inch - 2650rpm
+            66 inch - 2750rpm
+            72 inch - 2800rpm
+            78 inch - 2900rpm
+            far launch zone (120 inch) - 3500rpm
+             */
             theRobot.ShowTelemetry();
         } // end while (opModeIsActive())
 
