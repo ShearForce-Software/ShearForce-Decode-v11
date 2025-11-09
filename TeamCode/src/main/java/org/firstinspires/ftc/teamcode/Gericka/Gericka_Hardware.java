@@ -17,6 +17,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 //import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 //import org.firstinspires.ftc.teamcode.testign123;
@@ -192,7 +194,8 @@ public class Gericka_Hardware {
 
 
         // GoBilda Pinpoint Odometry computer (reports IMU heading and movement ticks)
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+        InitPinpoint(hardwareMap);
+
 
 
         // ********** Intake and Shooter System Motors **********************************
@@ -263,6 +266,73 @@ public class Gericka_Hardware {
         drive = new Gericka_MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
     }
 
+    public void InitPinpoint(HardwareMap hardwareMap) {
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+
+        /*
+         *  Set the odometry pod positions relative to the point that you want the position to be measured from.
+         *
+         *  The X pod offset refers to how far sideways from the tracking point the X (forward) odometry pod is.
+         *  Left of the center is a positive number, right of center is a negative number.
+         *
+         *  The Y pod offset refers to how far forwards from the tracking point the Y (strafe) odometry pod is.
+         *  Forward of center is a positive number, backwards is a negative number.
+         */
+        // Xpod is -84.0 MM from pinpoint computer, and -109.5 mm from center point of robot
+        // Ypod is aligned with pinpoint computer in X, and -198.0 mm behind the center point of robot
+        double xOffset = -109.5; //mm - X pod is to the right of pinpoint and center when viewed from the top
+        double yOffset = -198.0; // mm - Y pod is -198 mm behind the center rotation point of chassis
+        pinpoint.setOffsets(xOffset, yOffset, DistanceUnit.MM);
+
+        /*
+         * Set the direction that each of the two odometry pods count. The X (forward) pod should
+         * increase when you move the robot forward. And the Y (strafe) pod should increase when
+         * you move the robot to the left.
+         */
+        //TODO need to verify X,Y directions, going forward should make X count up, going Left should make Y count up
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+
+        /*
+         * Before running the robot, recalibrate the IMU. This needs to happen when the robot is stationary
+         * The IMU will automatically calibrate when first powered on, but recalibrating before running
+         * the robot is a good idea to ensure that the calibration is "good".
+         * resetPosAndIMU will reset the position to 0,0,0 and also recalibrate the IMU.
+         * This is recommended before you run your autonomous, as a bad initial calibration can cause
+         * an incorrect starting value for x, y, and heading.
+         */
+        pinpoint.resetPosAndIMU();
+        //pinpoint.recalibrateIMU();
+
+        pinpoint.update();
+    }
+
+    public void ShowPinpointTelemetry() {
+        pinpoint.update();
+
+        /*
+            Gets the Pinpoint device status. Pinpoint can reflect a few states. But we'll primarily see
+            READY: the device is working as normal
+            CALIBRATING: the device is calibrating and outputs are put on hold
+            NOT_READY: the device is resetting from scratch. This should only happen after a power-cycle
+            FAULT_NO_PODS_DETECTED - the device does not detect any pods plugged in
+            FAULT_X_POD_NOT_DETECTED - The device does not detect an X pod plugged in
+            FAULT_Y_POD_NOT_DETECTED - The device does not detect a Y pod plugged in
+            FAULT_BAD_READ - The firmware detected a bad I²C read, if a bad read is detected, the device status is updated and the previous position is reported
+        */
+        opMode.telemetry.addData("pinpoint status: ", pinpoint.getDeviceStatus());
+        opMode.telemetry.addData("pinpoint ", "x-ticks: %d, y-ticks: %d", pinpoint.getEncoderX(), pinpoint.getEncoderY());
+        opMode.telemetry.addData("pinpoint Position(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH));
+        opMode.telemetry.addData("pinpoint Heading(deg): ", pinpoint.getHeading(AngleUnit.DEGREES));
+
+    }
+
+    public void SetPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
+
+        pinpoint.update();
+    }
 
    public void WebcamInit (HardwareMap hardwareMap){
        aprilTag = new AprilTagProcessor.Builder().build();
@@ -480,7 +550,7 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
         //opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
 
-        //TODO need to add telemetry for the pinpoint imu heading data here so we can compare.
+        ShowPinpointTelemetry();
 
         if (allianceIndicatorLight.getPosition() == INDICATOR_RED)
         {

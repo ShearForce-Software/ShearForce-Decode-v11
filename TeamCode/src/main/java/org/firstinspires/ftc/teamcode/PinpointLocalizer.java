@@ -33,9 +33,24 @@ public final class PinpointLocalizer implements Localizer {
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         driver = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
-        double mmPerTick = inPerTick * 25.4;
-        driver.setEncoderResolution(1 / mmPerTick, DistanceUnit.MM);
-        driver.setOffsets(mmPerTick * PARAMS.parYTicks, mmPerTick * PARAMS.perpXTicks, DistanceUnit.MM);
+        //double mmPerTick = inPerTick * 25.4;
+        //driver.setEncoderResolution(1 / mmPerTick, DistanceUnit.MM);
+        driver.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        //driver.setOffsets(mmPerTick * PARAMS.parYTicks, mmPerTick * PARAMS.perpXTicks, DistanceUnit.MM);
+        /*
+         *  Set the odometry pod positions relative to the point that you want the position to be measured from.
+         *
+         *  The X pod offset refers to how far sideways from the tracking point the X (forward) odometry pod is.
+         *  Left of the center is a positive number, right of center is a negative number.
+         *
+         *  The Y pod offset refers to how far forwards from the tracking point the Y (strafe) odometry pod is.
+         *  Forward of center is a positive number, backwards is a negative number.
+         */
+        // Xpod is -84.0 MM from pinpoint computer, and -109.5 mm from center point of robot
+        // Ypod is aligned with pinpoint computer in X, and -198.0 mm behind the center point of robot
+        double xOffset = -109.5; //mm - X pod is to the right of pinpoint when viewed from the top
+        double yOffset = -198.0; // mm - Y pod is -198 mm from center rotation point of chassis -- not sure this is correct value for pinpoint computer
+        driver.setOffsets(xOffset, yOffset, DistanceUnit.MM);
 
         // TODO: reverse encoder directions if needed
         initialParDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;

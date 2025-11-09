@@ -32,6 +32,8 @@ public class Gericka_Manual_Control extends LinearOpMode {
     public void runOpMode() {
         theRobot = new Gericka_Hardware(true, true, this);
         telemetry.setMsTransmissionInterval(11);
+
+        // Use the Blackboard to determine what color we should be
         Object allianceColor = blackboard.get(ALLIANCE_KEY);
         if (Objects.equals(allianceColor, "RED")) {
             theRobot.Init(this.hardwareMap, "RED");
@@ -40,7 +42,16 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.Init(this.hardwareMap, "BLUE");
             turretTrackingID = 20;
         }
+
         theRobot.WebcamInit(this.hardwareMap);
+
+        // Use the Blackboard to determine the initial x,y and heading that auto finished in, OR use camera view of April tag to set position
+        //TODO use the blackboard function to set x,y, and heading at end of Auto, then reinitialize the pinpoint with that position OR USE camera and APRIL TAG
+        double xPositionInches = 0.0;
+        double yPositionInches = 0.0;
+        double headingDegrees = 0.0;
+        theRobot.SetPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
+
         theRobot.ShowTelemetry();
         telemetry.update();
         theRobot.InitRoadRunner(hardwareMap);
