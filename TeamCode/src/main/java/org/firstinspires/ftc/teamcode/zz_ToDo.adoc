@@ -5,27 +5,54 @@
 - [x] AUTO: Integrate Pinpoint Odometry Driver
 - [x] Add telemetry for pinpoint IMU and movement ticks to ShowTelemetry()
 - [x] AUTO: Calibrate Gericka roadrunner
-- [ ] AUTO: Test Blue_Far_Auto for positions
-- [ ] AUTO: Complete TODOs in Blue_Far_Auto to make shoot, intake, and track target
-- [ ] AUTO: Create a Red_Far_Auto that mirrors Blue_Far_Auto
-- [ ] AUTO: Create a Blue_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
-- [ ] AUTO: Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
-- [ ] SHOOTER: use the data collected to create a CalculateOptimumShooterRPM(double distanceInInches) method
-- [ ] SHOOTER: use the new webcam distance to target to auto set the shooter target RPMs
+- [*] GENERAL - Experiment and Verify the new blackboard concept to store auto settings for manual usage
+
+=== Shrey
+
+- [ ] AUTO(Shrey): Test Blue_Far_Auto for positions
+- [ ] AUTO(Shrey): Complete TODOs in Blue_Far_Auto to make shoot, intake, and track target
+- [ ] AUTO(Shrey): Create a Red_Far_Auto that mirrors Blue_Far_Auto
+
+=== Akshay
+
+- [ ] AUTO(Akshay): Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
+  * Need MeepMeep route, the ones currently in there don't do this simple meet 1 approach
+  * Copy structure of the Blue_Far_Auto when ready so the code seems familiar to everyone
+- [ ] AUTO(Akshay): Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
+
+=== Tong
+
+- [ ] SHOOTER(Tong): use the data collected to create a CalculateOptimumShooterRPM(double distanceInInches) method
+- [ ] SHOOTER(Tong): create method to use the webcam distance-to-target to auto set the shooter target RPMs using the CalculateOptimumShooterRPM()
   * if (getAprilTagVisible(currentTargetId)) then CalculateOptimumShooterRPM(getDistanceToAprilTag(currentTargetId))
-- [ ] SHOOTER: need button to turn auto RPM mode setting on/off - default to on
-- [*] Experiment and Verify the new blackboard concept to store auto settings for manual usage
-- [ ] Setup the control hub and driver station wifi to pass inspection
-- [ ] LIFTER: Integrate logic to use the ball distance detection sensor to automatically lift ball half way towards shooter
-* if (lifter is down && (ball detected by sensor-1 || ball detected by sensor-2)) then lift ball half-way up
-- [ ] LIFTER: need combo button to turn auto lifter logic on/off - default to on
+- [ ] SHOOTER(Tong): need button to turn auto RPM mode setting on/off - default to on
+  * look at TODOs in Manual control class
+
+=== Gianna
+
+- [ ] GENERAL(Gianna) - Setup the control hub and driver station wifi to pass inspection
+  * Run the Self-Inspect
+    ** https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/self_inspect/new-self-inspect.html
+  * Need to make sure ALL of our driver HUBs are loaded with the latest firmware from Rev Hardware Client
+  * Need to make sure our WiFi name and password are legal
+    ** pword: ShearForce21225SF
+- [ ] LIFTER(Gianna): Integrate logic to use the ball distance detection sensor to automatically lift ball half way towards shooter
+  * if (lifter is down && (ball detected by sensor-1 || ball detected by sensor-2)) then lift ball half-way up
+  * Need to figure out which exact sensor is installed Rev Color V2, Rev Color V3, or Rev 2M Distance
+  * Example code for any of those sensors can be found on the Rev site around here:
+    ** https://docs.revrobotics.com/rev-crossover-products/sensors/2m-distance/application-examples#onbot-java
+- [ ] LIFTER(Gianna): need combo button to turn auto lifter logic on/off - default to on
+  * look at TODOs in Manual control class
 
 == Next Level Stuff
 
 - [ ] INTAKE: Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
   * if (inside sensor says empty && outside sensor ball present) then turn intake on
   * else if (inside sensor says ball present) then turn intake off
+  * Example code for sensor is at:
+    ** FtcRobotController -> external.samples -> SensorDigitalTouch
 - [ ] INTAKE: need combo button to turn auto intake logic on/off - default to on
+  * look at TODOs in Manual control class
 
 
 - [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
