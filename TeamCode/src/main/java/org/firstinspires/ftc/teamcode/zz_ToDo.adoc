@@ -2,29 +2,26 @@
 
 == To prepare for first meet
 
-- [ ] AUTO: Integrate Pinpoint Odometry Driver
-  * https://github.com/goBILDA-Official/FtcRobotController-Add-Pinpoint/tree/goBILDA-Odometry-Driver
-  * https://github.com/jdhs-ftc/sparkfun-otos-quickstart/blob/pinpoint/PINPOINT_INSTRUCTIONS.md
-  * https://github.com/jdhs-ftc/sparkfun-otos-quickstart/tree/pinpoint
-  * https://www.gobilda.com/pinpoint-odometry-computer-imu-sensor-fusion-for-2-wheel-odometry/?srsltid=AfmBOork7ACtnP9Hq1BI-8tlrI981HSS56pcYZQ97NpOv8M97TuWrCGL
-- [ ] AUTO: Calibrate Gericka roadrunner
-- [ ] AUTO: Implement at least one autonomous route for Red Large Triangle side, that can shoot 3 pre-loaded balls, and park - (no camera needed)
-- [ ] AUTO: Implement at least one autonomous route for Blue Large Triangle side, that can shoot 3 pre-loaded balls, and park - (no camera needed)
-- [ ] AUTO: Implement one auto route for Red Small Triangle that shoots 3 pre-loaded balls and then parks safely - (no camera needed)
-- [ ] AUTO: Implement one auto route for Blue Small Triangle that shoots 3 pre-loaded balls and then parks safely - (no camera needed)
-- [ ] Add telemetry for pinpoint IMU and movement ticks to ShowTelemetry()
+- [x] AUTO: Integrate Pinpoint Odometry Driver
+- [x] Add telemetry for pinpoint IMU and movement ticks to ShowTelemetry()
+- [x] AUTO: Calibrate Gericka roadrunner
+- [ ] AUTO: Test Blue_Far_Auto for positions
+- [ ] AUTO: Complete TODOs in Blue_Far_Auto to make shoot, intake, and track target
+- [ ] AUTO: Create a Red_Far_Auto that mirrors Blue_Far_Auto
+- [ ] AUTO: Create a Blue_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
+- [ ] AUTO: Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
 - [ ] SHOOTER: use the data collected to create a CalculateOptimumShooterRPM(double distanceInInches) method
 - [ ] SHOOTER: use the new webcam distance to target to auto set the shooter target RPMs
   * if (getAprilTagVisible(currentTargetId)) then CalculateOptimumShooterRPM(getDistanceToAprilTag(currentTargetId))
 - [ ] SHOOTER: need button to turn auto RPM mode setting on/off - default to on
 - [*] Experiment and Verify the new blackboard concept to store auto settings for manual usage
 - [ ] Setup the control hub and driver station wifi to pass inspection
+- [ ] LIFTER: Integrate logic to use the ball distance detection sensor to automatically lift ball half way towards shooter
+* if (lifter is down && (ball detected by sensor-1 || ball detected by sensor-2)) then lift ball half-way up
+- [ ] LIFTER: need combo button to turn auto lifter logic on/off - default to on
 
 == Next Level Stuff
 
-- [ ] LIFTER: Integrate logic to use the ball distance detection sensor to automatically lift ball half way towards shooter
-  * if (lifter is down && (ball detected by sensor-1 || ball detected by sensor-2)) then lift ball half-way up
-- [ ] LIFTER: need combo button to turn auto lifter logic on/off - default to on
 - [ ] INTAKE: Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
   * if (inside sensor says empty && outside sensor ball present) then turn intake on
   * else if (inside sensor says ball present) then turn intake off

@@ -52,22 +52,22 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.Geronimo.ThreeDeadWheelLocalizer_Geronimo;
 import org.firstinspires.ftc.teamcode.Localizer;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
 import org.firstinspires.ftc.teamcode.messages.PoseMessage;
 
+import java.lang.Math;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 @Config
 public final class Gericka_MecanumDrive {
+    /** Dashboard-tunable params */
     public static class Params {
-        // IMU orientation
-        // TODO: fill in these values based on
+        // IMU orientation ( Pinpoint handles heading internally)
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
@@ -75,35 +75,36 @@ public final class Gericka_MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
         // drive model parameters
-        public double inPerTick = .000756;
-        public double lateralInPerTick = 0.000570261594370559;
-        public double trackWidthTicks = 15985.855585854693;//15548.620725915256;
+        public double inPerTick = 0.00197008000101; // manually observed: 0.00196898843219   // GoBilda says the 4-bar = 19.894 ticks per mm, or (19.984 * 25.4) = 507.5936 ticks per inch, or 0.00197008000101 inPerTick
+        public double lateralInPerTick = 0.001466960334232892; // observed 0.001466960334232892 from LateralRampLogger test, but GoBilda says it should be ~0.00197, might want to try that
+        public double trackWidthTicks = 6957.154438849874; // observed 6957.154438849874 from AngularRampLogger
 
         // feedforward parameters (in tick units)
-        public double kS = 0.6497006489935595;
-        public double kV = 0.00014050494245645588;
-        public double kA = 0.000009;
+        public double kS = 1.4558930634321543;
+        public double kV = 0.00026175725373093486;
+        public double kA = 0.000039;  // 0.000035;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 60; //40 //60
-        public double minProfileAccel = -35;
-        public double maxProfileAccel = 50; //40
+        public double maxWheelVel = 60;      // 50
+        public double minProfileAccel = -30; // -30
+        public double maxProfileAccel = 40;  // 50
 
         // turn profile parameters (in radians)
-        public double maxAngVel = Math.PI * .6; // shared with path //*.8
-        public double maxAngAccel = Math.PI * .8;
+        public double maxAngVel = Math.PI; // shared with path
+        public double maxAngAccel = Math.PI;
 
-        // path controller gains
-        public double axialGain = 10;
-        public double lateralGain = 8;
-        public double headingGain = 10; // shared with turn //10 //15
-        public double axialVelGain = 0.0;
-        public double lateralVelGain = 0.0;
-        public double headingVelGain = 0.0;
+        // Holonomic controller gains (nonzero defaults)
+        public double axialGain = 3.6;
+        public double lateralGain = 7.0;
+        public double headingGain =5.0;
+
+        public double axialVelGain = 0.05;
+        public double lateralVelGain = 0.5;
+        public double headingVelGain = 0.5;
     }
 
-        public static double imuOffsetRadians = 0.0;
-
+    public static double imuOffsetRadians = 0.0;
+    
     public static Params PARAMS = new Params();
 
     public final MecanumKinematics kinematics = new MecanumKinematics(
@@ -133,6 +134,7 @@ public final class Gericka_MecanumDrive {
     private final DownsampledWriter driveCommandWriter = new DownsampledWriter("DRIVE_COMMAND", 50_000_000);
     private final DownsampledWriter mecanumCommandWriter = new DownsampledWriter("MECANUM_COMMAND", 50_000_000);
 
+    /** Optional internal wheel+REV IMU localizer kept for reference/testing */
     public class DriveLocalizer implements Localizer {
         public final Encoder leftFront, leftBack, rightBack, rightFront;
         public final IMU imu;
@@ -176,6 +178,7 @@ public final class Gericka_MecanumDrive {
             PositionVelocityPair rightBackPosVel = rightBack.getPositionAndVelocity();
             PositionVelocityPair rightFrontPosVel = rightFront.getPositionAndVelocity();
 
+            // If you wire this localizer back in, supply yaw yourself (REV IMU)
             YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
 
             FlightRecorder.write("MECANUM_LOCALIZER_INPUTS", new MecanumLocalizerInputsMessage(
@@ -241,7 +244,7 @@ public final class Gericka_MecanumDrive {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        // TODO: make sure your config has motors with these names (or change them)
+        // Motor names must match your FTC config
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront_leftOdometry");
         leftBack = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -258,19 +261,18 @@ public final class Gericka_MecanumDrive {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // TODO: reverse motor directions if needed
-        //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
+        // make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         lazyImu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
+        // *** USE PINPOINT ***
+        localizer = new Gericka_PinpointLocalizer(hardwareMap, Gericka_MecanumDrive.PARAMS.inPerTick, pose);
         //localizer = new DriveLocalizer(pose);
-        localizer = new ThreeDeadWheelLocalizer_Geronimo(hardwareMap, Gericka_MecanumDrive.PARAMS.inPerTick, pose);
-        //localizer = new TwoDeadWheelLocalizer_Geronimo(hardwareMap, lazyImu.get(), MecanumDrive.PARAMS.inPerTick, pose);
+        //localizer = new Gericka_ThreeDeadWheelLocalizer(hardwareMap, Gericka_MecanumDrive.PARAMS.inPerTick, pose);
+        //localizer = new TwoDeadWheelLocalizer_Gericka(hardwareMap, lazyImu.get(), MecanumDrive.PARAMS.inPerTick, pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }

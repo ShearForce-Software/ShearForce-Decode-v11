@@ -63,9 +63,9 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
         // drive model parameters
-        public double inPerTick = 0.00196898843219; // 12189  41122 28933
-        public double lateralInPerTick = 0.001466960334232892;
-        public double trackWidthTicks = 6957.154438849874;
+        public double inPerTick = 0.00197008000101; // manually observed: 0.00196898843219   // GoBilda says the 4-bar = 19.894 ticks per mm, or (19.984 * 25.4) = 507.5936 ticks per inch, or 0.00197008000101 inPerTick
+        public double lateralInPerTick = 0.001466960334232892; // observed 0.001466960334232892 from LateralRampLogger test, but GoBilda says it should be ~0.00197, might want to try that
+        public double trackWidthTicks = 6957.154438849874; // observed 6957.154438849874 from AngularRampLogger
 
         // feedforward parameters (in tick units)
         public double kS = 1.4558930634321543;
@@ -73,13 +73,13 @@ public final class MecanumDrive {
         public double kA = 0.000039;  // 0.000035;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 60;      // 60
-        public double minProfileAccel = -30; // -35
+        public double maxWheelVel = 60;      // 50
+        public double minProfileAccel = -30; // -30
         public double maxProfileAccel = 40;  // 50
 
         // turn profile parameters (in radians)
-        public double maxAngVel = Math.PI;   // Math.PI*.6;   // shared with path 
-        public double maxAngAccel = Math.PI; // Math.PI*.8;
+        public double maxAngVel = Math.PI; // shared with path
+        public double maxAngAccel = Math.PI;
 
         // Holonomic controller gains (nonzero defaults)
         public double axialGain = 3.6;
@@ -249,7 +249,7 @@ public final class MecanumDrive {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
+        // make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         lazyImu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
