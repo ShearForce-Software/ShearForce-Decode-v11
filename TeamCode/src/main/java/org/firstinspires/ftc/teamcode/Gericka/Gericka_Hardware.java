@@ -111,7 +111,8 @@ public class Gericka_Hardware {
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
     public final double RADIANS_PER_SECOND_TO_RPM = 9.54929658551; // 60 / (2 * Math.PI)
-
+    public int currentAprilTargetId = 20;
+    boolean autoShooterMode = false;
     GoBildaPinpointDriver pinpoint;
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
@@ -425,7 +426,66 @@ public class Gericka_Hardware {
          */
         return initalWheelRotationalVelocityInRadiansPerSecond;
     }
+    public void SetAutoShooterMode(boolean value){
+        autoShooterMode = value;
+    }
+    public void ShooterRPMFromWebCam(int currentTargetId){
 
+        if (getAprilTagVisible(currentTargetId)){
+            SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(getDistanceToAprilTag(currentTargetId)));
+            currentAprilTargetId = currentTargetId;
+        }
+    }
+    public double CalculateOptimumShooterRPM(double distanceInInches){
+        double optimumShooterRPM = 0;
+        double testDistance = 24;
+        while (Math.min(distanceInInches,testDistance) != distanceInInches){
+            if (testDistance != 84) {
+                testDistance += 6;
+            }
+            else {
+                testDistance = 120;
+                break;
+            }
+        }
+        if (testDistance == 24){
+            optimumShooterRPM = 2100;
+        }
+        else if (testDistance == 30){
+            optimumShooterRPM = 2200;
+        }
+        else if (testDistance == 36){
+            optimumShooterRPM = 2300;
+        }
+        else if (testDistance == 42){
+            optimumShooterRPM = 2350;
+        }
+        else if (testDistance == 48){
+            optimumShooterRPM = 2350;
+        }
+        else if (testDistance == 54){
+            optimumShooterRPM = 2400;
+        }
+        else if (testDistance == 60){
+            optimumShooterRPM = 2650;
+        }
+        else if (testDistance == 66){
+            optimumShooterRPM = 2750;
+        }
+        else if (testDistance == 72){
+            optimumShooterRPM = 2800;
+        }
+        else if (testDistance == 78){
+            optimumShooterRPM = 2950;
+        }
+        else if (testDistance == 120){
+            optimumShooterRPM = 3500;
+        }
+        else {
+            optimumShooterRPM = 2500;
+        }
+        return optimumShooterRPM;
+    }
     public void SetIntakeMotor(boolean on,boolean intake){
         if (on && intake) {
             intakeMotor.setPower(INTAKE_POWER);
@@ -537,6 +597,8 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("        ", "L-Amp: %.1f, R-Amp: %.1f" , shooterMotorLeft.getCurrent(CurrentUnit.AMPS), shooterMotorRight.getCurrent(CurrentUnit.AMPS));
         opMode.telemetry.addData("Shooter Target Speed: ", shooterTargetSpeed);
         opMode.telemetry.addData("Shooter Target RPM", shooterTargetRPM);
+        opMode.telemetry.addData("April Tag Target ID", currentAprilTargetId);
+        opMode.telemetry.addData("Auto Shooter Mode",autoShooterMode);
 
         opMode.telemetry.addData("Turret ", "ticks: %d, tgt-Angle: %.1f", turretMotor.getCurrentPosition(),turretTargetAngle);
         opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));

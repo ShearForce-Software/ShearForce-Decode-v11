@@ -22,7 +22,7 @@
 
 === Tong
 
-- [ ] SHOOTER(Tong): use the data collected to create a CalculateOptimumShooterRPM(double distanceInInches) method
+- [x] SHOOTER(Tong): use the data collected to create a CalculateOptimumShooterRPM(double distanceInInches) method
 - [ ] SHOOTER(Tong): create method to use the webcam distance-to-target to auto set the shooter target RPMs using the CalculateOptimumShooterRPM()
   * if (getAprilTagVisible(currentTargetId)) then CalculateOptimumShooterRPM(getDistanceToAprilTag(currentTargetId))
 - [ ] SHOOTER(Tong): need button to turn auto RPM mode setting on/off - default to on
