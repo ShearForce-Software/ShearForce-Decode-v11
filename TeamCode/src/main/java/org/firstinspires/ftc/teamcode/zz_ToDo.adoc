@@ -9,7 +9,7 @@
 
 === Shrey
 
-- [ ] AUTO(Shrey): Test Blue_Far_Auto for positions
+- [x] AUTO(Shrey): Test Blue_Far_Auto for positions
 - [ ] AUTO(Shrey): Complete TODOs in Blue_Far_Auto to make shoot, intake, and track target
 - [ ] AUTO(Shrey): Create a Red_Far_Auto that mirrors Blue_Far_Auto
 
@@ -23,14 +23,16 @@
 === Tong
 
 - [x] SHOOTER(Tong): use the data collected to create a CalculateOptimumShooterRPM(double distanceInInches) method
-- [ ] SHOOTER(Tong): create method to use the webcam distance-to-target to auto set the shooter target RPMs using the CalculateOptimumShooterRPM()
+- [x] SHOOTER(Tong): create method to use the webcam distance-to-target to auto set the shooter target RPMs using the CalculateOptimumShooterRPM()
   * if (getAprilTagVisible(currentTargetId)) then CalculateOptimumShooterRPM(getDistanceToAprilTag(currentTargetId))
-- [ ] SHOOTER(Tong): need button to turn auto RPM mode setting on/off - default to on
+- [x] SHOOTER(Tong): need button to turn auto RPM mode setting on/off - default to on
   * look at TODOs in Manual control class
+- [ ] Test all buttons, make them all work (fix the if && logic )
+- [ ] Test shooting the balls
 
 === Gianna
 
-- [ ] GENERAL(Gianna) - Setup the control hub and driver station wifi to pass inspection
+- [x] GENERAL(Gianna) - Setup the control hub and driver station wifi to pass inspection
   * Run the Self-Inspect
     ** https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/self_inspect/new-self-inspect.html
   * Need to make sure ALL of our driver HUBs are loaded with the latest firmware from Rev Hardware Client
