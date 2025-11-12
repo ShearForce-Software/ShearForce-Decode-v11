@@ -47,7 +47,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         blackboard.put(ALLIANCE_KEY, "BLUE");
 
         //TODO turn turret to face the obolisk
-        double turretTargetAngle = 91.0;
+        double turretTargetAngle = -89.0;
         control.SetTurretRotationAngle(turretTargetAngle);
 
         // set lifter half up (so can get 3 ball loaded in robot)
@@ -113,7 +113,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         //TODO Read the obsolisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
         //TODO Turn Turret towards target, can leave turret there the whole time
-        turretTargetAngle = 40.0;
+        turretTargetAngle = -130.0;
         control.SetTurretRotationAngle(turretTargetAngle);
 
         //TODO determine optimum speed for small triangle shots probably 3500rpm, can just leave at this speed the whole time
