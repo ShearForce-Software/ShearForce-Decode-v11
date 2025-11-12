@@ -47,8 +47,11 @@ public class Blue_Far_Auto extends LinearOpMode {
         blackboard.put(ALLIANCE_KEY, "BLUE");
 
         //TODO turn turret to face the obolisk
+        double turretTargetAngle = 91.0;
+        control.SetTurretRotationAngle(turretTargetAngle);
 
-        //TODO set lifter half up (so can get 3 ball loaded in robot)
+        // set lifter half up (so can get 3 ball loaded in robot)
+        control.SetLifterPosition(control.LIFTER_MID_POSITION);
 
         telemetry.update();
 
@@ -109,9 +112,28 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         //TODO Read the obsolisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
-        //TODO Turn Turret towards target, probably should have separate thread tracking the target, but could start by just picking correct turret position and leaving it there the whole time
+        //TODO Turn Turret towards target, can leave turret there the whole time
+        turretTargetAngle = 40.0;
+        control.SetTurretRotationAngle(turretTargetAngle);
 
-        //TODO spin up shooter wheel to optimum speed for small triangle shots probably 3500rpm, can just leave at this speed the whole time
+        //TODO determine optimum speed for small triangle shots probably 3500rpm, can just leave at this speed the whole time
+        double shooterSpeedRPM = 3500;
+        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        sleep(250);
+
+        // shoot the 3 pre-loaded balls
+        control.SetLifterUp();  // shoot ball 1
+        sleep(500);
+        control.SetLifterDown();
+        sleep(500);
+        control.SetLifterUp();  // shoot ball 2
+        sleep(500);
+        control.SetLifterDown();
+        sleep(500);
+        control.SetLifterUp();  // shoot ball 3
+        sleep(500);
+        control.SetLifterDown();
+
 
         //TODO create a separate thread that auto lifts the lifter half way up when ball detected
 
@@ -121,11 +143,10 @@ public class Blue_Far_Auto extends LinearOpMode {
         // ***************************************************
         Actions.runBlocking(
                 new SequentialAction(
-                        new SleepAction(2), //TODO shoot 3 here with sequential action set (lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly)
                         DriveToSecondMark,     //TODO add parallel action that turns intake on
                         new SleepAction(0.5), // tiny sleep to finish ingesting balls, not sure how much is really needed
                         DriveSecondMarkToSmallTriangle, //TODO add parallel action that turns intake off
-                        new SleepAction(2), //TODO shoot 3 here
+                        new SleepAction(2), //TODO shoot 3 here with sequential action set (lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly)
                         DriveToFirstMark,       //TODO add parallel action that turns intake on
                         new SleepAction(0.5), // tiny sleep to finish ingesting balls, not sure how much is really needed
                         DriveFirstMarkToSmallTriangle, //TODO add parallel action that turns intake off
@@ -136,9 +157,13 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         //TODO store final exact position in blackboard, so can initialize manual pinpoint with that position
 
-        //TODO turn off shooter wheel
+        // turn off shooter wheel
+        shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
+        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
-        //TODO return shooter to zero position
+        // return turret to zero position
+        turretTargetAngle = 0.0;
+        control.SetTurretRotationAngle(turretTargetAngle);
 
         Gericka_Hardware.autoTimeLeft = 30-getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);

@@ -75,16 +75,16 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // RESERVED COMBOS    options + cross and options + circle
 
             // Press the triangle button / "y" while facing directly away from the driver to set the IMU correctly for field-centric mode if off
-            if (gamepad1.triangle && !gamepad1.options) {
+            if (gamepad1.triangle && !gamepad1.optionsWasPressed()) {
                 theRobot.imu.resetYaw();
             }
             // field centric drive mode (default at startup)
-            else if (gamepad1.triangle && gamepad1.options)
+            else if (gamepad1.triangle && gamepad1.optionsWasPressed())
             {
                 theRobot.SetFieldCentricMode(true);
             }
             // robot centric drive mode
-            else if (gamepad1.square && gamepad1.options)
+            else if (gamepad1.square && gamepad1.optionsWasPressed())
             {
                 theRobot.SetFieldCentricMode(false);
             }
@@ -101,21 +101,21 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
 
             // ********   INTAKE MOTOR CONTROLS ***********************
-            if (gamepad2.triangleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.share) {
+            if (gamepad2.triangleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()) {
                 //Turn intake on
                 theRobot.SetIntakeMotor(true,true);
 
             }
-            else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.share){
+            else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
                 //Turn outake on (in case of jam?)
                 theRobot.SetIntakeMotor(true, false);
             }
-            else if (gamepad2.squareWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.share){
+            else if (gamepad2.squareWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
                 //Turn intake system off
                 theRobot.SetIntakeMotor(false,false);
             }
             //TODO - create an auto mode (autoIntake) when sensors available, have a button to turn auto on/off
-            //TODO - suggest using (gamepad2.crossWasPressed && !gamepad2.options && !gamepad2.share) for auto intake on/off
+            //TODO - suggest using (gamepad2.crossWasPressed && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()) for auto intake on/off
             //TODO - create a method in HW class to utilize sensors to auto turn intake on/off -- call here if (autoIntake)
 
 
@@ -144,25 +144,25 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             }
             //TODO Add method HW class to utilize sensors to auto lift ball to MID position, call here if autoLift mode is true
-            //TODO add combo button to turn auto lift on/off -- suggest (gamepad2.share && gamepad2.right_trigger > 0.2)
+            //TODO add combo button to turn auto lift on/off -- suggest (gamepad2.shareWasPressed() && gamepad2.right_trigger > 0.2)
 
 
 
             // ********   TURRET CONTROLS ***********************
-            if (gamepad2.circleWasPressed() && gamepad2.share){
+            if (gamepad2.circleWasPressed() && gamepad2.shareWasPressed()){
                 //Turn Turret clockwise
                 turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
                 theRobot.SetTurretRotationAngle(turretRotationAngle);
                 turretAutoMode = false;
             }
-            else if (gamepad2.squareWasPressed() && gamepad2.share){
+            else if (gamepad2.squareWasPressed() && gamepad2.shareWasPressed()){
                //Turn Turret counterclockwise
                 turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
                 theRobot.SetTurretRotationAngle(turretRotationAngle);
                 turretAutoMode = false;
             }
             // switch to tracking red target
-            if (gamepad2.triangleWasPressed() && gamepad2.share){
+            if (gamepad2.triangleWasPressed() && gamepad2.shareWasPressed()){
                 if ( turretTrackingID == 20) {
                     // switch turret tracking to RED target
                     turretTrackingID = 24;
@@ -176,7 +176,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
 
             // toggling turret goal auto centering/tracking on/off
-            if (gamepad2.share && gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() ) {
+            if (gamepad2.shareWasPressed() && gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() ) {
                 turretAutoMode = !turretAutoMode;
             }
 
@@ -237,8 +237,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
             if (autoShooterMode){
                 theRobot.ShooterRPMFromWebCam(turretTrackingID);
             }
-            //TODO - add an auto rpm set mode (autoShooterSpeed), turn on/off via button, suggest (gamepad2.dpadDownWasPressed() && !gamepad2.options)
-            //TODO - add a method in HW class to auto set RPM based on webcam distance, call here if (autoShooterSpeed == true)
             /*
             24 inch - 2100rpm
             30 inch - 2200rpm
