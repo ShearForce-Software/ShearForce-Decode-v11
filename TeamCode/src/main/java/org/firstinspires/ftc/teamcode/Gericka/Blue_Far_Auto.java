@@ -39,7 +39,7 @@ public class Blue_Far_Auto extends LinearOpMode {
     Action DriveOutofLaunchZone;
 
     public void runOpMode(){
-        startPose = new Pose2d(9,-64, Math.toRadians(270));
+        startPose = new Pose2d(60,-12, Math.toRadians(270));
         /* Initialize the Robot */
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
 
@@ -82,6 +82,19 @@ public class Blue_Far_Auto extends LinearOpMode {
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(60,-12,Math.toRadians(270)))
                         .strafeToConstantHeading(new Vector2d(20,-12))
                         .build();
+
+        Thread SecondaryThread = new Thread(() -> {
+            while (!isStopRequested() && getRuntime() < 30) {
+                //control.ShowTelemetry();
+
+                control.ShowPinpointTelemetry();
+
+                telemetry.update();
+
+                sleep(20);
+            }
+        });
+        SecondaryThread.start();
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
@@ -130,6 +143,8 @@ public class Blue_Far_Auto extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 30-getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
+
+
 
     }
 }

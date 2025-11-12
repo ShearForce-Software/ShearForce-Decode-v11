@@ -292,7 +292,8 @@ public class Gericka_Hardware {
          * you move the robot to the left.
          */
         //TODO need to verify X,Y directions, going forward should make X count up, going Left should make Y count up
-        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD
+                , GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         /*
          * Before running the robot, recalibrate the IMU. This needs to happen when the robot is stationary
