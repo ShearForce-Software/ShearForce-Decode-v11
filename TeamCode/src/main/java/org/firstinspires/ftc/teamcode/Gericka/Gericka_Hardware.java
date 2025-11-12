@@ -12,6 +12,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -117,6 +120,9 @@ public class Gericka_Hardware {
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
+
+    private NormalizedColorSensor ColorSensorRight;
+    private NormalizedColorSensor ColorSensorLeft;
 
     //RevColorSensorV3 leftColorSensor;
     //RevColorSensorV3 rightColorSensor;
@@ -238,8 +244,9 @@ public class Gericka_Hardware {
         lifterServo = hardwareMap.get(Servo.class, "lifterServo");
 
 
-
         // ********** Color Sensors ********************
+        ColorSensorRight = hardwareMap.get(NormalizedColorSensor.class, "ColorSensorRight");
+        ColorSensorLeft = hardwareMap.get(NormalizedColorSensor.class, "ColorSensorLeft");
 
         //leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
         //rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
@@ -607,6 +614,21 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("       ", "Vel: %.1f", intakeMotor.getVelocity());
 
         opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
+
+        opMode.telemetry.addData("Light Detected", ((OpticalDistanceSensor) ColorSensorLeft).getLightDetected());
+        NormalizedRGBA colorsLeft = ColorSensorLeft.getNormalizedColors();
+
+        opMode.telemetry.addData("Light Detected", ((OpticalDistanceSensor) ColorSensorRight).getLightDetected());
+        NormalizedRGBA colorsRight = ColorSensorRight.getNormalizedColors();
+
+        //Determining the amount of red, green, and blue
+        /*opMode.telemetry.addData("Red", "%.3f", colorsLeft.red);
+        opMode.telemetry.addData("Green", "%.3f", colorsLeft.green);
+        opMode.telemetry.addData("Blue", "%.3f", colorsLeft.blue);
+
+        opMode.telemetry.addData("Red", "%.3f", colorsRight.red);
+        opMode.telemetry.addData("Green", "%.3f", colorsRight.green);
+        opMode.telemetry.addData("Blue", "%.3f", colorsRight.blue);*/
 
         opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
