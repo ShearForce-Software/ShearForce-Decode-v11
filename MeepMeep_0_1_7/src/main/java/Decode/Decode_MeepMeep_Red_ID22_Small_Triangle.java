@@ -16,22 +16,24 @@ public class Decode_MeepMeep_Red_ID22_Small_Triangle {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
-                /*.lineToX(11.5)
-                .turn(Math.toRadians(90))
-                .lineToY(48)
-                .build());*/
+                // shoot 3 balls
                 .waitSeconds(2)
+                // get line 2
                 .strafeToConstantHeading(new Vector2d(11.5,30))
                 .strafeToConstantHeading(new Vector2d(11.5,48))
-                //.strafeToLinearHeading(new Vector2d(0,-48),Math.toRadians(0))
-                //.strafeToConstantHeading(new Vector2d(0,-52))
+                // return to launch area
                 .strafeToConstantHeading(new Vector2d(20,12))
                 .strafeToConstantHeading(new Vector2d(60,12))
+                // shoot 3 balls
                 .waitSeconds(2)
+                // get line 3
                 .strafeToConstantHeading(new Vector2d(34.75,30))
                 .strafeToConstantHeading(new Vector2d(34.75,48))
+                // return to launch area
                 .strafeToConstantHeading(new Vector2d(60,12))
+                // shoot 3 balls
                 .waitSeconds(2)
+                // park
                 .strafeToConstantHeading(new Vector2d(20,12))
                 .build());
 
