@@ -20,12 +20,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive;
+import org.firstinspires.ftc.teamcode.Geronimo.FourHighSpecimensAutoRoute;
 
 //TODO auto select manual opMode next
 @Autonomous(name="Blue Far Auto", preselectTeleOp ="")
 
 public class Blue_Far_Auto extends LinearOpMode {
-    Gericka_Hardware control = new Gericka_Hardware(false, false,this);
+    Gericka_Hardware control = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
     public static final String ALLIANCE_KEY = "Alliance";
@@ -38,8 +39,8 @@ public class Blue_Far_Auto extends LinearOpMode {
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
 
-    public void runOpMode(){
-        startPose = new Pose2d(60,-12, Math.toRadians(270));
+    public void runOpMode() {
+        startPose = new Pose2d(60, -12, Math.toRadians(270));
         /* Initialize the Robot */
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
 
@@ -47,7 +48,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         blackboard.put(ALLIANCE_KEY, "BLUE");
 
         //TODO turn turret to face the obolisk
-        double turretTargetAngle = -89.0;
+        double turretTargetAngle = 91.0;
         control.SetTurretRotationAngle(turretTargetAngle);
 
         // set lifter half up (so can get 3 ball loaded in robot)
@@ -64,27 +65,27 @@ public class Blue_Far_Auto extends LinearOpMode {
         // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
-                        .strafeToConstantHeading(new Vector2d(11.5,-30))
-                        .strafeToConstantHeading(new Vector2d(11.5,-48))
+                .strafeToConstantHeading(new Vector2d(11.5, -30))
+                .strafeToConstantHeading(new Vector2d(11.5, -55))
                 .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5,-48, Math.toRadians(270)))
-                        .strafeToConstantHeading(new Vector2d(20,-12))
-                        .strafeToConstantHeading(new Vector2d(60,-12))
-                        .build();
+        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(20, -12))
+                .strafeToConstantHeading(new Vector2d(60, -12))
+                .build();
 
-        DriveToFirstMark = drive.actionBuilder(new Pose2d(60,-12, Math.toRadians(270)))
-                        .strafeToConstantHeading(new Vector2d(34.75,-30))
-                        .strafeToConstantHeading(new Vector2d(34.75,-48))
-                        .build();
+        DriveToFirstMark = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(34.75, -30))
+                .strafeToConstantHeading(new Vector2d(34.75, -55))
+                .build();
 
-        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75,-48, Math.toRadians(270)))
-                        .strafeToConstantHeading(new Vector2d(60,-12))
-                        .build();
+        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -55, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(60, -12))
+                .build();
 
-        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(60,-12,Math.toRadians(270)))
-                        .strafeToConstantHeading(new Vector2d(20,-12))
-                        .build();
+        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(20, -12))
+                .build();
 
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
@@ -102,7 +103,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
         // ***************************************************
-        while(!isStarted()){
+        while (!isStarted()) {
             telemetry.update();
         }
 
@@ -113,27 +114,29 @@ public class Blue_Far_Auto extends LinearOpMode {
         //TODO Read the obsolisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
         //TODO Turn Turret towards target, can leave turret there the whole time
-        turretTargetAngle = -130.0;
+        turretTargetAngle = 115.0;
         control.SetTurretRotationAngle(turretTargetAngle);
 
         //TODO determine optimum speed for small triangle shots probably 3500rpm, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3500;
+        double shooterSpeedRPM = 4500;
         control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        sleep(250);
+        sleep(4000);
 
         // shoot the 3 pre-loaded balls
         control.SetLifterUp();  // shoot ball 1
-        sleep(500);
+        sleep(1000);
         control.SetLifterDown();
-        sleep(500);
+        sleep(1000);
         control.SetLifterUp();  // shoot ball 2
-        sleep(500);
+        sleep(1000);
         control.SetLifterDown();
-        sleep(500);
+        sleep(1000);
         control.SetLifterUp();  // shoot ball 3
-        sleep(500);
+        sleep(1000);
         control.SetLifterDown();
 
+        shooterSpeedRPM = 3500;
+        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         //TODO create a separate thread that auto lifts the lifter half way up when ball detected
 
@@ -143,15 +146,47 @@ public class Blue_Far_Auto extends LinearOpMode {
         // ***************************************************
         Actions.runBlocking(
                 new SequentialAction(
-                        DriveToSecondMark,     //TODO add parallel action that turns intake on
-                        new SleepAction(0.5), // tiny sleep to finish ingesting balls, not sure how much is really needed
-                        DriveSecondMarkToSmallTriangle, //TODO add parallel action that turns intake off
-                        new SleepAction(2), //TODO shoot 3 here with sequential action set (lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly)
-                        DriveToFirstMark,       //TODO add parallel action that turns intake on
-                        new SleepAction(0.5), // tiny sleep to finish ingesting balls, not sure how much is really needed
-                        DriveFirstMarkToSmallTriangle, //TODO add parallel action that turns intake off
-                        new SleepAction(2), //TODO shoot 3 here
+                        //TODO add parallel action that turns intake on
+                        new ParallelAction(DriveToSecondMark, setIntakeOn()),
+                        new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
+                         //TODO add parallel action that turns intake off
+                        new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff()),
+                        //TODO shoot 3 here with sequential action set (lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly)
+                        //new SleepAction(2),
+
+                        new SequentialAction(
+                            new SetLifterUp(),
+                            new SleepAction(1),
+                            new SetLifterDown(),
+                            new SleepAction(1),
+                            new SetLifterUp(),
+                            new SleepAction(1),
+                            new SetLifterDown(),
+                            new SleepAction(1),
+                            new SetLifterUp(),
+                            new SleepAction(1),
+
+                            //TODO add parallel action that turns intake on
+                            new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown())),
+                            new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
+                             //TODO add parallel action that turns intake off
+                /*            new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()),
+                            //new SleepAction(2), //TODO shoot 3 here
+
+                        new SequentialAction(
+                                new SetLifterUp(),
+                                new SleepAction(1),
+                                new SetLifterDown(),
+                                new SleepAction(1),
+                                new SetLifterUp(),
+                                new SleepAction(1),
+                                new SetLifterDown(),
+                                new SleepAction(1),
+                                new SetLifterUp(),
+                                new SleepAction(1)),
                         DriveOutofLaunchZone));
+
+                 */));
 
         drive.updatePoseEstimate();
 
@@ -165,11 +200,75 @@ public class Blue_Far_Auto extends LinearOpMode {
         turretTargetAngle = 0.0;
         control.SetTurretRotationAngle(turretTargetAngle);
 
-        Gericka_Hardware.autoTimeLeft = 30-getRuntime();
+        Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
 
-
     }
+
+    public Action setIntakeOn() {
+        return new setIntakeOn();
+    }
+
+    public class setIntakeOn implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            control.SetIntakeMotor(true, true);
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+            }
+        }
+
+        public Action setIntakeOff() {
+            return new setIntakeOff();
+        }
+
+        public class setIntakeOff implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    initialized = true;
+                }
+                control.SetIntakeMotor(false, false);
+                packet.put("lock purple pixel", 0);
+                return false;  // returning true means not done, and will be called again.  False means action is completely done
+            }
+        }
+
+    public class SetLifterUp implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            control.SetLifterUp();
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+
+    public class SetLifterDown implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            control.SetLifterDown();
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+
 }
