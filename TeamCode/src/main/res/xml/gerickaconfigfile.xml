@@ -11,7 +11,8 @@
             <!-- Mechanism motors -->
             <goBILDA5202SeriesMotor name="intakeMotor"       port="2" />
             <goBILDA5202SeriesMotor name="turretMotor"       port="3" />
-            <ContinuousRotationServo name="cservo" port="0" />
+            <!-- <ContinuousRotationServo name="cservo" port="0" /-->
+            <RevColorSensorV3 name="ColorSensorRight" port="0" bus="2"/>
         </LynxModule>
         <LynxModule name="Control Hub" port="173">
 
@@ -30,8 +31,8 @@
             <!-- <BHI260IMU name="imu" bus="0" /> -->
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
 
-            <RevColorSensorV3 name="ColorSensorLeft" port="0" bus="3"/>
-            <RevColorSensorV3 name="ColorSensorRight" port="0" bus="2"/>
+
+            <RevColorSensorV3 name="ColorSensorLeft" port="0" bus="2"/>
 
 
             <goBILDAPinpoint name="pinpoint" port="0" bus="1"/>

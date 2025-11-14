@@ -71,7 +71,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
              */
             // Drive Controls uses left_stick_y, left_stick_x, and right_stick_x
             theRobot.RunDriveControls();
-
             // RESERVED COMBOS    options + cross and options + circle
 
             // Press the triangle button / "y" while facing directly away from the driver to set the IMU correctly for field-centric mode if off

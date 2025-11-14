@@ -82,7 +82,8 @@ public class Gericka_Hardware {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
-    final double INTAKE_POWER = 0.5;
+    final double INTAKE_POWER = 0.6
+            ;
 
     public final float LIFTER_UP_POSITION = 0.85f;
     public final float LIFTER_MID_POSITION = 0.5f;
