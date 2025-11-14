@@ -359,13 +359,6 @@ public class Gericka_Hardware {
        builder.addProcessor(aprilTag);
 
        visionPortal = builder.build();
-        // Create the TensorFlow processor the easy way.
-        // = TfodProcessor.easyCreateWithDefaults();
-
-        // Create the vision portal the easy way.
-
-        //     visionPortal = VisionPortal.easyCreateWithDefaults(
-        //             hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
     }
     private void telemetryAprilTag() {
         List<AprilTagDetection> detections = aprilTag.getDetections();
@@ -393,7 +386,7 @@ public class Gericka_Hardware {
                 if(detection.id == detectionID){
                     bearing = detection.ftcPose.bearing;
                     foundit = true;
-
+                    break;
                 }
             }
         }
@@ -405,6 +398,7 @@ public class Gericka_Hardware {
         for (AprilTagDetection detection : detections){
             if (detection.metadata != null){
                 foundit = (detection.id == detectionID);
+                break;
             }
         }
         return foundit;
@@ -415,8 +409,10 @@ public class Gericka_Hardware {
         double distance = 0.0;
         for (AprilTagDetection detection : detections){
             if (detection.metadata != null) {
-                distance = detection.ftcPose.range;
-
+                if (detection.id == detectionID) {
+                    distance = detection.ftcPose.range;
+                    break;
+                }
             }
         }
         return distance;
@@ -652,10 +648,12 @@ public class Gericka_Hardware {
     public void setPinpointPositionFromWebcam() {
         double currentX = 0;
         double currentY = 0;
-        //if (getAprilTagVisible(currentAprilTargetId)) {
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                //if (detection.id == currentAprilTargetId) {
+
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                // only use the two goals, the obelisk could be at a variable location
+                if ((detection.id == 20) || (detection.id == 24)) {
                     currentX = detection.ftcPose.x;
                     currentY = detection.ftcPose.y;
                     if (!leftFront.isBusy() && !leftRear.isBusy() && !rightFront.isBusy() && !rightRear.isBusy()) {
@@ -663,9 +661,10 @@ public class Gericka_Hardware {
                         SetPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
                         break;
                     }
-                //}
+                }
             }
-        //}
+        }
+
     }
     public void ShooterRPMFromPinpoint(){
         setPinpointPositionFromWebcam();

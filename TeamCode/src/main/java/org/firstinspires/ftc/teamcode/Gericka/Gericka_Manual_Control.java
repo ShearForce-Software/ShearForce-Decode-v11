@@ -41,14 +41,14 @@ public class Gericka_Manual_Control extends LinearOpMode {
         if (Objects.equals(allianceColor, "RED")) {
             theRobot.Init(this.hardwareMap, "RED");
             turretTrackingID = 24;
-            theRobot.targetX = 58;
-            theRobot.targetY = 54.5;
+            theRobot.targetX = -56;
+            theRobot.targetY = 56;
             defaultHeadingDegrees = 90.0;
         } else{
             theRobot.Init(this.hardwareMap, "BLUE");
             turretTrackingID = 20;
-            theRobot.targetX = -58;
-            theRobot.targetY = 54.5;
+            theRobot.targetX = -56;
+            theRobot.targetY = -56;
             defaultHeadingDegrees = 270.0;
         }
 
