@@ -101,18 +101,25 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
             // ********   INTAKE MOTOR CONTROLS ***********************
             if (gamepad2.triangleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()) {
-                //Turn intake on
-                theRobot.SetIntakeMotor(true,true);
+                //Turn intake off
+                //theRobot.SetIntakeMotor(true,true);
+                theRobot.SetIntakeMotor(true,false);
 
             }
             else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
-                //Turn outake on (in case of jam?)
+                //Turn intake on (in case of jam?)
                 theRobot.SetIntakeMotor(true, false);
+
             }
             else if (gamepad2.squareWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
-                //Turn intake system off
-                theRobot.SetIntakeMotor(false,false);
+                //Turn outtake system on
+                theRobot.SetIntakeMotor(true,true);
             }
+            /*else if(gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
+
+            }*/
+
+
             //TODO - create an auto mode (autoIntake) when sensors available, have a button to turn auto on/off
             //TODO - suggest using (gamepad2.crossWasPressed && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()) for auto intake on/off
             //TODO - create a method in HW class to utilize sensors to auto turn intake on/off -- call here if (autoIntake)
@@ -142,6 +149,10 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 //Set lifter position to middle
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             }
+            else if(gamepad2.right_trigger > 0.2){
+                theRobot.SetIntakeMotor(false,false);
+            }
+
             //TODO Add method HW class to utilize sensors to auto lift ball to MID position, call here if autoLift mode is true
             //TODO add combo button to turn auto lift on/off -- suggest (gamepad2.shareWasPressed() && gamepad2.right_trigger > 0.2)
 
@@ -197,7 +208,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     autoShooterMode = false;
                     theRobot.SetAutoShooterMode(autoShooterMode);
 
-                    shooterSpeedRPM = 2000; //4500rpm was about the value observed when the Motor was commanded to 100%.
+                    shooterSpeedRPM = 2100; //4500rpm was about the value observed when the Motor was commanded to 100%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
                 else {
@@ -211,7 +222,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 if (gamepad2.optionsWasPressed()){
                     autoShooterMode = false;
                     theRobot.SetAutoShooterMode(autoShooterMode);
-                    shooterSpeedRPM = 3200; //1950rpm was about the value observed when the Motor was commanded to 50%.
+                    shooterSpeedRPM = 2950; //1950rpm was about the value observed when the Motor was commanded to 50%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
                 else {
@@ -225,7 +236,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 if (gamepad2.optionsWasPressed()) {
                     autoShooterMode = false;
                     theRobot.SetAutoShooterMode(autoShooterMode);
-                    shooterSpeedRPM = 4500; //3200rpm was about the value observed when the Motor was commanded to 75%.
+                    shooterSpeedRPM = 3500; //3200rpm was about the value observed when the Motor was commanded to 75%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
                 else {
@@ -248,7 +259,13 @@ public class Gericka_Manual_Control extends LinearOpMode {
             72 inch - 2800rpm
             78 inch - 2950rpm
             far launch zone (120 inch) - 3500rpm
+
+
+            24, 80(tip of large triangle), 120 inch for tip of small triangle
+
              */
+
+
             theRobot.ShowTelemetry();
         } // end while (opModeIsActive())
 
