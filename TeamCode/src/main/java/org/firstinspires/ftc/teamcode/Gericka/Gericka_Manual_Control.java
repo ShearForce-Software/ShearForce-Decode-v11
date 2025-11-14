@@ -30,6 +30,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
     final double shooterSpeedRPMIncrement = 50;
     double autoShooterSpeed=0.0;
     boolean autoShooterMode = true;
+    boolean useWebcamForDistance = true;
     public void runOpMode() {
         theRobot = new Gericka_Hardware(true, true, this);
         telemetry.setMsTransmissionInterval(11);
@@ -39,9 +40,13 @@ public class Gericka_Manual_Control extends LinearOpMode {
         if (Objects.equals(allianceColor, "RED")) {
             theRobot.Init(this.hardwareMap, "RED");
             turretTrackingID = 24;
+            theRobot.targetX = 58;
+            theRobot.targetY = 54.5;
         } else{
             theRobot.Init(this.hardwareMap, "BLUE");
             turretTrackingID = 20;
+            theRobot.targetX = -58;
+            theRobot.targetY = 54.5;
         }
 
         theRobot.WebcamInit(this.hardwareMap);
@@ -242,8 +247,12 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetAutoShooterMode(autoShooterMode);
                 }
             }
-            if (autoShooterMode){
-                theRobot.ShooterRPMFromWebCam(turretTrackingID);
+            if (autoShooterMode) {
+                if (useWebcamForDistance) {
+                    theRobot.ShooterRPMFromWebCam(theRobot.currentAprilTargetId);
+                } else {
+                    theRobot.ShooterRPMFromPinpoint();
+                }
             }
             /*
             24 inch - 2100rpm

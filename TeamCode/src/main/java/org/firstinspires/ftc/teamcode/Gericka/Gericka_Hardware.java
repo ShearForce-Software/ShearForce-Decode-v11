@@ -30,7 +30,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -115,6 +114,8 @@ public class Gericka_Hardware {
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
     public final double RADIANS_PER_SECOND_TO_RPM = 9.54929658551; // 60 / (2 * Math.PI)
+    public double targetX = 0;
+    public double targetY = 0;
     public int currentAprilTargetId = 20;
     boolean autoShooterMode = false;
     GoBildaPinpointDriver pinpoint;
@@ -545,11 +546,12 @@ public class Gericka_Hardware {
     }
 
     void adjustTurretToTarget(int detectionID){
-        if (getAprilTagVisible(detectionID)){
+        //if (getAprilTagVisible(detectionID)){
             double x = getBearingToAprilTag(detectionID);
             double y = getCurrentTurretAngle();
             SetTurretRotationAngle(x+y);
-        }
+            //SetTurretRotationAngle(calculateTurnAngle(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH),targetX,targetY,pinpoint.getHeading(AngleUnit.DEGREES)));
+        //}
     }
     double getDistanceToAprilTag(int detectionID){
         List<AprilTagDetection> detections = aprilTag.getDetections();
@@ -575,6 +577,7 @@ public class Gericka_Hardware {
         //SetLifterPosition(LIFTER_DOWN_POSITION);
     }
     public void SetLifterDown(){
+
         SetLifterPosition(LIFTER_DOWN_POSITION);
     }
     public void SetShooterSpeed(double percent){
@@ -596,6 +599,51 @@ public class Gericka_Hardware {
         shooterMotorLeft.setVelocity(shooterTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
         shooterMotorRight.setVelocity(shooterTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
     }
+    public double calculateDistanceToTarget(double currentXInInches, double currentYInInches, double targetXInInches, double targetYInInches) {
+        double deltaX = targetXInInches - currentXInInches;
+        double deltaY = targetYInInches - currentYInInches;
+        double distanceInInches = Math.hypot(deltaX, deltaY);
+        return distanceInInches;
+    }
+    public static double calculateTurnAngle(double currentXInInches, double currentYInInches, double targetXInInches, double targetYInInches, double currentTurretHeadingDegrees) {
+        double deltaX = targetXInInches - currentXInInches;
+        double deltaY = targetYInInches - currentYInInches;
+        double angleToTargetRadians = Math.atan2(deltaY, deltaX);
+        double angleToTargetDegrees = Math.toDegrees(angleToTargetRadians);
+        double relativeAngleDegrees = angleToTargetDegrees - currentTurretHeadingDegrees;
+
+        while (relativeAngleDegrees <= -180) {
+            relativeAngleDegrees += 360;
+        }
+        while (relativeAngleDegrees > 180) {
+            relativeAngleDegrees -= 360;
+        }
+        return -relativeAngleDegrees;
+    }
+    public void setPinpointPositionFromWebcam() {
+        double currentX = 0;
+        double currentY = 0;
+        if (getAprilTagVisible(currentAprilTargetId)) {
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                if (detection.id == currentAprilTargetId) {
+                    currentX = detection.ftcPose.x;
+                    currentY = detection.ftcPose.y;
+                    if (!leftFront.isBusy() && !leftRear.isBusy() && !rightFront.isBusy() && !rightRear.isBusy()) {
+                        //if (pinpoint.getHeadingVelocity() = 0){
+                        SetPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
+                    }
+                }
+            }
+        }
+    }
+    public void ShooterRPMFromPinpoint(){
+        setPinpointPositionFromWebcam();
+        pinpoint.update();
+        double distanceToTarget = calculateDistanceToTarget(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH),targetX,targetY);
+        SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
+    }
+
 
     public void ShowTelemetry(){
 

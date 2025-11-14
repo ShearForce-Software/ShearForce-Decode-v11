@@ -29,8 +29,8 @@
   * look at TODOs in Manual control class
 - [ ] Test all buttons, make them all work (fix the if && logic )
 - [ ] Test shooting the balls
-- [ ] Develop method that can calculate distance between two points (will use with pinpoint to take current position to goal without relying on camera)
-- [ ] Develop method to calculate turn angle needed for turret to point at goal given two points and current heading (will use with pinpoint without relying on camera)
+- [x] Develop method that can calculate distance between two points (will use with pinpoint to take current position to goal without relying on camera)
+- [x] Develop method to calculate turn angle needed for turret to point at goal given two points and current heading (will use with pinpoint without relying on camera)
 
 === Gianna
 
