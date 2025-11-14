@@ -26,6 +26,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
     // Press intake button, have claw grab the sample
     // Have claw go down when slides extend forward?
     // 1 button to grab specimen off wall (rotate slides, Limelight correction, grab, rotate claw up to get off wall)
+    boolean autoLifter = true;
     double shooterSpeedRPM = 0.0;
     final double shooterSpeedRPMIncrement = 50;
     double autoShooterSpeed=0.0;
@@ -153,8 +154,17 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
             //TODO Add method HW class to utilize sensors to auto lift ball to MID position, call here if autoLift mode is true
             //TODO add combo button to turn auto lift on/off -- suggest (gamepad2.shareWasPressed() && gamepad2.right_trigger > 0.2)
-
-
+            if (gamepad2.right_trigger > 0.2){
+                if (gamepad2.shareWasPressed()) {
+                    if (autoLifter) {
+                        autoLifter = false;
+                    }
+                    else {
+                        autoLifter = true;
+                    }
+                }
+            }
+            theRobot.LifterAuto(autoLifter);
 
             // ********   TURRET CONTROLS ***********************
             if (gamepad2.circleWasPressed() && gamepad2.shareWasPressed()){
@@ -245,6 +255,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             if (autoShooterMode){
                 theRobot.ShooterRPMFromWebCam(turretTrackingID);
             }
+
             /*
             24 inch - 2100rpm
             30 inch - 2200rpm

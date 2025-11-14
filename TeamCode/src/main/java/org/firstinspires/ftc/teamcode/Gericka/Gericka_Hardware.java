@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -121,9 +122,10 @@ public class Gericka_Hardware {
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
-
-    private NormalizedColorSensor ColorSensorRight;
-    private NormalizedColorSensor ColorSensorLeft;
+    RevColorSensorV3 ColorSensorRight;
+    RevColorSensorV3 ColorSensorLeft;
+    //private NormalizedColorSensor ColorSensorRight;
+    //private NormalizedColorSensor ColorSensorLeft;
 
     //RevColorSensorV3 leftColorSensor;
     //RevColorSensorV3 rightColorSensor;
@@ -246,8 +248,8 @@ public class Gericka_Hardware {
 
 
         // ********** Color Sensors ********************
-        ColorSensorRight = hardwareMap.get(NormalizedColorSensor.class, "ColorSensorRight");
-        ColorSensorLeft = hardwareMap.get(NormalizedColorSensor.class, "ColorSensorLeft");
+        ColorSensorRight = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
+        ColorSensorLeft = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
 
         //leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
         //rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
@@ -568,6 +570,22 @@ public class Gericka_Hardware {
         lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
         lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
         lifterServo.setPosition(lifterTargetPosition);
+    }
+
+    public void LifterAuto(boolean CheckLifterAuto){
+        if (CheckLifterAuto) {
+            if (((lifterServo.getPosition() <= LIFTER_DOWN_POSITION))) {
+                if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0))
+                        && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.5)) {
+                    opMode.telemetry.addData("Distance (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
+                    lifterServo.setPosition(LIFTER_MID_POSITION);
+                } else if (((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0))
+                        && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.5)) {
+                    opMode.telemetry.addData("Distance (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
+                    lifterServo.setPosition(LIFTER_MID_POSITION);
+                }
+            }
+        }
     }
     public void SetLifterUp(){
         SetLifterPosition(LIFTER_UP_POSITION);
