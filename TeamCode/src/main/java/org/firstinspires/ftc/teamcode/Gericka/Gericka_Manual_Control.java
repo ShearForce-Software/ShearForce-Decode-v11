@@ -100,7 +100,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
              *************************************************
              * Arm Controls (gamepad2)
              *
-             *************************************************
+             ***************************************              **********
              *************************************************
              */
 
@@ -109,17 +109,17 @@ public class Gericka_Manual_Control extends LinearOpMode {
             if (gamepad2.triangleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()) {
                 //Turn intake off
                 //theRobot.SetIntakeMotor(true,true);
-                theRobot.SetIntakeMotor(true,false);
+                theRobot.SetIntakeMotor(false,false);
 
             }
             else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
                 //Turn intake on (in case of jam?)
-                theRobot.SetIntakeMotor(true, false);
+                theRobot.SetIntakeMotor(true, true);
 
             }
             else if (gamepad2.squareWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
                 //Turn outtake system on
-                theRobot.SetIntakeMotor(true,true);
+                theRobot.SetIntakeMotor(true,false);
             }
             /*else if(gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
 

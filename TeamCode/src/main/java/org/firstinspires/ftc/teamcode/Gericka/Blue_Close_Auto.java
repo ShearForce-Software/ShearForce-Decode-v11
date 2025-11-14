@@ -19,6 +19,8 @@ import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS
 import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 
 import java.util.Vector;
+@Autonomous(name="Blue Close Auto", preselectTeleOp ="")
+
 
 public class Blue_Close_Auto extends LinearOpMode {
     Gericka_Hardware control = new Gericka_Hardware(false, false, this);
@@ -97,9 +99,9 @@ public class Blue_Close_Auto extends LinearOpMode {
     control.SetTurretRotationAngle(turretTargetAngle);
 
     // Shooter RPM for big triangle shots (tune as needed)
-    double shooterSpeedRPM = 3500;
+    double shooterSpeedRPM = 2900;
     control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-    sleep(250);
+    sleep(5000);
 
     control.SetLifterUp();   // shot 1
     sleep(500);
@@ -134,7 +136,7 @@ public class Blue_Close_Auto extends LinearOpMode {
     control.SetIntakeMotor(false, true);
 
 
-    sleep(500);//giving it sleepy time
+   // sleep(5000);//giving it sleepy time
 
     control.SetLifterUp();   // shot 1
     sleep(500);
