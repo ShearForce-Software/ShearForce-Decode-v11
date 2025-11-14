@@ -28,10 +28,9 @@ public class Blue_Close_Auto extends LinearOpMode {
     public static final String ALLIANCE_KEY = "Alliance";
 
     // Trajectories
-    Action DriveToClosestLine;
+    Action DriveStartToMidPosition;
+    Action DriveMidToClosestLine;
     Action DriveClosestLineBackToLaunchPark;
-
-    Action DriveOffTriangleToLaunchSpot;
 
 @Override
 
@@ -47,7 +46,7 @@ public class Blue_Close_Auto extends LinearOpMode {
 
 
     // Turret initial rough angle toward speaker (tune as needed)
-    double turretTargetAngle = -89.0;
+    double turretTargetAngle = 135.8;
     control.SetTurretRotationAngle(turretTargetAngle);
 
     // Lifter halfway so we can hold 3
@@ -55,13 +54,19 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     telemetry.update();
 
-    DriveToClosestLine = drive.actionBuilder(
-            new Pose2d(-60, -39, Math.toRadians(270))).strafeToConstantHeading(new Vector2d(-12, -53)).build();
+    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(270)))
+            .strafeToLinearHeading(new Vector2d(-10, -10), Math.toRadians(210))
+            .turnTo(Math.toRadians(270))
+            .build();
 
-    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-12,-53,Math.toRadians(270))).strafeToConstantHeading(new Vector2d(-54, -16)).build();
+    // Mid (-10, -10, 270) -> closest line (-10, -40)
+    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-10, -10, Math.toRadians(270)))
+            .strafeToConstantHeading(new Vector2d(-10, -40))
+            .build();
 
-    DriveOffTriangleToLaunchSpot = drive.actionBuilder((new Pose2d(-60, -39, Math.toRadians(270))))
-            .strafeToLinearHeading(new Vector2d(-10, -10), Math.toRadians(270))
+    // Closest line (-10, -40, 270) -> launch park (-54, -16)
+    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-10, -40, Math.toRadians(270)))
+            .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
     // Background telemetry thread (same pattern as Blue_Far_Auto)
@@ -84,10 +89,11 @@ public class Blue_Close_Auto extends LinearOpMode {
     resetRuntime();
     Gericka_Hardware.autoTimeLeft = 0.0;
 
-    Actions.runBlocking(DriveOffTriangleToLaunchSpot);
+    Actions.runBlocking(new SleepAction((2.0)));
+    Actions.runBlocking(DriveStartToMidPosition);
 
     // Turn turret more directly to target for auto shooting (tune on field)
-    turretTargetAngle = -130.0;
+    turretTargetAngle = 45;    // CHANGE LLATER
     control.SetTurretRotationAngle(turretTargetAngle);
 
     // Shooter RPM for big triangle shots (tune as needed)
@@ -115,9 +121,13 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     Actions.runBlocking(
             new SequentialAction(
-                    DriveToClosestLine,
-                    new SleepAction(0.5),
-                    DriveClosestLineBackToLaunchPark
+                    // Mid -> closest line
+                    DriveMidToClosestLine,
+                    new SleepAction(0.5),           // tiny sleep to finish ingesting rings
+                    // Closest line -> launch park
+                    DriveClosestLineBackToLaunchPark,
+                    // Final 2 second wait to match MeepMeep .waitSeconds(2) at end
+                    new SleepAction(2.0)
             )
     );
 
