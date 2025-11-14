@@ -149,9 +149,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 //Set lifter position to middle
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             }
-            else if(gamepad2.right_trigger > 0.2){
-                theRobot.SetIntakeMotor(false,false);
-            }
+
 
             //TODO Add method HW class to utilize sensors to auto lift ball to MID position, call here if autoLift mode is true
             //TODO add combo button to turn auto lift on/off -- suggest (gamepad2.shareWasPressed() && gamepad2.right_trigger > 0.2)
