@@ -6,7 +6,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class Decode_MeepMeep_Blue_ID22_Small_Triangle {
+public class Decode_MeepMeep_Blue_ID23_Small_Triangle {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
 
@@ -18,21 +18,23 @@ public class Decode_MeepMeep_Blue_ID22_Small_Triangle {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
                 // shoot 3 balls
                 .waitSeconds(2)
+                // get line 1
+                .strafeToConstantHeading(new Vector2d(-12,-32))
+                .strafeToConstantHeading(new Vector2d(-12,-53))
+                // return to launch area
+                .strafeToConstantHeading(new Vector2d(0,-26))
+                .strafeToConstantHeading(new Vector2d(60,-12))
+                // shoot 3 balls
+                .waitSeconds(2)
                 // get line 2
                 .strafeToConstantHeading(new Vector2d(11.5,-30))
                 .strafeToConstantHeading(new Vector2d(11.5,-48))
                 // return to launch area
-                .strafeToConstantHeading(new Vector2d(20,-12))
+                .strafeToConstantHeading(new Vector2d(23,-23))
                 .strafeToConstantHeading(new Vector2d(60,-12))
                 // shoot 3 balls
                 .waitSeconds(2)
-                // get line 3
-                .strafeToConstantHeading(new Vector2d(34.75,-30))
-                .strafeToConstantHeading(new Vector2d(34.75,-48))
-                // return to launch area
-                .strafeToConstantHeading(new Vector2d(60,-12))
-                // shoot 3 balls
-                .waitSeconds(2)
+                // park
                 .strafeToConstantHeading(new Vector2d(20,-12))
                 .build());
 

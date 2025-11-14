@@ -29,6 +29,8 @@
   * look at TODOs in Manual control class
 - [ ] Test all buttons, make them all work (fix the if && logic )
 - [ ] Test shooting the balls
+- [ ] Develop method that can calculate distance between two points (will use with pinpoint to take current position to goal without relying on camera)
+- [ ] Develop method to calculate turn angle needed for turret to point at goal given two points and current heading (will use with pinpoint without relying on camera)
 
 === Gianna
 
@@ -45,9 +47,6 @@
     ** https://docs.revrobotics.com/rev-crossover-products/sensors/2m-distance/application-examples#onbot-java
 - [ ] LIFTER(Gianna): need combo button to turn auto lifter logic on/off - default to on
   * look at TODOs in Manual control class
-
-== Next Level Stuff
-
 - [ ] INTAKE: Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
   * if (inside sensor says empty && outside sensor ball present) then turn intake on
   * else if (inside sensor says ball present) then turn intake off
@@ -56,6 +55,7 @@
 - [ ] INTAKE: need combo button to turn auto intake logic on/off - default to on
   * look at TODOs in Manual control class
 
+== Next Level Stuff
 
 - [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
 - [ ] Integrate April tag detection to the Autonomous routes, change intake based on detected
