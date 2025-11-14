@@ -18,18 +18,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive;
-import org.firstinspires.ftc.teamcode.Geronimo.FourHighSpecimensAutoRoute;
 
-//TODO auto select manual opMode next
-@Autonomous(name="Blue Far Auto", preselectTeleOp ="")
+// auto select manual opMode next
+@Autonomous(name="Blue Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 public class Blue_Far_Auto extends LinearOpMode {
     Gericka_Hardware control = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
-    public static final String ALLIANCE_KEY = "Alliance";
 
     // Trajectories
 
@@ -45,9 +45,11 @@ public class Blue_Far_Auto extends LinearOpMode {
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
 
         control.Init(hardwareMap, "BLUE");
-        blackboard.put(ALLIANCE_KEY, "BLUE");
+        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+        control.WebcamInit(this.hardwareMap);
+        control.SetPinpointPosition(60, -12, 270);
 
-        //TODO turn turret to face the obolisk
+        // turn turret to face the obelisk
         double turretTargetAngle = 91.0;
         control.SetTurretRotationAngle(turretTargetAngle);
 
@@ -87,12 +89,16 @@ public class Blue_Far_Auto extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .build();
 
+        boolean autoLifter = true;
+
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
                 //control.ShowTelemetry();
-
                 control.ShowPinpointTelemetry();
 
+                if (isStarted()) {
+                    control.LifterAuto(autoLifter);
+                }
                 telemetry.update();
 
                 sleep(20);
@@ -103,7 +109,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
         // ***************************************************
-        while (!isStarted()) {
+        while (!isStarted() && !isStopRequested()) {
             telemetry.update();
         }
 
@@ -111,16 +117,22 @@ public class Blue_Far_Auto extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
-        //TODO Read the obsolisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
+        // spin up shooter wheel to max
+        control.SetShooterSpeed(1.0);
 
-        //TODO Turn Turret towards target, can leave turret there the whole time
+        //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
+
+        // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = 115.0;
         control.SetTurretRotationAngle(turretTargetAngle);
 
-        //TODO determine optimum speed for small triangle shots probably 3500rpm, can just leave at this speed the whole time
-        double shooterSpeedRPM = 4500;
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        // sleep some time to allow shooter wheel to spin up
         sleep(4000);
+
+        // set shooter speed to small triangle speed, can just leave at this speed the whole time
+        double shooterSpeedRPM = 3500;
+        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        sleep(500);
 
         // shoot the 3 pre-loaded balls
         control.SetLifterUp();  // shoot ball 1
@@ -138,22 +150,18 @@ public class Blue_Far_Auto extends LinearOpMode {
         shooterSpeedRPM = 3500;
         control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
-        //TODO create a separate thread that auto lifts the lifter half way up when ball detected
-
-
         // ***************************************************
         // ****  START DRIVING    ****************************
         // ***************************************************
         Actions.runBlocking(
                 new SequentialAction(
-                        //TODO add parallel action that turns intake on
+                        // Drive to the middle line and turn the intake on
                         new ParallelAction(DriveToSecondMark, setIntakeOn()),
                         new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
-                         //TODO add parallel action that turns intake off
+                         // Return to launch zone and turn intake off
                         new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff()),
-                        //TODO shoot 3 here with sequential action set (lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly, drop lifter, sleep briefly, lift up, sleep briefly)
-                        //new SleepAction(2),
 
+                        // Shoot 3 balls
                         new SequentialAction(
                             new SetLifterUp(),
                             new SleepAction(1),
@@ -166,7 +174,7 @@ public class Blue_Far_Auto extends LinearOpMode {
                             new SetLifterUp(),
                             new SleepAction(1),
 
-                            //TODO add parallel action that turns intake on
+                            // Drive to closest line and turn intake on and lower lifter
                             new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown())),
                             new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
                              //TODO add parallel action that turns intake off
@@ -190,7 +198,11 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         drive.updatePoseEstimate();
 
-        //TODO store final exact position in blackboard, so can initialize manual pinpoint with that position
+        // store final exact position in blackboard, so can initialize manual pinpoint with that position
+        control.pinpoint.update();
+        blackboard.put(Gericka_Hardware.FINAL_X_POSITION, control.pinpoint.getPosX(DistanceUnit.INCH));
+        blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, control.pinpoint.getPosY(DistanceUnit.INCH));
+        blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, control.pinpoint.getHeading(AngleUnit.DEGREES));
 
         // turn off shooter wheel
         shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.

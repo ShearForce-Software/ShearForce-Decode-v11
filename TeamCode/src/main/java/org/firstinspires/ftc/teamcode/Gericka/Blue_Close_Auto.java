@@ -3,23 +3,28 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Line;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS;
-
-import org.firstinspires.ftc.teamcode.PinpointLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
+import org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive;
 
 import java.util.Vector;
-@Autonomous(name="Blue Close Auto", preselectTeleOp ="")
+@Autonomous(name="Blue Close Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 
 public class Blue_Close_Auto extends LinearOpMode {
@@ -27,14 +32,10 @@ public class Blue_Close_Auto extends LinearOpMode {
     Gericka_MecanumDrive drive;
     Pose2d startPose;
 
-    public static final String ALLIANCE_KEY = "Alliance";
-
     // Trajectories
     Action DriveStartToMidPosition;
     Action DriveMidToClosestLine;
     Action DriveClosestLineBackToLaunchPark;
-
-@Override
 
     public void runOpMode(){
     //We will start at big trianlge start
@@ -44,8 +45,9 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     //Init hardware as Blue
     control.Init(hardwareMap, "BLUE");
-    blackboard.put(ALLIANCE_KEY, "BLUE");
-
+    blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+        control.WebcamInit(this.hardwareMap);
+        control.SetPinpointPosition(-60, -39, 270);
 
     // Turret initial rough angle toward speaker (tune as needed)
     double turretTargetAngle = 135.8;
@@ -71,10 +73,14 @@ public class Blue_Close_Auto extends LinearOpMode {
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
+        boolean autoLifter = true;
     // Background telemetry thread (same pattern as Blue_Far_Auto)
     Thread secondaryThread = new Thread(() -> {
         while (!isStopRequested() && getRuntime() < 30) {
             control.ShowPinpointTelemetry();
+                if (isStarted()) {
+                    control.LifterAuto(autoLifter);
+                }
             telemetry.update();
             sleep(20);
         }
@@ -90,6 +96,10 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     resetRuntime();
     Gericka_Hardware.autoTimeLeft = 0.0;
+
+        // spin up shooter wheel to max
+        control.SetShooterSpeed(1.0);
+
 
     Actions.runBlocking(new SleepAction((2.0)));
     Actions.runBlocking(DriveStartToMidPosition);
@@ -153,6 +163,12 @@ public class Blue_Close_Auto extends LinearOpMode {
     control.SetLifterDown();
 
     drive.updatePoseEstimate();
+
+        // store final exact position in blackboard, so can initialize manual pinpoint with that position
+        control.pinpoint.update();
+        blackboard.put(Gericka_Hardware.FINAL_X_POSITION, control.pinpoint.getPosX(DistanceUnit.INCH));
+        blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, control.pinpoint.getPosY(DistanceUnit.INCH));
+        blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, control.pinpoint.getHeading(AngleUnit.DEGREES));
 
     // turn off shooter wheel
     shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.

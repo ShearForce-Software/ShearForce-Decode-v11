@@ -10,8 +10,9 @@
 === Shrey
 
 - [x] AUTO(Shrey): Test Blue_Far_Auto for positions
-- [ ] AUTO(Shrey): Complete TODOs in Blue_Far_Auto to make shoot, intake, and track target
-- [ ] AUTO(Shrey): Create a Red_Far_Auto that mirrors Blue_Far_Auto
+- [x] AUTO(Shrey): Complete TODOs in Blue_Far_Auto to make shoot, intake, and track target
+- [x] AUTO(Shrey): Create a Red_Far_Auto that mirrors Blue_Far_Auto
+- [ ] AUTO: Test and tweak the two far auto routes to be awesome
 
 === Akshay
 
@@ -40,7 +41,7 @@
   * Need to make sure ALL of our driver HUBs are loaded with the latest firmware from Rev Hardware Client
   * Need to make sure our WiFi name and password are legal
     ** pword: ShearForce21225SF
-- [ ] LIFTER(Gianna): Integrate logic to use the ball distance detection sensor to automatically lift ball half way towards shooter
+- [x] LIFTER(Gianna): Integrate logic to use the ball distance detection sensor to automatically lift ball half way towards shooter
   * if (lifter is down && (ball detected by sensor-1 || ball detected by sensor-2)) then lift ball half-way up
   * Need to figure out which exact sensor is installed Rev Color V2, Rev Color V3, or Rev 2M Distance
   * Example code for any of those sensors can be found on the Rev site around here:

@@ -13,7 +13,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
     boolean slidePowerApplied = false;
 
     boolean alignBusy = false;
-    public static final String ALLIANCE_KEY = "Alliance";
 
     public int turretTrackingID = 24; // default to Red
     public boolean turretAutoMode = true;
@@ -37,27 +36,38 @@ public class Gericka_Manual_Control extends LinearOpMode {
         telemetry.setMsTransmissionInterval(11);
 
         // Use the Blackboard to determine what color we should be
-        Object allianceColor = blackboard.get(ALLIANCE_KEY);
+        Object allianceColor = blackboard.get(Gericka_Hardware.ALLIANCE_KEY);
+        double defaultHeadingDegrees = 0.0;
         if (Objects.equals(allianceColor, "RED")) {
             theRobot.Init(this.hardwareMap, "RED");
             turretTrackingID = 24;
             theRobot.targetX = 58;
             theRobot.targetY = 54.5;
+            defaultHeadingDegrees = 90.0;
         } else{
             theRobot.Init(this.hardwareMap, "BLUE");
             turretTrackingID = 20;
             theRobot.targetX = -58;
             theRobot.targetY = 54.5;
+            defaultHeadingDegrees = 270.0;
         }
 
         theRobot.WebcamInit(this.hardwareMap);
         theRobot.SetAutoShooterMode(autoShooterMode);
+
         // Use the Blackboard to determine the initial x,y and heading that auto finished in, OR use camera view of April tag to set position
-        //TODO use the blackboard function to set x,y, and heading at end of Auto, then reinitialize the pinpoint with that position OR USE camera and APRIL TAG
-        double xPositionInches = 0.0;
-        double yPositionInches = 0.0;
-        double headingDegrees = 0.0;
-        theRobot.SetPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
+        try {
+            double xPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_X_POSITION);
+            double yPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_Y_POSITION);
+            double headingDegrees = (double) blackboard.get(Gericka_Hardware.FINAL_HEADING_DEGREES);
+            theRobot.SetPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
+        } catch (NullPointerException ignored) {
+            theRobot.SetPinpointPosition(0.0, 0.0, defaultHeadingDegrees);
+            theRobot.pinpoint.update();
+            // attempt to use any april tags that are visible to update the pinpoint position
+            theRobot.setPinpointPositionFromWebcam();
+        }
+        theRobot.pinpoint.update();
 
         theRobot.ShowTelemetry();
         telemetry.update();
@@ -80,18 +90,20 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // RESERVED COMBOS    options + cross and options + circle
 
             // Press the triangle button / "y" while facing directly away from the driver to set the IMU correctly for field-centric mode if off
-            if (gamepad1.triangle && !gamepad1.optionsWasPressed()) {
-                theRobot.imu.resetYaw();
-            }
-            // field centric drive mode (default at startup)
-            else if (gamepad1.triangle && gamepad1.optionsWasPressed())
-            {
-                theRobot.SetFieldCentricMode(true);
+            if (gamepad1.triangleWasPressed()) {
+                if (gamepad1.optionsWasPressed()) {
+                    theRobot.SetFieldCentricMode(true);
+                }
+                else {
+                    theRobot.imu.resetYaw();
+                }
             }
             // robot centric drive mode
-            else if (gamepad1.square && gamepad1.optionsWasPressed())
+            else if (gamepad1.squareWasPressed())
             {
-                theRobot.SetFieldCentricMode(false);
+                if (gamepad1.optionsWasPressed()) {
+                    theRobot.SetFieldCentricMode(false);
+                }
             }
 
 
@@ -124,8 +136,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
             /*else if(gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
 
             }*/
-
-
             //TODO - create an auto mode (autoIntake) when sensors available, have a button to turn auto on/off
             //TODO - suggest using (gamepad2.crossWasPressed && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()) for auto intake on/off
             //TODO - create a method in HW class to utilize sensors to auto turn intake on/off -- call here if (autoIntake)
@@ -155,11 +165,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 //Set lifter position to middle
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             }
-
-
-            //TODO Add method HW class to utilize sensors to auto lift ball to MID position, call here if autoLift mode is true
-            //TODO add combo button to turn auto lift on/off -- suggest (gamepad2.shareWasPressed() && gamepad2.right_trigger > 0.2)
-            if (gamepad2.right_trigger > 0.2){
+            else if (gamepad2.right_trigger > 0.2){
                 if (gamepad2.shareWasPressed()) {
                     if (autoLifter) {
                         autoLifter = false;
@@ -169,44 +175,51 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     }
                 }
             }
+            // Run the Auto Lift to Midway position (if enabled)
             theRobot.LifterAuto(autoLifter);
 
             // ********   TURRET CONTROLS ***********************
-            if (gamepad2.circleWasPressed() && gamepad2.shareWasPressed()){
-                //Turn Turret clockwise
-                turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
-                theRobot.SetTurretRotationAngle(turretRotationAngle);
-                turretAutoMode = false;
+            if (gamepad2.circleWasPressed() ){
+                if (gamepad2.shareWasPressed()) {
+                    //Turn Turret clockwise
+                    turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
+                    theRobot.SetTurretRotationAngle(turretRotationAngle);
+                    turretAutoMode = false;
+                }
             }
-            else if (gamepad2.squareWasPressed() && gamepad2.shareWasPressed()){
-               //Turn Turret counterclockwise
-                turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
-                theRobot.SetTurretRotationAngle(turretRotationAngle);
-                turretAutoMode = false;
+            else if (gamepad2.squareWasPressed() ){
+                if (gamepad2.shareWasPressed()) {
+                    //Turn Turret counterclockwise
+                    turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
+                    theRobot.SetTurretRotationAngle(turretRotationAngle);
+                    turretAutoMode = false;
+                }
             }
             // switch to tracking red target
-            if (gamepad2.triangleWasPressed() && gamepad2.shareWasPressed()){
-                if ( turretTrackingID == 20) {
-                    // switch turret tracking to RED target
-                    turretTrackingID = 24;
-                    turretAutoMode = true;
-                }
-                else {
-                    // switch turret tracking to BLUE target
-                    turretTrackingID = 20;
-                    turretAutoMode = true;
+            if (gamepad2.triangleWasPressed() ){
+                if (gamepad2.shareWasPressed()) {
+                    if (turretTrackingID == 20) {
+                        // switch turret tracking to RED target
+                        turretTrackingID = 24;
+                        turretAutoMode = true;
+                    } else {
+                        // switch turret tracking to BLUE target
+                        turretTrackingID = 20;
+                        turretAutoMode = true;
+                    }
                 }
             }
 
             // toggling turret goal auto centering/tracking on/off
-            if (gamepad2.shareWasPressed() && gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() ) {
-                turretAutoMode = !turretAutoMode;
+            if ( gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() ) {
+                if (gamepad2.shareWasPressed()) {
+                    turretAutoMode = !turretAutoMode;
+                }
             }
 
             if (turretAutoMode) {
-                theRobot.adjustTurretToTarget(turretTrackingID);
+                theRobot.adjustTurretToTargetAprilTag(turretTrackingID);
             }
-
 
 
             // ********   SHOOTER MOTOR CONTROLS ***********************

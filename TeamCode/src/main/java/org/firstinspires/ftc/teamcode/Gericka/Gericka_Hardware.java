@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -39,6 +38,10 @@ import java.util.concurrent.TimeUnit;
 @Config
 public class Gericka_Hardware {
     //ReentrantLock lock = new ReentrantLock();
+    public static final String ALLIANCE_KEY = "Alliance";
+    public static final String FINAL_X_POSITION = "Final_X_Position";
+    public static final String FINAL_Y_POSITION = "Final_Y_Position";
+    public static final String FINAL_HEADING_DEGREES = "Final_Heading_Degrees";
 
     IMU imu;
     public double imuOffsetInDegrees = 0.0;
@@ -120,6 +123,7 @@ public class Gericka_Hardware {
     public int currentAprilTargetId = 20;
     boolean autoShooterMode = false;
     GoBildaPinpointDriver pinpoint;
+    public boolean usePinpointForTurretAnglesEnabled = false;
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -303,7 +307,7 @@ public class Gericka_Hardware {
          * increase when you move the robot forward. And the Y (strafe) pod should increase when
          * you move the robot to the left.
          */
-        //TODO need to verify X,Y directions, going forward should make X count up, going Left should make Y count up
+        // need to verify X,Y directions, going forward should make X count up, going Left should make Y count up
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD
                 , GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
@@ -380,6 +384,43 @@ public class Gericka_Hardware {
         }
     }
 
+    double getBearingToAprilTag(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        double bearing = 0.0;
+        for (AprilTagDetection detection : detections){
+            if (detection.metadata != null) {
+                if(detection.id == detectionID){
+                    bearing = detection.ftcPose.bearing;
+                    foundit = true;
+
+                }
+            }
+        }
+        return bearing;
+    }
+    boolean getAprilTagVisible(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        for (AprilTagDetection detection : detections){
+            if (detection.metadata != null){
+                foundit = (detection.id == detectionID);
+            }
+        }
+        return foundit;
+    }
+    double getDistanceToAprilTag(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        boolean foundit = false;
+        double distance = 0.0;
+        for (AprilTagDetection detection : detections){
+            if (detection.metadata != null) {
+                distance = detection.ftcPose.range;
+
+            }
+        }
+        return distance;
+    }
 
     public void SetIndicatorLight(double colorValue) {
         allianceIndicatorLight.setPosition(colorValue);
@@ -516,56 +557,24 @@ public class Gericka_Hardware {
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(1.0);
     }
-    double getBearingToAprilTag(int detectionID){
-        List<AprilTagDetection> detections = aprilTag.getDetections();
-        boolean foundit = false;
-        double bearing = 0.0;
-        for (AprilTagDetection detection : detections){
-            if (detection.metadata != null) {
-                if(detection.id == detectionID){
-                    bearing = detection.ftcPose.bearing;
-                    foundit = true;
 
-                }
-            }
-        }
-        return bearing;
-    }
-    boolean getAprilTagVisible(int detectionID){
-        List<AprilTagDetection> detections = aprilTag.getDetections();
-        boolean foundit = false;
-        for (AprilTagDetection detection : detections){
-            if (detection.metadata != null){
-                foundit = (detection.id == detectionID);
-            }
-        }
-        return foundit;
-    }
     double getCurrentTurretAngle (){
         double turretAngle = turretMotor.getCurrentPosition()/TURRET_TICKS_IN_DEGREES;
 
         return turretAngle;
     }
 
-    void adjustTurretToTarget(int detectionID){
-        //if (getAprilTagVisible(detectionID)){
-            double x = getBearingToAprilTag(detectionID);
-            double y = getCurrentTurretAngle();
-            SetTurretRotationAngle(x+y);
-            //SetTurretRotationAngle(calculateTurnAngle(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH),targetX,targetY,pinpoint.getHeading(AngleUnit.DEGREES)));
-        //}
-    }
-    double getDistanceToAprilTag(int detectionID){
-        List<AprilTagDetection> detections = aprilTag.getDetections();
-        boolean foundit = false;
-        double distance = 0.0;
-        for (AprilTagDetection detection : detections){
-            if (detection.metadata != null) {
-                distance = detection.ftcPose.range;
-
-                }
-            }
-        return distance;
+    void adjustTurretToTargetAprilTag(int detectionID){
+        double bearingToAprilTag = 0.0;
+        double currentTurretAngle = getCurrentTurretAngle();
+        if (getAprilTagVisible(detectionID)){
+            bearingToAprilTag = getBearingToAprilTag(detectionID);
+            SetTurretRotationAngle(bearingToAprilTag+currentTurretAngle);
+        }
+        else if (usePinpointForTurretAnglesEnabled) {  //TODO need to enable this flag and test if really works
+            bearingToAprilTag = calculateBearingToPointInDegrees(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH),targetX,targetY,pinpoint.getHeading(AngleUnit.DEGREES));
+            SetTurretRotationAngle(bearingToAprilTag+currentTurretAngle);
+        }
     }
 
     public void SetLifterPosition(float position){
@@ -623,37 +632,40 @@ public class Gericka_Hardware {
         double distanceInInches = Math.hypot(deltaX, deltaY);
         return distanceInInches;
     }
-    public static double calculateTurnAngle(double currentXInInches, double currentYInInches, double targetXInInches, double targetYInInches, double currentTurretHeadingDegrees) {
-        double deltaX = targetXInInches - currentXInInches;
-        double deltaY = targetYInInches - currentYInInches;
-        double angleToTargetRadians = Math.atan2(deltaY, deltaX);
-        double angleToTargetDegrees = Math.toDegrees(angleToTargetRadians);
-        double relativeAngleDegrees = angleToTargetDegrees - currentTurretHeadingDegrees;
+    public static double calculateBearingToPointInDegrees(double robotXInInches, double robotYInInches, double targetXInInches, double targetYInInches, double robotHeadingDegrees) {
+        double deltaX = targetXInInches - robotXInInches;
+        double deltaY = targetYInInches - robotYInInches;
+        double angleToTargetRadians = Math.atan2(deltaY, deltaX); // calculates the absolute angle to the target in field-relative coordinates
+        double relativeAngleRadians = angleToTargetRadians - Math.toRadians(robotHeadingDegrees);
 
-        while (relativeAngleDegrees <= -180) {
-            relativeAngleDegrees += 360;
+        // Normalize the value to -180 to 180 equivalent values
+        while (relativeAngleRadians > Math.PI) {
+            relativeAngleRadians -= 2 * Math.PI;
         }
-        while (relativeAngleDegrees > 180) {
-            relativeAngleDegrees -= 360;
+        while (relativeAngleRadians < -Math.PI) {
+            relativeAngleRadians += 2 * Math.PI;
         }
-        return -relativeAngleDegrees;
+        double relativeAngleDegrees = Math.toDegrees(relativeAngleRadians);
+
+        return relativeAngleDegrees;
     }
     public void setPinpointPositionFromWebcam() {
         double currentX = 0;
         double currentY = 0;
-        if (getAprilTagVisible(currentAprilTargetId)) {
+        //if (getAprilTagVisible(currentAprilTargetId)) {
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
-                if (detection.id == currentAprilTargetId) {
+                //if (detection.id == currentAprilTargetId) {
                     currentX = detection.ftcPose.x;
                     currentY = detection.ftcPose.y;
                     if (!leftFront.isBusy() && !leftRear.isBusy() && !rightFront.isBusy() && !rightRear.isBusy()) {
                         //if (pinpoint.getHeadingVelocity() = 0){
                         SetPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
+                        break;
                     }
-                }
+                //}
             }
-        }
+        //}
     }
     public void ShooterRPMFromPinpoint(){
         setPinpointPositionFromWebcam();
