@@ -22,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive;
+import org.firstinspires.ftc.teamcode.Geronimo.FourHighSpecimensAutoRoute;
 
 //TODO auto select manual opMode next
 @Autonomous(name="Red Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
@@ -34,6 +35,7 @@ public class Red_Far_Auto extends LinearOpMode {
     // Trajectories
 
     Action DriveToSecondMark;
+    Action DriveToShootingPosition;
     Action DriveSecondMarkToSmallTriangle;
     Action DriveToFirstMark;
     Action DriveFirstMarkToSmallTriangle;
@@ -47,7 +49,7 @@ public class Red_Far_Auto extends LinearOpMode {
         control.Init(hardwareMap, "RED");
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
         control.WebcamInit(this.hardwareMap);
-        control.SetPinpointPosition(60, 12, 90);
+        //control.SetPinpointPosition(60, 12, 90);
 
         // turn turret to face the obelisk
         double turretTargetAngle = -91.0;
@@ -65,27 +67,30 @@ public class Red_Far_Auto extends LinearOpMode {
         // ***************************************************
 
         // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
+        DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(48,12))
+                .build();
 
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
+        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(11.5, 30))
                 .strafeToConstantHeading(new Vector2d(11.5, 55))
                 .build();
 
         DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, 55, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12))
-                .strafeToConstantHeading(new Vector2d(60, 12))
+                .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
-        DriveToFirstMark = drive.actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
+        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(34.75, 30))
                 .strafeToConstantHeading(new Vector2d(34.75, 55))
                 .build();
 
         DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, 55, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(60, 12))
+                .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
-        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
+        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12))
                 .build();
 
@@ -120,6 +125,7 @@ public class Red_Far_Auto extends LinearOpMode {
         // spin up shooter wheel to max
         control.SetShooterSpeed(1.0);
 
+        Actions.runBlocking(DriveToShootingPosition);
         //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
         // Turn Turret towards target, can leave turret there the whole time
@@ -131,7 +137,7 @@ public class Red_Far_Auto extends LinearOpMode {
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
         double shooterSpeedRPM = 3500;
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+       // control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
         sleep(500);
 
         // shoot the 3 pre-loaded balls

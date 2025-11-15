@@ -47,7 +47,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         control.Init(hardwareMap, "BLUE");
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
         control.WebcamInit(this.hardwareMap);
-        control.SetPinpointPosition(60, -12, 270);
+        //control.SetPinpointPosition(60, -12, 270);
 
         // turn turret to face the obelisk
         double turretTargetAngle = 91.0;
@@ -131,7 +131,7 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
         double shooterSpeedRPM = 3500;
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
         sleep(500);
 
         // shoot the 3 pre-loaded balls
