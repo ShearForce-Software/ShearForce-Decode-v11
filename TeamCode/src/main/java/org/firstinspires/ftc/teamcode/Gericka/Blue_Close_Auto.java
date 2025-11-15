@@ -105,8 +105,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     Actions.runBlocking(DriveStartToMidPosition);
 
     // Turn turret more directly to target for auto shooting (tune on field)
-    turretTargetAngle = 45;    // CHANGE LLATER
-    control.SetTurretRotationAngle(turretTargetAngle);
+    //turretTargetAngle = 45;    // CHANGE LLATER
+    //control.SetTurretRotationAngle(turretTargetAngle);
 
     // Shooter RPM for big triangle shots (tune as needed)
     double shooterSpeedRPM = 2900;

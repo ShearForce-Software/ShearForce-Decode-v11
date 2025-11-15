@@ -52,8 +52,9 @@ public class Red_Far_Auto extends LinearOpMode {
         //control.SetPinpointPosition(60, 12, 90);
 
         // turn turret to face the obelisk
-        double turretTargetAngle = -91.0;
-        control.SetTurretRotationAngle(turretTargetAngle);
+        //double turretTargetAngle = -91.0;
+        //control.SetTurretRotationAngle(turretTargetAngle);
+
 
         // set lifter half up (so can get 3 ball loaded in robot)
         control.SetLifterPosition(control.LIFTER_MID_POSITION);
@@ -120,6 +121,9 @@ public class Red_Far_Auto extends LinearOpMode {
 
         // ********* STARTED ********************************
         resetRuntime();
+        double turretTargetAngle = -91.0;
+        control.SetTurretRotationAngle(turretTargetAngle);
+
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // spin up shooter wheel to max

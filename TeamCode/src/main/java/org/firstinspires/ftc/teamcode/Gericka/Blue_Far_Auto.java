@@ -38,6 +38,7 @@ public class Blue_Far_Auto extends LinearOpMode {
     Action DriveToFirstMark;
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
+    Action DriveToStartShootPosition;
 
     public void runOpMode() {
         startPose = new Pose2d(60, -12, Math.toRadians(270));
@@ -50,8 +51,8 @@ public class Blue_Far_Auto extends LinearOpMode {
         //control.SetPinpointPosition(60, -12, 270);
 
         // turn turret to face the obelisk
-        double turretTargetAngle = 91.0;
-        control.SetTurretRotationAngle(turretTargetAngle);
+        //double turretTargetAngle = 91.0;
+        //control.SetTurretRotationAngle(turretTargetAngle);
 
         // set lifter half up (so can get 3 ball loaded in robot)
         control.SetLifterPosition(control.LIFTER_MID_POSITION);
@@ -66,26 +67,30 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
 
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
+        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(270)))
                 .strafeToConstantHeading(new Vector2d(11.5, -30))
                 .strafeToConstantHeading(new Vector2d(11.5, -55))
                 .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(20, -12))
-                .strafeToConstantHeading(new Vector2d(60, -12))
+        DriveToStartShootPosition = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveToFirstMark = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
+        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(20, -12))
+                .strafeToConstantHeading(new Vector2d(48, -12))
+                .build();
+
+        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(270)))
                 .strafeToConstantHeading(new Vector2d(34.75, -30))
                 .strafeToConstantHeading(new Vector2d(34.75, -55))
                 .build();
 
         DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -55, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(60, -12))
+                .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
+        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(270)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .build();
 
@@ -114,7 +119,11 @@ public class Blue_Far_Auto extends LinearOpMode {
         }
 
         // ********* STARTED ********************************
+
         resetRuntime();
+
+        double turretTargetAngle = 91.0;
+        control.SetTurretRotationAngle(turretTargetAngle);
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // spin up shooter wheel to max
@@ -133,6 +142,11 @@ public class Blue_Far_Auto extends LinearOpMode {
         double shooterSpeedRPM = 3500;
         //control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
         sleep(500);
+
+        Actions.runBlocking(
+                DriveToStartShootPosition
+        );
+
 
         // shoot the 3 pre-loaded balls
         control.SetLifterUp();  // shoot ball 1
