@@ -1,53 +1,55 @@
 = Shear Force Software Team To-Do List:
 
-== To prepare for first meet
+== Tasks to be worked
 
-- [x] AUTO: Integrate Pinpoint Odometry Driver
-- [x] Add telemetry for pinpoint IMU and movement ticks to ShowTelemetry()
-- [x] AUTO: Calibrate Gericka roadrunner
-- [*] GENERAL - Experiment and Verify the new blackboard concept to store auto settings for manual usage
 
 === Shrey
 
-- [x] AUTO(Shrey): Test Blue_Far_Auto for positions
-- [x] AUTO(Shrey): Complete TODOs in Blue_Far_Auto to make shoot, intake, and track target
-- [x] AUTO(Shrey): Create a Red_Far_Auto that mirrors Blue_Far_Auto
-- [ ] AUTO: Test and tweak the two far auto routes to be awesome
+- [ ] AUTO: figure out why the 3rd shot is not going out, is the lifter not going all the way down or is it going up too soon, or is the ball stuck somehow?
+- [ ] AUTO: experiment, if we set the shooter motors to RUN_USING_ENCODER does it do any better at spinning up or holding its RPM speed?
+- [ ] AUTO: Turn initialization of the turret position in Init back on, instead of commenting out, sleep a second then turn power off on the turret motor.  Be sure to turn power back on when play pressed.
+- [ ] AUTO: Change far auto routine to be separate path calls, so that shooting can be handled outside of actions (look at Blue_Close_Auto for example of separate path calls with shooting separate), this will give us more flexibility to use variables to control the sleep times between shots, and to use time to decide if we shoot more or not
+- [ ] AUTO: Change the sleeps on the shooting to be based on achieving a minimal RPM speed like 3400
+  * Example:
+```
+   while (control.CalculateMotorRPM(shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+     sleep(20);
+   }
+   control.SetLifterUp();  // Shot 1
+   sleep(500); //TODO need to find the smallest sleep time to lift and drop
+   while (control.CalculateMotorRPM(shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+     sleep(20);
+   }
+   control.SetLifterUp();  // Shot 2
+```
+- [ ] AUTO: Change the ending to be time based, meaning if we have enough time, lets shoot another 3 balls then park
+  * Example:
+```
+   Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
+   if (Gericka_Hardware.autoTimeLeft > 10) {  //TODO calculate time needed to shoot 3 and park
+      Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
+
+      // Shoot 3 balls here
+
+      // Drive to parking spot...
+   }
+```
 
 === Akshay
 
-- [ ] AUTO(Akshay): Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
-  * Need MeepMeep route, the ones currently in there don't do this simple meet 1 approach
-  * Copy structure of the Blue_Far_Auto when ready so the code seems familiar to everyone
-- [ ] AUTO(Akshay): Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
+- [ ] AUTO: Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
+- [ ] AUTO: Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
+- [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
 
 === Tong
 
-- [x] SHOOTER(Tong): use the data collected to create a CalculateOptimumShooterRPM(double distanceInInches) method
-- [x] SHOOTER(Tong): create method to use the webcam distance-to-target to auto set the shooter target RPMs using the CalculateOptimumShooterRPM()
-  * if (getAprilTagVisible(currentTargetId)) then CalculateOptimumShooterRPM(getDistanceToAprilTag(currentTargetId))
-- [x] SHOOTER(Tong): need button to turn auto RPM mode setting on/off - default to on
-  * look at TODOs in Manual control class
-- [ ] Test all buttons, make them all work (fix the if && logic )
-- [ ] Test shooting the balls
-- [x] Develop method that can calculate distance between two points (will use with pinpoint to take current position to goal without relying on camera)
-- [x] Develop method to calculate turn angle needed for turret to point at goal given two points and current heading (will use with pinpoint without relying on camera)
+- [ ] Assess pinpoint telemetry during Auto -- is it correct?
+- [ ] Assess pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
+- [ ] Disable the April tag update of pinpoint position for now
+- [ ] Test tracking of target with pinpoint
 
 === Gianna
 
-- [x] GENERAL(Gianna) - Setup the control hub and driver station wifi to pass inspection
-  * Run the Self-Inspect
-    ** https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/self_inspect/new-self-inspect.html
-  * Need to make sure ALL of our driver HUBs are loaded with the latest firmware from Rev Hardware Client
-  * Need to make sure our WiFi name and password are legal
-    ** pword: ShearForce21225SF
-- [x] LIFTER(Gianna): Integrate logic to use the ball distance detection sensor to automatically lift ball half way towards shooter
-  * if (lifter is down && (ball detected by sensor-1 || ball detected by sensor-2)) then lift ball half-way up
-  * Need to figure out which exact sensor is installed Rev Color V2, Rev Color V3, or Rev 2M Distance
-  * Example code for any of those sensors can be found on the Rev site around here:
-    ** https://docs.revrobotics.com/rev-crossover-products/sensors/2m-distance/application-examples#onbot-java
-- [ ] LIFTER(Gianna): need combo button to turn auto lifter logic on/off - default to on
-  * look at TODOs in Manual control class
 - [ ] INTAKE: Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
   * if (inside sensor says empty && outside sensor ball present) then turn intake on
   * else if (inside sensor says ball present) then turn intake off
@@ -55,13 +57,13 @@
     ** FtcRobotController -> external.samples -> SensorDigitalTouch
 - [ ] INTAKE: need combo button to turn auto intake logic on/off - default to on
   * look at TODOs in Manual control class
+- [ ] move the auto mode variables from Manual class to Hardware class, so can put all of them in the telemetry, to make testing buttons to turn auto functions on/off easier
+- [ ] Test all buttons, make them all work, in particular it appears a lot of the SHARE + buttons are not working correctly
 
 == Next Level Stuff
 
 - [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
-- [ ] Integrate April tag detection to the Autonomous routes, change intake based on detected
-- [ ] Setup PID controller for shooter motors
-- [ ] Setup PID controller for turret rotator
+- [ ] Integrate April tag detection to the Autonomous routes, change intake order based on detected april tag
 - [ ] Develop lots of autonomous options and test them
 - [ ] AUTO: Implement Blue Large triangle start that can shoot 3 balls, and pick up correct line and shoot them then park for any of the 3 choices
 - [ ] AUTO: Implement Red Large triangles start that can shoot 3 balls, and pick up correct line and shoot them then park for any of the 3 choices
@@ -72,20 +74,7 @@
 == Advanced Shooter System Tasks
 
 - [ ] Develop function to calculate the optimum launcher ramp height
-
-== Color Sensor / LED Tasks
-
-- [ ] Develop test program to assess color sensor usage on balls, document best color ranges to use
-- [ ] Integrate the new LED light system
-
-== Setup Laptops and Accounts
-
-- [ ] Verify Shrey has his laptop setup correctly
-
-== Odometry Assessment Related Tasks
-
-- [ ] Calibrate Summer Chassis
-- [ ] Develop a test path plan to use to assess odometry pods
-- [ ] Conduct tests of the different odometry pods and compare results
+- [ ] Setup PID controller for shooter motors
+- [ ] Setup PID controller for turret rotator
 
 

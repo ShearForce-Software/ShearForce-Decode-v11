@@ -46,8 +46,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     //Init hardware as Blue
     control.Init(hardwareMap, "BLUE");
     blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
-        control.WebcamInit(this.hardwareMap);
-        control.SetPinpointPosition(-60, -39, 270);
+    control.WebcamInit(this.hardwareMap);
+    //    control.SetPinpointPosition(-60, -39, 270);
 
     // Turret initial rough angle toward speaker (tune as needed)
     double turretTargetAngle = 135.8;
