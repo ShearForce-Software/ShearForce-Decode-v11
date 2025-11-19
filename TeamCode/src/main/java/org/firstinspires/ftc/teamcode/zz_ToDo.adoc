@@ -5,11 +5,11 @@
 
 === Shrey
 
-- [ ] AUTO: figure out why the 3rd shot is not going out, is the lifter not going all the way down or is it going up too soon, or is the ball stuck somehow?
-- [ ] AUTO: experiment, if we set the shooter motors to RUN_USING_ENCODER does it do any better at spinning up or holding its RPM speed?
+- [x] AUTO: figure out why the 3rd shot is not going out, is the lifter not going all the way down or is it going up too soon, or is the ball stuck somehow?
+- [x] AUTO: experiment, if we set the shooter motors to RUN_USING_ENCODER does it do any better at spinning up or holding its RPM speed?
 - [ ] AUTO: Turn initialization of the turret position in Init back on, instead of commenting out, sleep a second then turn power off on the turret motor.  Be sure to turn power back on when play pressed.
 - [ ] AUTO: Change far auto routine to be separate path calls, so that shooting can be handled outside of actions (look at Blue_Close_Auto for example of separate path calls with shooting separate), this will give us more flexibility to use variables to control the sleep times between shots, and to use time to decide if we shoot more or not
-- [ ] AUTO: Change the sleeps on the shooting to be based on achieving a minimal RPM speed like 3400
+- [x] AUTO: Change the sleeps on the shooting to be based on achieving a minimal RPM speed like 3400
   * Example:
 ```
    while (control.CalculateMotorRPM(shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
@@ -43,8 +43,8 @@
 
 === Tong
 
-- [ ] Assess pinpoint telemetry during Auto -- is it correct?
-- [ ] Assess pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
+- [x] Assess pinpoint telemetry during Auto -- is it correct?
+- [x] Assess pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
 - [ ] Disable the April tag update of pinpoint position for now
 - [ ] Test tracking of target with pinpoint
 

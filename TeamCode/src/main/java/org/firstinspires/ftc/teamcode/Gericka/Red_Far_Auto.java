@@ -75,20 +75,20 @@ public class Red_Far_Auto extends LinearOpMode {
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(11.5, 30))
-                .strafeToConstantHeading(new Vector2d(11.5, 55))
+                .strafeToConstantHeading(new Vector2d(11.5, 57))
                 .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, 55, Math.toRadians(90)))
+        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, 57, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12))
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(34.75, 30))
-                .strafeToConstantHeading(new Vector2d(34.75, 55))
+                .strafeToConstantHeading(new Vector2d(34.75, 57))
                 .build();
 
-        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, 55, Math.toRadians(90)))
+        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, 57, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
@@ -114,6 +114,7 @@ public class Red_Far_Auto extends LinearOpMode {
         SecondaryThread.start();
         double turretTargetAngle = -91.0;
         control.SetTurretRotationAngle(turretTargetAngle);
+        sleep(1000);
         control.turretMotor.setPower(0);
 
         // ***************************************************
