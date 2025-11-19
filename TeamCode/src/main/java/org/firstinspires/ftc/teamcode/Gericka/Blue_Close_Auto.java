@@ -40,20 +40,22 @@ public class Blue_Close_Auto extends LinearOpMode {
     public void runOpMode(){
     //We will start at big trianlge start
     startPose = new Pose2d(-60,-39,Math.toRadians(270));
+    /* Initialize the Robot */
+    control.Init(hardwareMap, "BLUE");
 
+    // initialize roadrunner
     drive = new Gericka_MecanumDrive(hardwareMap, startPose);
 
-    //Init hardware as Blue
-    control.Init(hardwareMap, "BLUE");
-    blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+    // initialize the webcam
     control.WebcamInit(this.hardwareMap);
-    //    control.SetPinpointPosition(-60, -39, 270);
 
-    // Turret initial rough angle toward speaker (tune as needed)
-    double turretTargetAngle = 135.8;
-    control.SetTurretRotationAngle(turretTargetAngle);
+    sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
+    // finish initializing the pinpoint
+    control.SetPinpointPosition(-60, -39, 270);
 
-    // Lifter halfway so we can hold 3
+    blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+
+    // set lifter half up (so can get 3 ball loaded in robot)
     control.SetLifterPosition(control.LIFTER_MID_POSITION);
 
     telemetry.update();
@@ -74,10 +76,15 @@ public class Blue_Close_Auto extends LinearOpMode {
             .build();
 
         boolean autoLifter = true;
-    // Background telemetry thread (same pattern as Blue_Far_Auto)
+
+    // ***************************************************
+    // ****  Secondary Thread to run all the time ********
+    // ***************************************************
     Thread secondaryThread = new Thread(() -> {
         while (!isStopRequested() && getRuntime() < 30) {
-            control.ShowPinpointTelemetry();
+                control.ShowTelemetry();
+                //control.ShowPinpointTelemetry();
+
                 if (isStarted()) {
                     control.LifterAuto(autoLifter);
                 }
@@ -87,6 +94,13 @@ public class Blue_Close_Auto extends LinearOpMode {
     });
     secondaryThread.start();
 
+    // Turret initial rough angle toward speaker (tune as needed)
+    double turretTargetAngle = 135.8;
+    control.SetTurretRotationAngle(turretTargetAngle);
+    sleep(1000);
+    // turn off turret power so doesn't twitch
+    control.turretMotor.setPower(0);
+
     // *************************************
     //      Wait for start
     // *************************************
@@ -94,8 +108,12 @@ public class Blue_Close_Auto extends LinearOpMode {
         telemetry.update();
     }
 
+    // ********* STARTED ********************************
     resetRuntime();
     Gericka_Hardware.autoTimeLeft = 0.0;
+
+    // turn on intake to suck in any stuck balls
+    control.SetIntakeMotor(true,true);
 
         // spin up shooter wheel to max
         control.SetShooterSpeed(1.0);

@@ -43,21 +43,22 @@ public class Blue_Far_Auto extends LinearOpMode {
     public void runOpMode() {
         startPose = new Pose2d(60, -12, Math.toRadians(270));
         /* Initialize the Robot */
+        control.Init(hardwareMap, "BLUE");
+
+        // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
 
-        control.Init(hardwareMap, "BLUE");
-        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+        // initialize the webcam
         control.WebcamInit(this.hardwareMap);
-        //control.SetPinpointPosition(60, -12, 270);
 
-        // turn turret to face the obelisk
-        //double turretTargetAngle = 91.0;
-        //control.SetTurretRotationAngle(turretTargetAngle);
+        sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
+        // finish initializing the pinpoint
+        control.SetPinpointPosition(60, -12, 270);
+
+        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
         // set lifter half up (so can get 3 ball loaded in robot)
         control.SetLifterPosition(control.LIFTER_MID_POSITION);
-
-        telemetry.update();
 
         //control.imuOffsetInDegrees = 270; // Math.toDegrees(startPose.heading.toDouble());
 
@@ -96,10 +97,13 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         boolean autoLifter = true;
 
+        // ***************************************************
+        // ****  Secondary Thread to run all the time ********
+        // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                //control.ShowTelemetry();
-                control.ShowPinpointTelemetry();
+                control.ShowTelemetry();
+                //control.ShowPinpointTelemetry();
 
                 if (isStarted()) {
                     control.LifterAuto(autoLifter);
@@ -111,6 +115,13 @@ public class Blue_Far_Auto extends LinearOpMode {
         });
         SecondaryThread.start();
 
+        // turn turret to face the obelisk
+        double turretTargetAngle = 91.0;
+        control.SetTurretRotationAngle(turretTargetAngle);
+        sleep(1000);
+        // turn off turret power so doesn't twitch
+        control.turretMotor.setPower(0);
+
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
         // ***************************************************
@@ -119,15 +130,20 @@ public class Blue_Far_Auto extends LinearOpMode {
         }
 
         // ********* STARTED ********************************
-
         resetRuntime();
-
-        double turretTargetAngle = 91.0;
-        control.SetTurretRotationAngle(turretTargetAngle);
         Gericka_Hardware.autoTimeLeft = 0.0;
 
+        // turn on intake to suck in any stuck balls
+        control.SetIntakeMotor(true,true);
+
         // spin up shooter wheel to max
-        control.SetShooterSpeed(1.0);
+        //control.SetShooterSpeed(1.0);
+        // set shooter speed to small triangle speed, can just leave at this speed the whole time
+        double shooterSpeedRPM = 3500;
+        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        // drive to the start triangle
+        Actions.runBlocking(DriveToStartShootPosition);
 
         //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
@@ -136,33 +152,42 @@ public class Blue_Far_Auto extends LinearOpMode {
         control.SetTurretRotationAngle(turretTargetAngle);
 
         // sleep some time to allow shooter wheel to spin up
-        sleep(4000);
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+            sleep(20);
+        }
 
-        // set shooter speed to small triangle speed, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3500;
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        /* **** SHOOT BALL #1 **** */
+        control.SetLifterUp();  // Shot 1
+        sleep(500); //TODO need to find the smallest sleep time to lift and get shot
+        control.SetLifterDown();
+        sleep(500); //TODO need to find the smallest sleep time to drop and get another ball ready
+
+        // can stop the intake after the first shot to save power
+        control.SetIntakeMotor(false,true);
+
+        // sleep some time to allow shooter wheel to spin back up if needed
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+            sleep(20);
+        }
+
+        /* **** SHOOT BALL #2 **** */
+        control.SetLifterUp();  // Shot 2
+        sleep(500);
+        control.SetLifterDown();
         sleep(500);
 
-        Actions.runBlocking(
-                DriveToStartShootPosition
-        );
+        // sleep some time to allow shooter wheel to spin back up if needed
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+            sleep(20);
+        }
 
-
-        // shoot the 3 pre-loaded balls
-        control.SetLifterUp();  // shoot ball 1
-        sleep(1000);
-        control.SetLifterDown();
-        sleep(1000);
-        control.SetLifterUp();  // shoot ball 2
-        sleep(1000);
-        control.SetLifterDown();
-        sleep(1000);
-        control.SetLifterUp();  // shoot ball 3
-        sleep(1000);
+        /* **** SHOOT BALL #3 **** */
+        control.SetLifterUp();  // Shot 3
+        sleep(500);
         control.SetLifterDown();
 
-        shooterSpeedRPM = 3500;
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //shooterSpeedRPM = 3500;
+        //control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // ***************************************************
         // ****  START DRIVING    ****************************

@@ -55,6 +55,8 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
         theRobot.SetAutoShooterMode(autoShooterMode);
 
+        sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
+
         // Use the Blackboard to determine the initial x,y and heading that auto finished in, OR use camera view of April tag to set position
         try {
             double xPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_X_POSITION);
@@ -62,12 +64,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
             double headingDegrees = (double) blackboard.get(Gericka_Hardware.FINAL_HEADING_DEGREES);
             theRobot.SetPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
         } catch (NullPointerException ignored) {
-            theRobot.SetPinpointPosition(0.0, 0.0, defaultHeadingDegrees);
-            theRobot.pinpoint.update();
+            //theRobot.SetPinpointPosition(0.0, 0.0, defaultHeadingDegrees);
+            //theRobot.pinpoint.update();
             // attempt to use any april tags that are visible to update the pinpoint position
             theRobot.setPinpointPositionFromWebcam();
         }
-        theRobot.pinpoint.update();
 
         theRobot.ShowTelemetry();
         telemetry.update();

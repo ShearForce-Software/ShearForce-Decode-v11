@@ -319,8 +319,8 @@ public class Gericka_Hardware {
          * This is recommended before you run your autonomous, as a bad initial calibration can cause
          * an incorrect starting value for x, y, and heading.
          */
-        pinpoint.resetPosAndIMU();
-        //pinpoint.recalibrateIMU();
+        //pinpoint.resetPosAndIMU();
+        pinpoint.recalibrateIMU();
 
         pinpoint.update();
     }
@@ -664,6 +664,7 @@ public class Gericka_Hardware {
                 }
             }
         }
+        pinpoint.update();
 
     }
     public void ShooterRPMFromPinpoint(){

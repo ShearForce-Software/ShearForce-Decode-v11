@@ -3,25 +3,27 @@
 == Tasks to be worked
 
 
+=== Akshay
+
+- [ ] AUTO: Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
+- [ ] AUTO: Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
+- [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
+
+=== Gianna
+
+- [ ] INTAKE: Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
+* if (inside sensor says empty && outside sensor ball present) then turn intake on
+* else if (inside sensor says ball present) then turn intake off
+* Example code for sensor is at:
+** FtcRobotController -> external.samples -> SensorDigitalTouch
+- [ ] INTAKE: need combo button to turn auto intake logic on/off - default to on
+* look at TODOs in Manual control class
+- [ ] move the auto mode variables from Manual class to Hardware class, so can put all of them in the telemetry, to make testing buttons to turn auto functions on/off easier
+- [ ] Test all buttons, make them all work, in particular it appears a lot of the SHARE + buttons are not working correctly
+
 === Shrey
 
-- [x] AUTO: figure out why the 3rd shot is not going out, is the lifter not going all the way down or is it going up too soon, or is the ball stuck somehow?
-- [x] AUTO: experiment, if we set the shooter motors to RUN_USING_ENCODER does it do any better at spinning up or holding its RPM speed?
-- [ ] AUTO: Turn initialization of the turret position in Init back on, instead of commenting out, sleep a second then turn power off on the turret motor.  Be sure to turn power back on when play pressed.
-- [ ] AUTO: Change far auto routine to be separate path calls, so that shooting can be handled outside of actions (look at Blue_Close_Auto for example of separate path calls with shooting separate), this will give us more flexibility to use variables to control the sleep times between shots, and to use time to decide if we shoot more or not
-- [x] AUTO: Change the sleeps on the shooting to be based on achieving a minimal RPM speed like 3400
-  * Example:
-```
-   while (control.CalculateMotorRPM(shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
-     sleep(20);
-   }
-   control.SetLifterUp();  // Shot 1
-   sleep(500); //TODO need to find the smallest sleep time to lift and drop
-   while (control.CalculateMotorRPM(shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
-     sleep(20);
-   }
-   control.SetLifterUp();  // Shot 2
-```
+- [ ] AUTO: Change far auto routine to be separate path calls, so that shooting can be handled outside of actions (look at Blue_Close_Auto for example of separate path calls with shooting separate), this will give us more flexibility to use variables to control the sleep times between shots, and to use time to decide if we shoot more balls or not
 - [ ] AUTO: Change the ending to be time based, meaning if we have enough time, lets shoot another 3 balls then park
   * Example:
 ```
@@ -35,30 +37,13 @@
    }
 ```
 
-=== Akshay
-
-- [ ] AUTO: Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
-- [ ] AUTO: Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
-- [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
-
 === Tong
 
-- [x] Assess pinpoint telemetry during Auto -- is it correct?
-- [x] Assess pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
+- [ ] Retest pinpoint telemetry during Auto (switched from resetPosAndIMU to just recalibrateIMU) -- is it correct now?
+- [ ] Retest pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
+- [ ] IF pinpoint still not reporting correct values, then create variable to store initial position in HW class, then create method(s) to get pinpoint position + initial offsets, convert telemetry to use these new values, and test.  Then can use for turret logic.
 - [ ] Disable the April tag update of pinpoint position for now
 - [ ] Test tracking of target with pinpoint
-
-=== Gianna
-
-- [ ] INTAKE: Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
-  * if (inside sensor says empty && outside sensor ball present) then turn intake on
-  * else if (inside sensor says ball present) then turn intake off
-  * Example code for sensor is at:
-    ** FtcRobotController -> external.samples -> SensorDigitalTouch
-- [ ] INTAKE: need combo button to turn auto intake logic on/off - default to on
-  * look at TODOs in Manual control class
-- [ ] move the auto mode variables from Manual class to Hardware class, so can put all of them in the telemetry, to make testing buttons to turn auto functions on/off easier
-- [ ] Test all buttons, make them all work, in particular it appears a lot of the SHARE + buttons are not working correctly
 
 == Next Level Stuff
 

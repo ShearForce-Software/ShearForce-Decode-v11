@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
 import org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive;
 import org.firstinspires.ftc.teamcode.Geronimo.FourHighSpecimensAutoRoute;
 
-//TODO auto select manual opMode next
+// auto select manual opMode next
 @Autonomous(name="Red Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 public class Red_Far_Auto extends LinearOpMode {
@@ -46,21 +46,21 @@ public class Red_Far_Auto extends LinearOpMode {
         startPose = new Pose2d(60, 12, Math.toRadians(90));
         /* Initialize the Robot */
         control.Init(hardwareMap, "RED");
+
+        // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
 
-        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
+        // initialize the webcam
         control.WebcamInit(this.hardwareMap);
+
+        sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
+        // finish initializing the pinpoint
         control.SetPinpointPosition(60, 12, 90);
 
-        // turn turret to face the obelisk
-        //double turretTargetAngle = -91.0;
-        //control.SetTurretRotationAngle(turretTargetAngle);
-
+        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
         // set lifter half up (so can get 3 ball loaded in robot)
         control.SetLifterPosition(control.LIFTER_MID_POSITION);
-
-        telemetry.update();
 
         //control.imuOffsetInDegrees = 270; // Math.toDegrees(startPose.heading.toDouble());
 
@@ -98,6 +98,9 @@ public class Red_Far_Auto extends LinearOpMode {
 
         boolean autoLifter = true;
 
+        // ***************************************************
+        // ****  Secondary Thread to run all the time ********
+        // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
                 control.ShowTelemetry();
@@ -112,15 +115,18 @@ public class Red_Far_Auto extends LinearOpMode {
             }
         });
         SecondaryThread.start();
+
+        // turn turret to face the obelisk
         double turretTargetAngle = -91.0;
         control.SetTurretRotationAngle(turretTargetAngle);
         sleep(1000);
+        // turn off turret power so doesn't twitch
         control.turretMotor.setPower(0);
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
         // ***************************************************
-        while (!isStarted()) {
+        while (!isStarted() && !isStopRequested()) {
             telemetry.update();
         }
 
@@ -128,64 +134,61 @@ public class Red_Far_Auto extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
-        // spin up shooter wheel to max
-        control.SetShooterSpeed(1.0);
+        // turn on intake to suck in any stuck balls
+        control.SetIntakeMotor(true,true);
 
+        // spin up shooter wheel to max
+        //control.SetShooterSpeed(1.0);
+        // set shooter speed to small triangle speed, can just leave at this speed the whole time
+        double shooterSpeedRPM = 3500;
+        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        // drive to the start triangle
         Actions.runBlocking(DriveToShootingPosition);
+
         //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
         // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = -115.0;
         control.SetTurretRotationAngle(turretTargetAngle);
-        //sleep(1000);
-        //control.turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //control.turretMotor.setPower(0);
 
         // sleep some time to allow shooter wheel to spin up
-        //sleep(4000);
-        double shooterSpeedRPM = 3500;
         while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
             sleep(20);
         }
-        //control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        /* **** SHOOT BALL #1 **** */
         control.SetLifterUp();  // Shot 1
-        sleep(500); //TODO need to find the smallest sleep time to lift and drop
+        sleep(500); //TODO need to find the smallest sleep time to lift and get shot
         control.SetLifterDown();
-        control.SetIntakeMotor(true,true);
-        sleep(500);
+        sleep(500); //TODO need to find the smallest sleep time to drop and get another ball ready
+
+        // can stop the intake after the first shot to save power
+        control.SetIntakeMotor(false,true);
+
+        // sleep some time to allow shooter wheel to spin back up if needed
         while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
             sleep(20);
         }
+
+        /* **** SHOOT BALL #2 **** */
         control.SetLifterUp();  // Shot 2
         sleep(500);
         control.SetLifterDown();
         sleep(500);
+
+        // sleep some time to allow shooter wheel to spin back up if needed
         while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
             sleep(20);
         }
+
+        /* **** SHOOT BALL #3 **** */
         control.SetLifterUp();  // Shot 3
         sleep(500);
         control.SetLifterDown();
-        //sleep(500);
 
-        // set shooter speed to small triangle speed, can just leave at this speed the whole time
-          //sleep(500);
-
-        // shoot the 3 pre-loaded balls
-        /*control.SetLifterUp();  // shoot ball 1
-        sleep(1000);
-        control.SetLifterDown();
-        sleep(1000);
-        control.SetLifterUp();  // shoot ball 2
-        sleep(1000);
-        control.SetLifterDown();
-        sleep(1000);
-        control.SetLifterUp();  // shoot ball 3
-        sleep(1000);
-        control.SetLifterDown();*/
-
-        shooterSpeedRPM = 3500;
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //shooterSpeedRPM = 3500;
+        //control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // ***************************************************
         // ****  START DRIVING    ****************************
