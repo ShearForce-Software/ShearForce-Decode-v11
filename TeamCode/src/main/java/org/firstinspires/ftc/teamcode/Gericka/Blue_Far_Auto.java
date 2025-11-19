@@ -140,7 +140,7 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
         double shooterSpeedRPM = 3500;
-        //control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
         sleep(500);
 
         Actions.runBlocking(

@@ -237,8 +237,8 @@ public class Gericka_Hardware {
         turretMotor.setTargetPosition(0);
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeMotor.setPower(0.0);
@@ -340,8 +340,8 @@ public class Gericka_Hardware {
         */
         opMode.telemetry.addData("pinpoint status: ", pinpoint.getDeviceStatus());
         opMode.telemetry.addData("pinpoint ", "x-ticks: %d, y-ticks: %d", pinpoint.getEncoderX(), pinpoint.getEncoderY());
-        opMode.telemetry.addData("pinpoint Position(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH));
-        opMode.telemetry.addData("pinpoint Heading(deg): ", pinpoint.getHeading(AngleUnit.DEGREES));
+        opMode.telemetry.addData("pinpoint Position(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosition().getX(DistanceUnit.INCH), pinpoint.getPosition().getY(DistanceUnit.INCH));
+        opMode.telemetry.addData("pinpoint Heading(deg): ", pinpoint.getPosition().getHeading(AngleUnit.DEGREES));
 
     }
 

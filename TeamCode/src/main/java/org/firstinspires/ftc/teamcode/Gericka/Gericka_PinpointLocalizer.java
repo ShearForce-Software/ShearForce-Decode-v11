@@ -8,7 +8,9 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.teamcode.Localizer;
 
@@ -60,6 +62,8 @@ public final class Gericka_PinpointLocalizer implements Localizer {
         driver.setEncoderDirections(initialParDirection, initialPerpDirection);
 
         driver.resetPosAndIMU();
+
+        driver.setPosition(new Pose2D(DistanceUnit.INCH, initialPose.position.x, initialPose.position.y, AngleUnit.RADIANS,initialPose.heading.toDouble()));
 
         txWorldPinpoint = initialPose;
     }
