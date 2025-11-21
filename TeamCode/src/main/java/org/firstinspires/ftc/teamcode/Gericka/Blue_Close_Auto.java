@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Gericka;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -24,6 +27,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     Action DriveStartToMidPosition;
     Action DriveMidToClosestLine;
     Action DriveClosestLineBackToLaunchPark;
+    int lifterUpSleepTime = 500;
+    int lifterDownSleepTime = 600;
 
     public void runOpMode(){
     //We will start at big trianlge start
@@ -46,7 +51,6 @@ public class Blue_Close_Auto extends LinearOpMode {
     // set lifter half up (so can get 3 ball loaded in robot)
     control.SetLifterPosition(control.LIFTER_MID_POSITION);
 
-    telemetry.update();
 
     DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(270)))
             .strafeToLinearHeading(new Vector2d(-10, -10), Math.toRadians(210))
@@ -63,7 +67,7 @@ public class Blue_Close_Auto extends LinearOpMode {
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
-        boolean autoLifter = true;
+        control.SetAutoLifterMode(true);
 
     // ***************************************************
     // ****  Secondary Thread to run all the time ********
@@ -74,7 +78,7 @@ public class Blue_Close_Auto extends LinearOpMode {
                 //control.ShowPinpointTelemetry();
 
                 if (isStarted()) {
-                    control.LifterAuto(autoLifter);
+                    control.RunAutoLifter();
                 }
             telemetry.update();
             sleep(20);
@@ -92,9 +96,7 @@ public class Blue_Close_Auto extends LinearOpMode {
     // *************************************
     //      Wait for start
     // *************************************
-    while (!isStarted() && !isStopRequested()) {
-        telemetry.update();
-    }
+        waitForStart();
 
     // ********* STARTED ********************************
     resetRuntime();
@@ -103,8 +105,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     // turn on intake to suck in any stuck balls
     control.SetIntakeMotor(true,true);
 
-        // spin up shooter wheel to max
-        control.SetShooterSpeed(1.0);
+    // spin up shooter wheel to max
+    control.SetShooterSpeed(1.0);
 
 
     Actions.runBlocking(new SleepAction((2.0)));
@@ -117,23 +119,22 @@ public class Blue_Close_Auto extends LinearOpMode {
     // Shooter RPM for big triangle shots (tune as needed)
     double shooterSpeedRPM = 2900;
     control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-    sleep(5000);
+        // Turn on intake incase a ball is stuck
+        control.SetIntakeMotor(true, true);
 
-    control.SetLifterUp();   // shot 1
-    sleep(500);
-    control.SetLifterDown();
-    sleep(500);
+        /* **** SHOOT BALL #1 **** */
+        ShootBall(shooterSpeedRPM);
 
-    control.SetLifterUp();   // shot 2
-    sleep(500);
-    control.SetLifterDown();
-    sleep(500);
+        // Turn off intake to save energy
+        control.SetIntakeMotor(false, true);
 
-    control.SetLifterUp();   // shot 3
-    sleep(500);
-    control.SetLifterDown();
+        /* **** SHOOT BALL #2 **** */
+        ShootBall(shooterSpeedRPM);
 
-    //Shouljd we turn intake on while we go to the closest line
+        /* **** SHOOT BALL #3 **** */
+        ShootBall(shooterSpeedRPM);
+
+    //Should we turn intake on while we go to the closest line
     control.SetIntakeMotor(true, true);
 
 
@@ -154,27 +155,23 @@ public class Blue_Close_Auto extends LinearOpMode {
 
    // sleep(5000);//giving it sleepy time
 
-    control.SetLifterUp();   // shot 1
-    sleep(500);
-    control.SetLifterDown();
-    sleep(500);
+        /* **** SHOOT BALL #4 **** */
+        ShootBall(shooterSpeedRPM);
 
-    control.SetLifterUp();   // shot 2
-    sleep(500);
-    control.SetLifterDown();
-    sleep(500);
+        /* **** SHOOT BALL #5 **** */
+        ShootBall(shooterSpeedRPM);
 
-    control.SetLifterUp();   // shot 3
-    sleep(500);
-    control.SetLifterDown();
+        /* **** SHOOT BALL #6 **** */
+        ShootBall(shooterSpeedRPM);
 
-    drive.updatePoseEstimate();
+        //TODO need to park away from the line
 
-        // store final exact position in blackboard, so can initialize manual pinpoint with that position
-        control.pinpoint.update();
-        blackboard.put(Gericka_Hardware.FINAL_X_POSITION, control.pinpoint.getPosX(DistanceUnit.INCH));
-        blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, control.pinpoint.getPosY(DistanceUnit.INCH));
-        blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, control.pinpoint.getHeading(AngleUnit.DEGREES));
+        // store final exact position in blackboard, so can initialize absolute pinpoint with that position
+        //control.pinpoint.update();
+        drive.updatePoseEstimate();
+        blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+        blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+        blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
 
     // turn off shooter wheel
     shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
@@ -191,5 +188,85 @@ public class Blue_Close_Auto extends LinearOpMode {
 
 }
 
+    private void ShootBall(double shooterSpeedRPM) {
+        // sleep some time to allow shooter wheel to spin back up if needed
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+                control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 10)) {
+            sleep(20);
+        }
+
+        /* **** SHOOT a BALL  **** */
+        control.SetLifterUp();
+        sleep(lifterUpSleepTime);
+
+        // Reset to get another ball
+        control.SetLifterDown();
+        sleep(lifterDownSleepTime);
+
+    }
+
+    public Action setIntakeOn() {
+        return new setIntakeOn();
+    }
+
+    public class setIntakeOn implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            control.SetIntakeMotor(true, true);
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+            }
+        }
+
+        public Action setIntakeOff() {
+            return new setIntakeOff();
+        }
+
+        public class setIntakeOff implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    initialized = true;
+                }
+                control.SetIntakeMotor(false, false);
+                packet.put("lock purple pixel", 0);
+                return false;  // returning true means not done, and will be called again.  False means action is completely done
+            }
+        }
+
+    public class SetLifterUp implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            control.SetLifterUp();
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+
+    public class SetLifterDown implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            control.SetLifterDown();
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
 
 }

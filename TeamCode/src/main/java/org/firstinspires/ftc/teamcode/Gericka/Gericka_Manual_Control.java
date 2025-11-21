@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Gericka;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,28 +10,12 @@ import java.util.Objects;
 //@Disabled
 public class Gericka_Manual_Control extends LinearOpMode {
     Gericka_Hardware theRobot;
-    boolean rotatorPowerApplied = false;
-    boolean slidePowerApplied = false;
-
-    boolean alignBusy = false;
-
     public int turretTrackingID = 24; // default to Red
-    public boolean turretAutoMode = true;
-    private boolean dpadDownPrev = false;
-    //boolean intakeStarPowerApplied = false;
-
     float turretRotationAngle = 0.0f;
     final float TURRET_ROTATION_ANGLE_INCREMENT = 1.0f;
-    // Scrimmage Meet Ideas:
-    // Press intake button, have claw grab the sample
-    // Have claw go down when slides extend forward?
-    // 1 button to grab specimen off wall (rotate slides, Limelight correction, grab, rotate claw up to get off wall)
-    boolean autoLifter = true;
     double shooterSpeedRPM = 0.0;
     final double shooterSpeedRPMIncrement = 50;
-    double autoShooterSpeed=0.0;
-    boolean autoShooterMode = true;
-    boolean useWebcamForDistance = true;
+
     public void runOpMode() {
         theRobot = new Gericka_Hardware(true, true, this);
         telemetry.setMsTransmissionInterval(11);
@@ -53,15 +38,17 @@ public class Gericka_Manual_Control extends LinearOpMode {
         }
 
         theRobot.WebcamInit(this.hardwareMap);
-        theRobot.SetAutoShooterMode(autoShooterMode);
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
 
         // Use the Blackboard to determine the initial x,y and heading that auto finished in, OR use camera view of April tag to set position
+        double xPositionInches = 0.0;
+        double yPositionInches = 0.0;
+        double headingDegrees = defaultHeadingDegrees;
         try {
-            double xPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_X_POSITION);
-            double yPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_Y_POSITION);
-            double headingDegrees = (double) blackboard.get(Gericka_Hardware.FINAL_HEADING_DEGREES);
+            xPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_X_POSITION);
+            yPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_Y_POSITION);
+            headingDegrees = (double) blackboard.get(Gericka_Hardware.FINAL_HEADING_DEGREES);
             theRobot.SetInitalPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
         } catch (NullPointerException ignored) {
             //theRobot.SetPinpointPosition(0.0, 0.0, defaultHeadingDegrees);
@@ -70,9 +57,21 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.setPinpointPositionFromWebcam();
         }
 
+        // set auto settings
+        theRobot.SetAutoShooterMode(true);  // auto adjusts speed of shooter motors based on distance
+        theRobot.SetUseOnlyWebcamForDistance(true);  // true means only use webcam, false means use pinpoint and webcam for distance calculations of shooter speed
+        theRobot.SetAutoLifterMode(true);   // auto lifts lifter half-way if ball detected on top of lifter arm
+        theRobot.SetTurretAutoMode(true);   // auto adjusts the turret rotation angle to align with
+        theRobot.SetUsePinpointForTurretAnglesEnabled(false); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
+        theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
+
+        Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
+        Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        theRobot.InitRoadRunner(drive);
+
         theRobot.ShowTelemetry();
         telemetry.update();
-        theRobot.InitRoadRunner(hardwareMap);
+
 
         waitForStart();
         resetRuntime();
@@ -123,25 +122,28 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 //Turn intake off
                 //theRobot.SetIntakeMotor(true,true);
                 theRobot.SetIntakeMotor(false,false);
+                theRobot.SetAutoIntakeMode(false);
 
             }
             else if (gamepad2.circleWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
-                //Turn intake on (in case of jam?)
+                //Turn intake on
                 theRobot.SetIntakeMotor(true, true);
+                theRobot.SetAutoIntakeMode(false);
 
             }
             else if (gamepad2.squareWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
                 //Turn outtake system on
                 theRobot.SetIntakeMotor(true,false);
+                theRobot.SetAutoIntakeMode(false);
             }
-            /*else if(gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
+            else if(gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()){
+                theRobot.SetAutoIntakeMode(!theRobot.GetAutoIntakeMode());
+            }
 
-            }*/
-            //TODO - create an auto mode (autoIntake) when sensors available, have a button to turn auto on/off
-            //TODO - suggest using (gamepad2.crossWasPressed && !gamepad2.optionsWasPressed() && !gamepad2.shareWasPressed()) for auto intake on/off
-            //TODO - create a method in HW class to utilize sensors to auto turn intake on/off -- call here if (autoIntake)
-
-
+            if (theRobot.GetAutoIntakeMode())
+            {
+                theRobot.RunAutoIntake();
+            }
 
             // ********   LIFTER CONTROLS ***********************
             if (gamepad2.rightBumperWasPressed()) {
@@ -168,16 +170,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             else if (gamepad2.right_trigger > 0.2){
                 if (gamepad2.shareWasPressed()) {
-                    if (autoLifter) {
-                        autoLifter = false;
-                    }
-                    else {
-                        autoLifter = true;
-                    }
+                    theRobot.SetAutoLifterMode(!theRobot.GetAutoLifterMode());
                 }
             }
             // Run the Auto Lift to Midway position (if enabled)
-            theRobot.LifterAuto(autoLifter);
+            theRobot.RunAutoLifter();
 
             // ********   TURRET CONTROLS ***********************
             if (gamepad2.circleWasPressed() ){
@@ -185,7 +182,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     //Turn Turret clockwise
                     turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
                     theRobot.SetTurretRotationAngle(turretRotationAngle);
-                    turretAutoMode = false;
+                    theRobot.SetTurretAutoMode(false);
                 }
             }
             else if (gamepad2.squareWasPressed() ){
@@ -193,7 +190,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     //Turn Turret counterclockwise
                     turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
                     theRobot.SetTurretRotationAngle(turretRotationAngle);
-                    turretAutoMode = false;
+                    theRobot.SetTurretAutoMode(false);
                 }
             }
             // switch to tracking red target
@@ -202,11 +199,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     if (turretTrackingID == 20) {
                         // switch turret tracking to RED target
                         turretTrackingID = 24;
-                        turretAutoMode = true;
+                        theRobot.SetTurretAutoMode(true);
                     } else {
                         // switch turret tracking to BLUE target
                         turretTrackingID = 20;
-                        turretAutoMode = true;
+                        theRobot.SetTurretAutoMode(true);
                     }
                 }
             }
@@ -214,69 +211,62 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // toggling turret goal auto centering/tracking on/off
             if ( gamepad2.crossWasPressed() && !gamepad2.optionsWasPressed() ) {
                 if (gamepad2.shareWasPressed()) {
-                    turretAutoMode = !turretAutoMode;
+                    theRobot.SetTurretAutoMode(!theRobot.GetTurretAutoMode());
                 }
             }
 
-            if (turretAutoMode) {
+            if (theRobot.GetTurretAutoMode()) {
                 theRobot.adjustTurretToTargetAprilTag(turretTrackingID);
             }
 
 
             // ********   SHOOTER MOTOR CONTROLS ***********************
             if (gamepad2.dpadUpWasPressed()){
-                autoShooterMode = false;
-                theRobot.SetAutoShooterMode(autoShooterMode);
+                theRobot.SetAutoShooterMode(false);
                 shooterSpeedRPM = 0.0;
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
             else if (gamepad2.dpadLeftWasPressed()){
                 if (gamepad2.optionsWasPressed()){
-                    autoShooterMode = false;
-                    theRobot.SetAutoShooterMode(autoShooterMode);
+                    theRobot.SetAutoShooterMode(false);
 
                     shooterSpeedRPM = 2100; //4500rpm was about the value observed when the Motor was commanded to 100%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
                 else {
-                    autoShooterMode = false;
-                    theRobot.SetAutoShooterMode(autoShooterMode);
+                    theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM -= shooterSpeedRPMIncrement;
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
             }
             else if (gamepad2.dpadRightWasPressed()){
                 if (gamepad2.optionsWasPressed()){
-                    autoShooterMode = false;
-                    theRobot.SetAutoShooterMode(autoShooterMode);
+                    theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM = 2950; //1950rpm was about the value observed when the Motor was commanded to 50%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
                 else {
-                    autoShooterMode = false;
-                    theRobot.SetAutoShooterMode(autoShooterMode);
+                    theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM += shooterSpeedRPMIncrement;
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
             }
             else if (gamepad2.dpadDownWasPressed()) {
                 if (gamepad2.optionsWasPressed()) {
-                    autoShooterMode = false;
-                    theRobot.SetAutoShooterMode(autoShooterMode);
+                    theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM = 3500; //3200rpm was about the value observed when the Motor was commanded to 75%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
                 else {
-                    autoShooterMode = !autoShooterMode;
-                    theRobot.SetAutoShooterMode(autoShooterMode);
+                    theRobot.SetAutoShooterMode(!theRobot.GetAutoShooterMode());
                 }
             }
-            if (autoShooterMode) {
-                //if (useWebcamForDistance) {
-                    //theRobot.ShooterRPMFromWebCam(theRobot.currentAprilTargetId);
-                //} else {
+            if (theRobot.GetAutoShooterMode()) {
+                if (theRobot.GetUseOnlyWebcamForDistance()) {
+                    theRobot.ShooterRPMFromWebCam(theRobot.currentAprilTargetId);
+                } else {
                     theRobot.ShooterRPMFromPinpoint();
-                //}
+                }
             }
 
             /*

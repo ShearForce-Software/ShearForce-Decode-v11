@@ -16,34 +16,20 @@
 * else if (inside sensor says ball present) then turn intake off
 * Example code for sensor is at:
 ** FtcRobotController -> external.samples -> SensorDigitalTouch
-- [ ] INTAKE: need combo button to turn auto intake logic on/off - default to on
-* look at TODOs in Manual control class
-- [ ] move the auto mode variables from Manual class to Hardware class, so can put all of them in the telemetry, to make testing buttons to turn auto functions on/off easier
 - [ ] Test all buttons, make them all work, in particular it appears a lot of the SHARE + buttons are not working correctly
 
 === Shrey
 
-- [ ] AUTO: Change far auto routine to be separate path calls, so that shooting can be handled outside of actions (look at Blue_Close_Auto for example of separate path calls with shooting separate), this will give us more flexibility to use variables to control the sleep times between shots, and to use time to decide if we shoot more balls or not
-- [ ] AUTO: Change the ending to be time based, meaning if we have enough time, lets shoot another 3 balls then park
-  * Example:
-```
-   Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
-   if (Gericka_Hardware.autoTimeLeft > 10) {  //TODO calculate time needed to shoot 3 and park
-      Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
-
-      // Shoot 3 balls here
-
-      // Drive to parking spot...
-   }
-```
+- [ ] AUTO: Experiment with lowering sleep time for lifterUp, should be able to do 250 milliseconds
+- [ ] AUTO: Test, test, test -- need all 3 balls to shoot consistently every time, and all balls to be ingested
+- [ ] AUTO: Experiment with lowering sleep time for lifterDown
 
 === Tong
 
-- [ ] Retest pinpoint telemetry during Auto (switched from resetPosAndIMU to just recalibrateIMU) -- is it correct now?
-- [ ] Retest pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
-- [ ] IF pinpoint still not reporting correct values, then create variable to store initial position in HW class, then create method(s) to get pinpoint position + initial offsets, convert telemetry to use these new values, and test.  Then can use for turret logic.
-- [ ] Disable the April tag update of pinpoint position for now
-- [ ] Test tracking of target with pinpoint
+- [ ] Fix the pinpoint absolute function to return correct heading
+- [ ] Test new roadrunner telemetry messages just added, might be correct values without needing absolute methods
+- [ ] Test pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
+- [ ] Test tracking of target to set turret rotation angle with pinpoint absolute values for the calculation
 
 == Next Level Stuff
 

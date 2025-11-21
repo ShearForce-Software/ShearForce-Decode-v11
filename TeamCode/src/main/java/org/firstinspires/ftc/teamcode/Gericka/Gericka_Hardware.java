@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Gericka;
 
 import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -35,7 +34,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-@Config
 public class Gericka_Hardware {
     //ReentrantLock lock = new ReentrantLock();
     public static final String ALLIANCE_KEY = "Alliance";
@@ -71,8 +69,6 @@ public class Gericka_Hardware {
     PIDController Right_controller = new PIDController(p, i, d);
     PIDController Left_controller = new PIDController(p, i, d);
 
-    //pidf slide extension variables
-    public static boolean pidfSlidesEnabled = false;
     public static double Kp = 0.0035, Ki = 0, Kd = 0.00021, Kf = 0;
     public static double Ktolerance = 5.0;
     PIDController RightSlide_controller = new PIDController(Kp, Ki, Kd);
@@ -91,6 +87,14 @@ public class Gericka_Hardware {
     public final float LIFTER_UP_POSITION = 0.85f;
     public final float LIFTER_MID_POSITION = 0.5f;
     public final float LIFTER_DOWN_POSITION = 0.05f;
+
+    private boolean useOnlyWebcamForDistance = true;
+    private boolean autoTurretMode = false;
+    private boolean autoLifterMode = false;
+    private boolean autoIntakeMode = false;
+    private boolean autoShooterMode = false;
+    private boolean usePinpointForTurretAnglesEnabled = false;
+
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
     double shooterTargetRPM = 0.0;
@@ -121,10 +125,8 @@ public class Gericka_Hardware {
     public double targetX = 0;
     public double targetY = 0;
     public int currentAprilTargetId = 20;
-    boolean autoShooterMode = false;
     GoBildaPinpointDriver pinpoint;
-    public boolean usePinpointForTurretAnglesEnabled = false;
-    Pose2D Startpos = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
+    Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -278,9 +280,15 @@ public class Gericka_Hardware {
 
     }
 
-    public void InitRoadRunner(HardwareMap hardwareMap)
+    public void InitRoadRunner(Gericka_MecanumDrive roadrunner)
     {
-        drive = new Gericka_MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        drive = roadrunner;
+    }
+
+    public void ShowRoadrunnerPosition() {
+        drive.updatePoseEstimate();
+        opMode.telemetry.addData("Roadrunner Position(inches): ", "x: %.1f, y: %.1f", drive.localizer.getPose().position.x, drive.localizer.getPose().position.y);
+        opMode.telemetry.addData("Roadrunner Heading(deg): ", Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
     }
 
     public void InitPinpoint(HardwareMap hardwareMap) {
@@ -341,16 +349,19 @@ public class Gericka_Hardware {
         */
         opMode.telemetry.addData("pinpoint status: ", pinpoint.getDeviceStatus());
         opMode.telemetry.addData("pinpoint ", "x-ticks: %d, y-ticks: %d", pinpoint.getEncoderX(), pinpoint.getEncoderY());
+        opMode.telemetry.addData("pinpoint Relative Pos(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH));
         opMode.telemetry.addData("pinpoint Relative Position(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosition().getX(DistanceUnit.INCH), pinpoint.getPosition().getY(DistanceUnit.INCH));
-        opMode.telemetry.addData("pinpoint Heading(deg): ", pinpoint.getPosition().getHeading(AngleUnit.DEGREES));
-        Pose2D currentPosition = PinpointAbsolute(Startpos);
+        opMode.telemetry.addData("pinpoint Relative Heading(deg): ", pinpoint.getPosition().getHeading(AngleUnit.DEGREES));
+
+        Pose2D currentPosition = GetPinpointAbsolutePosition(startPose);
         opMode.telemetry.addData("pinpoint Absolute Position(inches): ", "x: %.1f, y: %.1f", currentPosition.getX(DistanceUnit.INCH), currentPosition.getY(DistanceUnit.INCH));
         opMode.telemetry.addData("pinpoint Absolute Heading(deg): ", currentPosition.getHeading(AngleUnit.DEGREES));
+
     }
 
     public void SetInitalPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
         //pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
-        Startpos = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
+        startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
         //pinpoint.update();
     }
 
@@ -480,6 +491,7 @@ public class Gericka_Hardware {
     public void SetAutoShooterMode(boolean value){
         autoShooterMode = value;
     }
+    public boolean GetAutoShooterMode() { return autoShooterMode; }
     public void ShooterRPMFromWebCam(int currentTargetId){
 
         if (getAprilTagVisible(currentTargetId)){
@@ -537,6 +549,9 @@ public class Gericka_Hardware {
         }
         return optimumShooterRPM;
     }
+
+    public boolean GetAutoIntakeMode() { return autoIntakeMode; }
+    public void SetAutoIntakeMode(boolean value) { autoIntakeMode = value; }
     public void SetIntakeMotor(boolean on,boolean intake){
         if (on && intake) {
             intakeMotor.setPower(INTAKE_POWER);
@@ -547,6 +562,16 @@ public class Gericka_Hardware {
         else {
             intakeMotor.setPower(-INTAKE_POWER);
         }
+    }
+    public void RunAutoIntake()
+    {
+        //TODO -- hook up to sensors to detect balls
+        /* Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
+         if (inside sensor says empty && outside sensor ball present) then turn intake on
+         else if (inside sensor says ball present) then turn intake off
+
+         Example code for sensor is at:
+            FtcRobotController -> external.samples -> SensorDigitalTouch */
     }
     public void SetTurretRotationAngle(double degrees){
         turretTargetAngle = Math.min(degrees,MAX_TURRET_ANGLE);
@@ -563,6 +588,8 @@ public class Gericka_Hardware {
         return turretAngle;
     }
 
+    public boolean GetTurretAutoMode() { return autoTurretMode; }
+    public void SetTurretAutoMode(boolean value) { autoTurretMode = value; }
     void adjustTurretToTargetAprilTag(int detectionID){
         double bearingToAprilTag = 0.0;
         double currentTurretAngle = getCurrentTurretAngle();
@@ -576,14 +603,19 @@ public class Gericka_Hardware {
         }
     }
 
+    public boolean GetUsePinpointForTurretAnglesEnabled() { return usePinpointForTurretAnglesEnabled; }
+    public void SetUsePinpointForTurretAnglesEnabled(boolean value) { usePinpointForTurretAnglesEnabled = value; }
+
     public void SetLifterPosition(float position){
         lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
         lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
         lifterServo.setPosition(lifterTargetPosition);
     }
 
-    public void LifterAuto(boolean CheckLifterAuto){
-        if (CheckLifterAuto) {
+    public boolean GetAutoLifterMode() { return autoLifterMode; }
+    public void SetAutoLifterMode(boolean value) { autoLifterMode = value; }
+    public void RunAutoLifter() {
+        if (autoLifterMode) {
             if (((lifterServo.getPosition() <= LIFTER_DOWN_POSITION))) {
                 if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0))
                         && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.5)) {
@@ -671,12 +703,14 @@ public class Gericka_Hardware {
 
     }
     public void ShooterRPMFromPinpoint(){
-        setPinpointPositionFromWebcam();
-        pinpoint.update();
+        //setPinpointPositionFromWebcam();
+        //pinpoint.update();
+        //TODO Swich this calculation to using the new absolute positions
         double distanceToTarget = calculateDistanceToTarget(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH),targetX,targetY);
+
         SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
     }
-    public Pose2D PinpointAbsolute(Pose2D pos){
+    public Pose2D GetPinpointAbsolutePosition(Pose2D pos){
         double AbsoluteX = pinpoint.getPosY(DistanceUnit.INCH) + pos.getX(DistanceUnit.INCH);
         double AbsoluteY = pinpoint.getPosX(DistanceUnit.INCH) + pos.getY(DistanceUnit.INCH);
         double AbsoluteAngle = pinpoint.getHeading(AngleUnit.DEGREES) + pos.getHeading(AngleUnit.DEGREES);
@@ -684,30 +718,41 @@ public class Gericka_Hardware {
     }
 
 
+
     public void ShowTelemetry(){
 
+        ShowPinpointTelemetry();
+
+        ShowRoadrunnerPosition();
+
         opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));
-        opMode.telemetry.addData("        ", "L-Vel: %.1f, R-Vel: %.1f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
-        opMode.telemetry.addData("        ", "L-Pow: %.1f, R-Pow: %.1f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
-        opMode.telemetry.addData("        ", "L-Amp: %.1f, R-Amp: %.1f" , shooterMotorLeft.getCurrent(CurrentUnit.AMPS), shooterMotorRight.getCurrent(CurrentUnit.AMPS));
-        opMode.telemetry.addData("Shooter Target Speed: ", shooterTargetSpeed);
-        opMode.telemetry.addData("Shooter Target RPM", shooterTargetRPM);
+        //opMode.telemetry.addData("        ", "L-Vel: %.1f, R-Vel: %.1f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
+        //opMode.telemetry.addData("        ", "L-Pow: %.1f, R-Pow: %.1f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
+        //opMode.telemetry.addData("        ", "L-Amp: %.1f, R-Amp: %.1f" , shooterMotorLeft.getCurrent(CurrentUnit.AMPS), shooterMotorRight.getCurrent(CurrentUnit.AMPS));
+        //opMode.telemetry.addData("Shooter Target Speed: ", shooterTargetSpeed);
+        opMode.telemetry.addData("Shooter Target RPM: ", shooterTargetRPM);
+        opMode.telemetry.addData("Auto Shooter Mode: ", autoShooterMode);
+        opMode.telemetry.addData("Auto Turret Mode: ", autoTurretMode);
+        opMode.telemetry.addData("Auto Lifter Mode: ", autoLifterMode);
+        opMode.telemetry.addData("Auto Intake Mode: ", autoIntakeMode);
+        opMode.telemetry.addData("Use Only Webcam for Distance: ", GetUseOnlyWebcamForDistance());
+        opMode.telemetry.addData("Use pinpoint for turret angles: ", GetUsePinpointForTurretAnglesEnabled());
+
         opMode.telemetry.addData("April Tag Target ID", currentAprilTargetId);
-        opMode.telemetry.addData("Auto Shooter Mode",autoShooterMode);
 
         opMode.telemetry.addData("Turret ", "ticks: %d, tgt-Angle: %.1f", turretMotor.getCurrentPosition(),turretTargetAngle);
-        opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));
+        //opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));
 
         opMode.telemetry.addData("Intake ", "Pow: %.1f, Amp: %.1f", intakeMotor.getPower(), intakeMotor.getCurrent(CurrentUnit.AMPS));
-        opMode.telemetry.addData("       ", "Vel: %.1f", intakeMotor.getVelocity());
+        //opMode.telemetry.addData("       ", "Vel: %.1f", intakeMotor.getVelocity());
 
         opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
 
         opMode.telemetry.addData("Light Detected", ((OpticalDistanceSensor) ColorSensorLeft).getLightDetected());
-        NormalizedRGBA colorsLeft = ColorSensorLeft.getNormalizedColors();
+        //NormalizedRGBA colorsLeft = ColorSensorLeft.getNormalizedColors();
 
         opMode.telemetry.addData("Light Detected", ((OpticalDistanceSensor) ColorSensorRight).getLightDetected());
-        NormalizedRGBA colorsRight = ColorSensorRight.getNormalizedColors();
+        //NormalizedRGBA colorsRight = ColorSensorRight.getNormalizedColors();
 
         //Determining the amount of red, green, and blue
         /*opMode.telemetry.addData("Red", "%.3f", colorsLeft.red);
@@ -722,8 +767,6 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
         //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
         //opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
-
-        ShowPinpointTelemetry();
 
         if (allianceIndicatorLight.getPosition() == INDICATOR_RED)
         {
@@ -886,12 +929,14 @@ public class Gericka_Hardware {
                 if (IsFieldCentric) driveControlsFieldCentric();
                 if (!IsFieldCentric) driveControlsRobotCentric();
             }
-            if(pidfSlidesEnabled || pidfEnabled){
-                opMode.sleep(5);
-            }
+            //if(pidfSlidesEnabled || pidfEnabled){
+            //    opMode.sleep(5);
+            //}
         }
     }
 
+    public boolean GetUseOnlyWebcamForDistance() { return useOnlyWebcamForDistance; }
+    public void SetUseOnlyWebcamForDistance(boolean value) { useOnlyWebcamForDistance = value; }
     public boolean isRobotLevel() {
         boolean returnValue = false;
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
