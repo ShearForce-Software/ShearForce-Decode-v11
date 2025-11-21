@@ -124,6 +124,7 @@ public class Gericka_Hardware {
     boolean autoShooterMode = false;
     GoBildaPinpointDriver pinpoint;
     public boolean usePinpointForTurretAnglesEnabled = false;
+    Pose2D Startpos = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -319,8 +320,8 @@ public class Gericka_Hardware {
          * This is recommended before you run your autonomous, as a bad initial calibration can cause
          * an incorrect starting value for x, y, and heading.
          */
-        //pinpoint.resetPosAndIMU();
-        pinpoint.recalibrateIMU();
+        pinpoint.resetPosAndIMU();
+        //pinpoint.recalibrateIMU();
 
         pinpoint.update();
     }
@@ -340,15 +341,17 @@ public class Gericka_Hardware {
         */
         opMode.telemetry.addData("pinpoint status: ", pinpoint.getDeviceStatus());
         opMode.telemetry.addData("pinpoint ", "x-ticks: %d, y-ticks: %d", pinpoint.getEncoderX(), pinpoint.getEncoderY());
-        opMode.telemetry.addData("pinpoint Position(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosition().getX(DistanceUnit.INCH), pinpoint.getPosition().getY(DistanceUnit.INCH));
+        opMode.telemetry.addData("pinpoint Relative Position(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosition().getX(DistanceUnit.INCH), pinpoint.getPosition().getY(DistanceUnit.INCH));
         opMode.telemetry.addData("pinpoint Heading(deg): ", pinpoint.getPosition().getHeading(AngleUnit.DEGREES));
-
+        Pose2D currentPosition = PinpointAbsolute(Startpos);
+        opMode.telemetry.addData("pinpoint Absolute Position(inches): ", "x: %.1f, y: %.1f", currentPosition.getX(DistanceUnit.INCH), currentPosition.getY(DistanceUnit.INCH));
+        opMode.telemetry.addData("pinpoint Absolute Heading(deg): ", currentPosition.getHeading(AngleUnit.DEGREES));
     }
 
-    public void SetPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
-        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
-
-        pinpoint.update();
+    public void SetInitalPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
+        //pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
+        Startpos = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
+        //pinpoint.update();
     }
 
    public void WebcamInit (HardwareMap hardwareMap){
@@ -658,7 +661,7 @@ public class Gericka_Hardware {
                     currentY = detection.ftcPose.y;
                     if (!leftFront.isBusy() && !leftRear.isBusy() && !rightFront.isBusy() && !rightRear.isBusy()) {
                         //if (pinpoint.getHeadingVelocity() = 0){
-                        SetPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
+                        SetInitalPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
                         break;
                     }
                 }
@@ -672,6 +675,12 @@ public class Gericka_Hardware {
         pinpoint.update();
         double distanceToTarget = calculateDistanceToTarget(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH),targetX,targetY);
         SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
+    }
+    public Pose2D PinpointAbsolute(Pose2D pos){
+        double AbsoluteX = pinpoint.getPosY(DistanceUnit.INCH) + pos.getX(DistanceUnit.INCH);
+        double AbsoluteY = pinpoint.getPosX(DistanceUnit.INCH) + pos.getY(DistanceUnit.INCH);
+        double AbsoluteAngle = pinpoint.getHeading(AngleUnit.DEGREES) + pos.getHeading(AngleUnit.DEGREES);
+        return new Pose2D(DistanceUnit.INCH, AbsoluteX, AbsoluteY,AngleUnit.DEGREES, AbsoluteAngle);
     }
 
 

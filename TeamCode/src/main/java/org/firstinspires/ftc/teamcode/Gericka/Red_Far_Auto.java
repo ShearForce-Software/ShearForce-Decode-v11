@@ -3,27 +3,18 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
-import org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive;
-import org.firstinspires.ftc.teamcode.Geronimo.FourHighSpecimensAutoRoute;
 
 // auto select manual opMode next
 @Autonomous(name="Red Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
@@ -55,7 +46,7 @@ public class Red_Far_Auto extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        control.SetPinpointPosition(60, 12, 90);
+        control.SetInitalPinpointPosition(60, 12, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 

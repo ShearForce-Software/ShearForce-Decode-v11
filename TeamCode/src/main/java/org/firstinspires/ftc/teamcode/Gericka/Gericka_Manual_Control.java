@@ -62,7 +62,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             double xPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_X_POSITION);
             double yPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_Y_POSITION);
             double headingDegrees = (double) blackboard.get(Gericka_Hardware.FINAL_HEADING_DEGREES);
-            theRobot.SetPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
+            theRobot.SetInitalPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
         } catch (NullPointerException ignored) {
             //theRobot.SetPinpointPosition(0.0, 0.0, defaultHeadingDegrees);
             //theRobot.pinpoint.update();
@@ -272,11 +272,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
             }
             if (autoShooterMode) {
-                if (useWebcamForDistance) {
-                    theRobot.ShooterRPMFromWebCam(theRobot.currentAprilTargetId);
-                } else {
+                //if (useWebcamForDistance) {
+                    //theRobot.ShooterRPMFromWebCam(theRobot.currentAprilTargetId);
+                //} else {
                     theRobot.ShooterRPMFromPinpoint();
-                }
+                //}
             }
 
             /*
