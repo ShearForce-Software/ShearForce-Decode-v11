@@ -3,18 +3,27 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Gericka.Gericka_Hardware;
+import org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive;
+import org.firstinspires.ftc.teamcode.Geronimo.FourHighSpecimensAutoRoute;
 
 // auto select manual opMode next
 @Autonomous(name="Red Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
@@ -46,7 +55,7 @@ public class Red_Far_Auto extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        control.SetInitalPinpointPosition(60, 12, 90);
+        //control.SetPinpointPosition(60, 12, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
@@ -84,7 +93,7 @@ public class Red_Far_Auto extends LinearOpMode {
                 .build();
 
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(20, 12))
+                .strafeToConstantHeading(new Vector2d(35, 12))
                 .build();
 
         boolean autoLifter = true;
@@ -131,8 +140,11 @@ public class Red_Far_Auto extends LinearOpMode {
         // spin up shooter wheel to max
         //control.SetShooterSpeed(1.0);
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3500;
+        double shooterSpeedRPM = 3400;
         control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        int lifterUpSleepTime = 500;
+        int lifterDownSleepTime = 600;
 
         // drive to the start triangle
         Actions.runBlocking(DriveToShootingPosition);
@@ -144,38 +156,38 @@ public class Red_Far_Auto extends LinearOpMode {
         control.SetTurretRotationAngle(turretTargetAngle);
 
         // sleep some time to allow shooter wheel to spin up
-        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10)) {
             sleep(20);
         }
 
         /* **** SHOOT BALL #1 **** */
         control.SetLifterUp();  // Shot 1
-        sleep(500); //TODO need to find the smallest sleep time to lift and get shot
+        sleep(lifterUpSleepTime); //TODO need to find the smallest sleep time to lift and get shot
         control.SetLifterDown();
-        sleep(500); //TODO need to find the smallest sleep time to drop and get another ball ready
+        sleep(lifterDownSleepTime); //TODO need to find the smallest sleep time to drop and get another ball ready
 
         // can stop the intake after the first shot to save power
         control.SetIntakeMotor(false,true);
 
         // sleep some time to allow shooter wheel to spin back up if needed
-        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10)) {
             sleep(20);
         }
 
         /* **** SHOOT BALL #2 **** */
         control.SetLifterUp();  // Shot 2
-        sleep(500);
+        sleep(lifterUpSleepTime);
         control.SetLifterDown();
-        sleep(500);
+        sleep(lifterDownSleepTime);
 
         // sleep some time to allow shooter wheel to spin back up if needed
-        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) {
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10)) {
             sleep(20);
         }
 
         /* **** SHOOT BALL #3 **** */
         control.SetLifterUp();  // Shot 3
-        sleep(500);
+        sleep(lifterUpSleepTime);
         control.SetLifterDown();
 
         //shooterSpeedRPM = 3500;
@@ -190,42 +202,82 @@ public class Red_Far_Auto extends LinearOpMode {
                         new ParallelAction(DriveToSecondMark, setIntakeOn()),
                         new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
                          // Return to launch zone and turn intake off
-                        new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff()),
-
+                        new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
+                        ));
                         // Shoot 3 balls
-                        new SequentialAction(
-                            new SetLifterUp(),
-                            new SleepAction(1),
-                            new SetLifterDown(),
-                            new SleepAction(1),
-                            new SetLifterUp(),
-                            new SleepAction(1),
-                            new SetLifterDown(),
-                            new SleepAction(1),
-                            new SetLifterUp(),
-                            new SleepAction(1),
 
-                            // Drive to closest line and turn intake on and lower lifter
-                            new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown())),
-                            new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
-                             //TODO add parallel action that turns intake off
-                /*            new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()),
+        /* **** SHOOT BALL #1 **** */
+        control.SetLifterUp();  // Shot 1
+        sleep(lifterUpSleepTime); //TODO need to find the smallest sleep time to lift and get shot
+        control.SetLifterDown();
+        sleep(lifterDownSleepTime); //TODO need to find the smallest sleep time to drop and get another ball ready
+
+        // sleep some time to allow shooter wheel to spin back up if needed
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10)) {
+            sleep(20);
+        }
+
+        /* **** SHOOT BALL #2 **** */
+        control.SetLifterUp();  // Shot 2
+        sleep(lifterUpSleepTime);
+        control.SetLifterDown();
+        sleep(lifterDownSleepTime);
+
+        // sleep some time to allow shooter wheel to spin back up if needed
+        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10)) {
+            sleep(20);
+        }
+
+        /* **** SHOOT BALL #3 **** */
+        control.SetLifterUp();  // Shot 3
+        sleep(lifterUpSleepTime);
+        control.SetLifterDown();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        // Drive to closest line and turn intake on and lower lifter
+                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
+                        //TODO add parallel action that turns intake off
+                ));
+        Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
+        if (Gericka_Hardware.autoTimeLeft >= 8) {
+            Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
                             //new SleepAction(2), //TODO shoot 3 here
 
-                        new SequentialAction(
-                                new SetLifterUp(),
-                                new SleepAction(1),
-                                new SetLifterDown(),
-                                new SleepAction(1),
-                                new SetLifterUp(),
-                                new SleepAction(1),
-                                new SetLifterDown(),
-                                new SleepAction(1),
-                                new SetLifterUp(),
-                                new SleepAction(1)),
-                        DriveOutofLaunchZone));
 
-                 */));
+
+            /* **** SHOOT BALL #1 **** */
+            control.SetLifterUp();  // Shot 1
+            sleep(lifterUpSleepTime); //TODO need to find the smallest sleep time to lift and get shot
+            control.SetLifterDown();
+            sleep(lifterDownSleepTime); //TODO need to find the smallest sleep time to drop and get another ball ready
+
+            // sleep some time to allow shooter wheel to spin back up if needed
+            while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10)) {
+                sleep(20);
+            }
+
+            /* **** SHOOT BALL #2 **** */
+            control.SetLifterUp();  // Shot 2
+            sleep(lifterUpSleepTime);
+            control.SetLifterDown();
+            sleep(lifterDownSleepTime);
+
+            // sleep some time to allow shooter wheel to spin back up if needed
+            while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10)) {
+                sleep(20);
+            }
+
+            /* **** SHOOT BALL #3 **** */
+            control.SetLifterUp();  // Shot 3
+            sleep(lifterUpSleepTime);
+            control.SetLifterDown();
+
+            turretTargetAngle = 0;
+            control.SetTurretRotationAngle(turretTargetAngle);
+            Actions.runBlocking(DriveOutofLaunchZone);
+        }
 
         drive.updatePoseEstimate();
 
