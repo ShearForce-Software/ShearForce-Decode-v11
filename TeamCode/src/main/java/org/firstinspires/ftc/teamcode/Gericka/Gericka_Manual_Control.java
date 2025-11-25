@@ -263,9 +263,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             if (theRobot.GetAutoShooterMode()) {
                 if (theRobot.GetUseOnlyWebcamForDistance()) {
-                    theRobot.ShooterRPMFromWebCam(theRobot.currentAprilTargetId);
+                    theRobot.SetShooterRPMFromWebCam(theRobot.currentAprilTargetId);
                 } else {
-                    theRobot.ShooterRPMFromPinpoint();
+                    theRobot.SetShooterRPMFromPinpoint();
                 }
             }
 

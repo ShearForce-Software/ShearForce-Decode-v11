@@ -12,14 +12,11 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 @Autonomous(name="Blue Close Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 
 public class Blue_Close_Auto extends LinearOpMode {
-    Gericka_Hardware control = new Gericka_Hardware(false, false, this);
+    Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
 
@@ -34,22 +31,23 @@ public class Blue_Close_Auto extends LinearOpMode {
     //We will start at big trianlge start
     startPose = new Pose2d(-60,-39,Math.toRadians(270));
     /* Initialize the Robot */
-    control.Init(hardwareMap, "BLUE");
+    theRobot.Init(hardwareMap, "BLUE");
 
     // initialize roadrunner
     drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+    theRobot.InitRoadRunner(drive);
 
     // initialize the webcam
-    control.WebcamInit(this.hardwareMap);
+    theRobot.WebcamInit(this.hardwareMap);
 
     sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
     // finish initializing the pinpoint
-    control.SetInitalPinpointPosition(-60, -39, 270);
+    theRobot.SetInitalPinpointPosition(-60, -39, 270);
 
     blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
     // set lifter half up (so can get 3 ball loaded in robot)
-    control.SetLifterPosition(control.LIFTER_MID_POSITION);
+    theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
 
     DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(270)))
@@ -67,18 +65,18 @@ public class Blue_Close_Auto extends LinearOpMode {
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
-        control.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(true);
 
     // ***************************************************
     // ****  Secondary Thread to run all the time ********
     // ***************************************************
     Thread secondaryThread = new Thread(() -> {
         while (!isStopRequested() && getRuntime() < 30) {
-                control.ShowTelemetry();
+                theRobot.ShowTelemetry();
                 //control.ShowPinpointTelemetry();
 
                 if (isStarted()) {
-                    control.RunAutoLifter();
+                    theRobot.RunAutoLifter();
                 }
             telemetry.update();
             sleep(20);
@@ -88,10 +86,10 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     // Turret initial rough angle toward speaker (tune as needed)
     double turretTargetAngle = 135.8;
-    control.SetTurretRotationAngle(turretTargetAngle);
+    theRobot.SetTurretRotationAngle(turretTargetAngle);
     sleep(1000);
     // turn off turret power so doesn't twitch
-    control.turretMotor.setPower(0);
+    theRobot.turretMotor.setPower(0);
 
     // *************************************
     //      Wait for start
@@ -103,10 +101,10 @@ public class Blue_Close_Auto extends LinearOpMode {
     Gericka_Hardware.autoTimeLeft = 0.0;
 
     // turn on intake to suck in any stuck balls
-    control.SetIntakeMotor(true,true);
+    theRobot.SetIntakeMotor(true,true);
 
     // spin up shooter wheel to max
-    control.SetShooterSpeed(1.0);
+    theRobot.SetShooterSpeed(1.0);
 
 
     Actions.runBlocking(new SleepAction((2.0)));
@@ -118,15 +116,15 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     // Shooter RPM for big triangle shots (tune as needed)
     double shooterSpeedRPM = 2900;
-    control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
         // Turn on intake incase a ball is stuck
-        control.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(true, true);
 
         /* **** SHOOT BALL #1 **** */
         ShootBall(shooterSpeedRPM);
 
         // Turn off intake to save energy
-        control.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(false, true);
 
         /* **** SHOOT BALL #2 **** */
         ShootBall(shooterSpeedRPM);
@@ -135,7 +133,7 @@ public class Blue_Close_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
 
     //Should we turn intake on while we go to the closest line
-    control.SetIntakeMotor(true, true);
+    theRobot.SetIntakeMotor(true, true);
 
 
     Actions.runBlocking(
@@ -150,7 +148,7 @@ public class Blue_Close_Auto extends LinearOpMode {
             )
     );
 
-    control.SetIntakeMotor(false, true);
+    theRobot.SetIntakeMotor(false, true);
 
 
    // sleep(5000);//giving it sleepy time
@@ -175,11 +173,11 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     // turn off shooter wheel
     shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
-    control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
     // return turret to zero position
     turretTargetAngle = 0.0;
-    control.SetTurretRotationAngle(turretTargetAngle);
+    theRobot.SetTurretRotationAngle(turretTargetAngle);
 
     Gericka_Hardware.autoTimeLeft = 30-getRuntime();
     telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
@@ -190,17 +188,17 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     private void ShootBall(double shooterSpeedRPM) {
         // sleep some time to allow shooter wheel to spin back up if needed
-        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
-                control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 10)) {
+        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 10)) {
             sleep(20);
         }
 
         /* **** SHOOT a BALL  **** */
-        control.SetLifterUp();
+        theRobot.SetLifterUp();
         sleep(lifterUpSleepTime);
 
         // Reset to get another ball
-        control.SetLifterDown();
+        theRobot.SetLifterDown();
         sleep(lifterDownSleepTime);
 
     }
@@ -217,7 +215,7 @@ public class Blue_Close_Auto extends LinearOpMode {
             if (!initialized) {
                 initialized = true;
             }
-            control.SetIntakeMotor(true, true);
+            theRobot.SetIntakeMotor(true, true);
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
             }
@@ -235,7 +233,7 @@ public class Blue_Close_Auto extends LinearOpMode {
                 if (!initialized) {
                     initialized = true;
                 }
-                control.SetIntakeMotor(false, false);
+                theRobot.SetIntakeMotor(false, false);
                 packet.put("lock purple pixel", 0);
                 return false;  // returning true means not done, and will be called again.  False means action is completely done
             }
@@ -249,7 +247,7 @@ public class Blue_Close_Auto extends LinearOpMode {
             if (!initialized) {
                 initialized = true;
             }
-            control.SetLifterUp();
+            theRobot.SetLifterUp();
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
@@ -263,7 +261,7 @@ public class Blue_Close_Auto extends LinearOpMode {
             if (!initialized) {
                 initialized = true;
             }
-            control.SetLifterDown();
+            theRobot.SetLifterDown();
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }

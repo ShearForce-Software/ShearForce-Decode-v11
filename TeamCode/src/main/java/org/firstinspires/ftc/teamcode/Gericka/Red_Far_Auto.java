@@ -13,14 +13,11 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 // auto select manual opMode next
 @Autonomous(name="Red Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 public class Red_Far_Auto extends LinearOpMode {
-    Gericka_Hardware control = new Gericka_Hardware(false, false, this);
+    Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
 
@@ -38,22 +35,23 @@ public class Red_Far_Auto extends LinearOpMode {
     public void runOpMode() {
         startPose = new Pose2d(60, 12, Math.toRadians(90));
         /* Initialize the Robot */
-        control.Init(hardwareMap, "RED");
+        theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        theRobot.InitRoadRunner(drive);
 
         // initialize the webcam
-        control.WebcamInit(this.hardwareMap);
+        theRobot.WebcamInit(this.hardwareMap);
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        control.SetInitalPinpointPosition(60, 12, 90);
+        theRobot.SetInitalPinpointPosition(60, 12, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
         // set lifter half up (so can get 3 ball loaded in robot)
-        control.SetLifterPosition(control.LIFTER_MID_POSITION);
+        theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
         //control.imuOffsetInDegrees = 270; // Math.toDegrees(startPose.heading.toDouble());
 
@@ -89,18 +87,18 @@ public class Red_Far_Auto extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(35, 12))
                 .build();
 
-        control.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(true);
 
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                control.ShowTelemetry();
+                theRobot.ShowTelemetry();
                 //control.ShowPinpointTelemetry();
 
                 if (isStarted()) {
-                    control.RunAutoLifter();
+                    theRobot.RunAutoLifter();
                 }
                 telemetry.update();
 
@@ -111,10 +109,10 @@ public class Red_Far_Auto extends LinearOpMode {
 
         // turn turret to face the obelisk
         double turretTargetAngle = -91.0;
-        control.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
         sleep(1000);
         // turn off turret power so doesn't twitch
-        control.turretMotor.setPower(0);
+        theRobot.turretMotor.setPower(0);
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
@@ -126,17 +124,17 @@ public class Red_Far_Auto extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // turn on intake to suck in any stuck balls
-        control.SetIntakeMotor(true,true);
+        theRobot.SetIntakeMotor(true,true);
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
         double shooterSpeedRPM = 3400;
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
         // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = -115.0;
-        control.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
 
         // drive to the start triangle
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition, setIntakeOff()));
@@ -196,7 +194,7 @@ public class Red_Far_Auto extends LinearOpMode {
 
             // Drive to Parking spot
             turretTargetAngle = 0;
-            control.SetTurretRotationAngle(turretTargetAngle);
+            theRobot.SetTurretRotationAngle(turretTargetAngle);
             Actions.runBlocking(DriveOutofLaunchZone);
         }
 
@@ -210,11 +208,11 @@ public class Red_Far_Auto extends LinearOpMode {
 
         // turn off shooter wheel
         shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
-        control.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // return turret to zero position
         turretTargetAngle = 0.0;
-        control.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
 
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
@@ -225,17 +223,17 @@ public class Red_Far_Auto extends LinearOpMode {
 
     private void ShootBall(double shooterSpeedRPM) {
         // sleep some time to allow shooter wheel to spin back up if needed
-        while (control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
-                control.CalculateMotorRPM(control.shooterMotorLeft.getVelocity(), control.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 10)) {
+        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 10)) {
             sleep(20);
         }
 
         /* **** SHOOT a BALL  **** */
-        control.SetLifterUp();
+        theRobot.SetLifterUp();
         sleep(lifterUpSleepTime);
 
         // Reset to get another ball
-        control.SetLifterDown();
+        theRobot.SetLifterDown();
         sleep(lifterDownSleepTime);
 
     }
@@ -252,7 +250,7 @@ public class Red_Far_Auto extends LinearOpMode {
             if (!initialized) {
                 initialized = true;
             }
-            control.SetIntakeMotor(true, true);
+            theRobot.SetIntakeMotor(true, true);
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
             }
@@ -270,7 +268,7 @@ public class Red_Far_Auto extends LinearOpMode {
                 if (!initialized) {
                     initialized = true;
                 }
-                control.SetIntakeMotor(false, false);
+                theRobot.SetIntakeMotor(false, false);
                 packet.put("lock purple pixel", 0);
                 return false;  // returning true means not done, and will be called again.  False means action is completely done
             }
@@ -284,7 +282,7 @@ public class Red_Far_Auto extends LinearOpMode {
             if (!initialized) {
                 initialized = true;
             }
-            control.SetLifterUp();
+            theRobot.SetLifterUp();
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
@@ -298,7 +296,7 @@ public class Red_Far_Auto extends LinearOpMode {
             if (!initialized) {
                 initialized = true;
             }
-            control.SetLifterDown();
+            theRobot.SetLifterDown();
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
