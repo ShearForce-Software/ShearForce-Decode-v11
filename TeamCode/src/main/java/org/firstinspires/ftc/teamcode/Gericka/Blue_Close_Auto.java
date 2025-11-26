@@ -24,6 +24,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     Action DriveStartToMidPosition;
     Action DriveMidToClosestLine;
     Action DriveClosestLineBackToLaunchPark;
+
+    Action DriveClosestLineBackToMid;
     int lifterUpSleepTime = 500;
     int lifterDownSleepTime = 600;
 
@@ -51,17 +53,22 @@ public class Blue_Close_Auto extends LinearOpMode {
 
 
     DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(270)))
-            .strafeToLinearHeading(new Vector2d(-10, -10), Math.toRadians(210))
-            .turnTo(Math.toRadians(270))
+            .strafeToLinearHeading(new Vector2d(-11.4, -10), Math.toRadians(210))
+
             .build();
 
     // Mid (-10, -10, 270) -> closest line (-10, -40)
-    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-10, -10, Math.toRadians(270)))
-            .strafeToConstantHeading(new Vector2d(-10, -40))
+    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(210)))
+            .turnTo(Math.toRadians(270))
+            .strafeToConstantHeading(new Vector2d(-11.4, -55))
+            .build();
+
+    DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, -55, Math.toRadians(270)))
+            .strafeToLinearHeading(new Vector2d(-11.4, -10), Math.toRadians(210))
             .build();
 
     // Closest line (-10, -40, 270) -> launch park (-54, -16)
-    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-10, -40, Math.toRadians(270)))
+    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(210)))
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
@@ -85,7 +92,7 @@ public class Blue_Close_Auto extends LinearOpMode {
     secondaryThread.start();
 
     // Turret initial rough angle toward speaker (tune as needed)
-    double turretTargetAngle = 135.8;
+    double turretTargetAngle = 180;
     theRobot.SetTurretRotationAngle(turretTargetAngle);
     sleep(1000);
     // turn off turret power so doesn't twitch
@@ -100,9 +107,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     resetRuntime();
     Gericka_Hardware.autoTimeLeft = 0.0;
 
-    // turn on intake to suck in any stuck balls
-    theRobot.SetIntakeMotor(true,true);
 
+    theRobot.SetIntakeMotor(true,true);
     // spin up shooter wheel to max
     theRobot.SetShooterSpeed(1.0);
 
@@ -117,14 +123,10 @@ public class Blue_Close_Auto extends LinearOpMode {
     // Shooter RPM for big triangle shots (tune as needed)
     double shooterSpeedRPM = 2900;
     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        // Turn on intake incase a ball is stuck
-        theRobot.SetIntakeMotor(true, true);
+
 
         /* **** SHOOT BALL #1 **** */
         ShootBall(shooterSpeedRPM);
-
-        // Turn off intake to save energy
-        theRobot.SetIntakeMotor(false, true);
 
         /* **** SHOOT BALL #2 **** */
         ShootBall(shooterSpeedRPM);
@@ -133,34 +135,39 @@ public class Blue_Close_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
 
     //Should we turn intake on while we go to the closest line
-    theRobot.SetIntakeMotor(true, true);
+
 
 
     Actions.runBlocking(
             new SequentialAction(
                     // Mid -> closest line
                     DriveMidToClosestLine,
-                    new SleepAction(0.5),           // tiny sleep to finish ingesting rings
+                    new SleepAction(2.0),           // tiny sleep to finish ingesting rings
                     // Closest line -> launch park
-                    DriveClosestLineBackToLaunchPark,
-                    // Final 2 second wait to match MeepMeep .waitSeconds(2) at end
+
+                    DriveClosestLineBackToMid,
                     new SleepAction(2.0)
-            )
+                    )
     );
 
-    theRobot.SetIntakeMotor(false, true);
-
-
-   // sleep(5000);//giving it sleepy time
-
-        /* **** SHOOT BALL #4 **** */
+        ShootBall(shooterSpeedRPM);
+        ShootBall(shooterSpeedRPM);
         ShootBall(shooterSpeedRPM);
 
-        /* **** SHOOT BALL #5 **** */
-        ShootBall(shooterSpeedRPM);
 
-        /* **** SHOOT BALL #6 **** */
-        ShootBall(shooterSpeedRPM);
+        //theRobot.SetIntakeMotor(true, true);
+        Actions.runBlocking(
+                new SequentialAction(
+                    DriveClosestLineBackToLaunchPark,
+                        new SleepAction(2.0)
+                )
+        );
+
+
+
+
+
+
 
         //TODO need to park away from the line
 
@@ -174,6 +181,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     // turn off shooter wheel
     shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+    theRobot.SetIntakeMotor(false,false);
 
     // return turret to zero position
     turretTargetAngle = 0.0;
