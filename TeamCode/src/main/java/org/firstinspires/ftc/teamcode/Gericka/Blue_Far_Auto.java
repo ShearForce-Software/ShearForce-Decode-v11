@@ -47,7 +47,7 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        theRobot.SetInitalPinpointPosition(60, -12, 270);
+        theRobot.SetRoadrunnerPosition(60, -12, 270);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
