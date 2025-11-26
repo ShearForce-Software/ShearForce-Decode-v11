@@ -129,7 +129,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         theRobot.SetIntakeMotor(true,true);
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3400;
+        double shooterSpeedRPM = 3200;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
@@ -140,7 +140,8 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         // drive to the start triangle
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition, setIntakeOff()));
-
+        shooterSpeedRPM = 3400;
+        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
         /* **** SHOOT BALL #1 **** */
         ShootBall(shooterSpeedRPM);
 
@@ -225,8 +226,17 @@ public class Blue_Far_Auto extends LinearOpMode {
 
     private void ShootBall(double shooterSpeedRPM) {
         // sleep some time to allow shooter wheel to spin back up if needed
+        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 200) ) {
+            theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-200);
+            sleep(20);
+        }
+        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100) ) {
+            theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-100);
+            sleep(20);
+        }
         while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
-                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 10)) {
+                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) {
+            theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             sleep(20);
         }
 
