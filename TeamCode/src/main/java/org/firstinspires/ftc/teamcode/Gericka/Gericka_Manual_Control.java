@@ -69,6 +69,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
         Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
 
+        //theRobot.TestLights();
+        theRobot.light1Color();
+
         theRobot.ShowTelemetry();
         telemetry.update();
 
@@ -176,6 +179,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // Run the Auto Lift to Midway position (if enabled)
             theRobot.RunAutoLifter();
 
+            theRobot.light2Color();
             // ********   TURRET CONTROLS ***********************
             if (gamepad2.circleWasPressed() ){
                 if (gamepad2.shareWasPressed()) {
@@ -195,13 +199,15 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             // switch to tracking red target
             if (gamepad2.triangleWasPressed() ){
-                if (gamepad2.shareWasPressed()) {
+                if (gamepad2.optionsWasPressed()) {
                     if (turretTrackingID == 20) {
                         // switch turret tracking to RED target
                         turretTrackingID = 24;
                         theRobot.SetTurretAutoMode(true);
+                        theRobot.light1.setPosition(0.279);
                     } else {
                         // switch turret tracking to BLUE target
+                        theRobot.light1.setPosition(0.611);
                         turretTrackingID = 20;
                         theRobot.SetTurretAutoMode(true);
                     }

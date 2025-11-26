@@ -13,6 +13,11 @@
             <goBILDA5202SeriesMotor name="turretMotor"       port="3" />
             <!-- <ContinuousRotationServo name="cservo" port="0" /-->
             <RevColorSensorV3 name="ColorSensorRight" port="0" bus="2"/>
+
+            <!-- Servo -->
+            <Servo name="light1" port="0" />
+            <Servo name="light2" port="1" />
+            <Servo name="light3" port="2" />
         </LynxModule>
         <LynxModule name="Control Hub" port="173">
 

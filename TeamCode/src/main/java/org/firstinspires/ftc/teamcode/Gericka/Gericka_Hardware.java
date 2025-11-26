@@ -59,6 +59,9 @@ public class Gericka_Hardware {
     DcMotorEx shooterMotorLeft;
     DcMotorEx turretMotor;
     Servo lifterServo;
+    Servo light1;
+    Servo light2;
+    Servo light3;
 
     //pidf rotator variables
     public static boolean pidfEnabled = false;
@@ -250,7 +253,9 @@ public class Gericka_Hardware {
 
         // ****************** SERVOS ******************************************
         lifterServo = hardwareMap.get(Servo.class, "lifterServo");
-
+        light1 = hardwareMap.get(Servo.class, "light1");
+        light2 = hardwareMap.get(Servo.class, "light2");
+        light3 = hardwareMap.get(Servo.class, "light3");
 
         // ********** Color Sensors ********************
         ColorSensorRight = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
@@ -311,6 +316,9 @@ public class Gericka_Hardware {
 
         opMode.telemetry.addData("Light Detected", ((OpticalDistanceSensor) ColorSensorRight).getLightDetected());
         //NormalizedRGBA colorsRight = ColorSensorRight.getNormalizedColors();
+        opMode.telemetry.addData("Light1", light1.getPosition());
+        opMode.telemetry.addData("Light2", light2.getPosition());
+        opMode.telemetry.addData("Light3", light3.getPosition());
 
         opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
@@ -342,7 +350,6 @@ public class Gericka_Hardware {
             opMode.gamepad2.rumble(1000);
         }
     }
-
     public void InitRoadRunner(Gericka_MecanumDrive roadrunner)
     {
         drive = roadrunner;
@@ -554,7 +561,23 @@ public class Gericka_Hardware {
         allianceIndicatorLight.setPosition(colorValue);
         indicatorLightValue = colorValue;
     }
+    public void TestLights(){
+        light1.setPosition(INDICATOR_RED);
+        light2.setPosition(INDICATOR_BLUE);
+        light3.setPosition(INDICATOR_GREEN);
+    }
+    public void light1Color(){
+        light1.setPosition(allianceIndicatorLight.getPosition());
 
+    }
+    public void light2Color(){
+        if (lifterServo.getPosition() == LIFTER_MID_POSITION){
+            light2.setPosition(INDICATOR_GREEN);
+        }
+        else{
+            light2.setPosition(0);
+        }
+    }
     public void InitBlinkin(HardwareMap hardwareMap) {
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class,"RevBLinkinLedDriver");
         /*
@@ -785,10 +808,12 @@ public class Gericka_Hardware {
                         && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.5)) {
                     opMode.telemetry.addData("Distance (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
                     lifterServo.setPosition(LIFTER_MID_POSITION);
+                    light1.setPosition(INDICATOR_GREEN);
                 } else if (((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0))
                         && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.5)) {
                     opMode.telemetry.addData("Distance (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
                     lifterServo.setPosition(LIFTER_MID_POSITION);
+                    light1.setPosition(INDICATOR_GREEN);
                 }
             }
         }
