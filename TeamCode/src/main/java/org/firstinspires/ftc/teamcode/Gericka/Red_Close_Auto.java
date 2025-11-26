@@ -12,7 +12,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Blue Close Auto", preselectTeleOp ="Gericka 1 Manual Control")
+@Autonomous(name="Red Close Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 
 public class Red_Close_Auto extends LinearOpMode {
