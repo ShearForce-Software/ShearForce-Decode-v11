@@ -112,12 +112,17 @@ public class Gericka_Hardware {
     double turretTargetAngle = 0.0;
     double lifterTargetPosition = 0.0;
     double shooterTargetSpeed = 0.0;
-    public Servo allianceIndicatorLight = null;
+    //public Servo allianceIndicatorLight = null;
+    private String allianceColorString = "UNKNOWN";
     final double INDICATOR_BLACK = 0;
     final double INDICATOR_RED = 0.279;
     final double INDICATOR_BLUE = 0.611;
     final double INDICATOR_WHITE = 1;
     final double INDICATOR_GREEN = 0.500;
+    final double INDICATOR_ORANGE = 0.333;
+    final double INDICATOR_YELLOW = 0.388;
+    final double INDICATOR_SAGE_GREEN = 0.444;
+    final double INDICATOR_VIOLET = 0.722;
     double indicatorLightValue = 0;
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
@@ -188,7 +193,7 @@ public class Gericka_Hardware {
         this.opMode = opMode;
     }
     public void Init (HardwareMap hardwareMap, String allianceColor) {
-        allianceIndicatorLight = hardwareMap.get(Servo.class, "IndicatorLight");
+        //allianceIndicatorLight = hardwareMap.get(Servo.class, "IndicatorLight");
         // ************* Drive MOTORS ****************
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront_leftOdometry");
         leftRear= hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -266,9 +271,11 @@ public class Gericka_Hardware {
         //leftColorSensor.enableLed(false);
         //rightColorSensor.enableLed(false);
         if (Objects.equals(allianceColor, "RED")) {
-            allianceIndicatorLight.setPosition(INDICATOR_RED);
+            allianceColorString = "RED";
+            //allianceIndicatorLight.setPosition(INDICATOR_RED);
         } else {
-            allianceIndicatorLight.setPosition(INDICATOR_BLUE);
+            allianceColorString = "BLUE";
+            //allianceIndicatorLight.setPosition(INDICATOR_BLUE);
         }
 
          //limelightbox = hardwareMap.get(Limelight3A.class, "limelight");
@@ -280,6 +287,10 @@ public class Gericka_Hardware {
         imu.initialize(parameters);
         imu.resetYaw();
 
+    }
+
+    public void SetAllianceColor(String value) {
+        allianceColorString = value;
     }
 
     public void ShowTelemetry(){
@@ -325,17 +336,7 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
         //opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
 
-        if (allianceIndicatorLight.getPosition() == INDICATOR_RED)
-        {
-            opMode.telemetry.addData("Alliance: ", "RED");
-        }
-        else if (allianceIndicatorLight.getPosition() == INDICATOR_BLUE)
-        {
-            opMode.telemetry.addData("Alliance: ", "BLUE");
-        }
-        else {
-            opMode.telemetry.addData("ERROR: Alliance Value:", allianceIndicatorLight.getPosition());
-        }
+        opMode.telemetry.addData("Alliance: ", allianceColorString);
 
         telemetryAprilTag();
 
@@ -550,6 +551,11 @@ public class Gericka_Hardware {
         }
         return distance;
     }
+
+    public void SetAprilTagTargetId(int value) {
+        currentAprilTargetId = value;
+    }
+    public int GetAprilTagTargetId() { return currentAprilTargetId; }
     public boolean GetUseOnlyWebcamForDistance() { return useOnlyWebcamForDistance; }
     public void SetUseOnlyWebcamForDistance(boolean value) { useOnlyWebcamForDistance = value; }
 
@@ -557,26 +563,43 @@ public class Gericka_Hardware {
     // ****      LED Lights Controls and Utility functions
     // *********************************************************
 
-    public void SetIndicatorLight(double colorValue) {
-        allianceIndicatorLight.setPosition(colorValue);
-        indicatorLightValue = colorValue;
-    }
-    public void TestLights(){
-        light1.setPosition(INDICATOR_RED);
-        light2.setPosition(INDICATOR_BLUE);
-        light3.setPosition(INDICATOR_GREEN);
-    }
-    public void light1Color(){
-        light1.setPosition(allianceIndicatorLight.getPosition());
+    public void SetIndicatorLights() {
+        // set light1 to red or blue based on alliance
+        if (allianceColorString == "RED") {
+            light1.setPosition(INDICATOR_RED);
+        }
+        else if (allianceColorString == "BLUE") {
+            light1.setPosition(INDICATOR_BLUE);
+        }
+        else {
+            light1.setPosition(INDICATOR_VIOLET);
+        }
 
-    }
-    public void light2Color(){
+        // set light2 based on if ball in firing position
         if (lifterServo.getPosition() == LIFTER_MID_POSITION){
             light2.setPosition(INDICATOR_GREEN);
         }
         else{
             light2.setPosition(0);
         }
+
+        // set light3 based on if shooter motor within tolerances and if turret is aligned
+        double currentMotorRPM = CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS);
+        boolean shooterReady =  ((currentMotorRPM >= shooterTargetSpeed - 10) && (currentMotorRPM <= shooterTargetSpeed + 200));
+        boolean turretReady = ((turretMotor.getCurrentPosition() > (turretMotor.getTargetPosition() - 5)) && (turretMotor.getCurrentPosition() < (turretMotor.getTargetPosition() + 5)));  // 5 ticks is a little bit more than 2 degrees
+        if (shooterReady && turretReady) {
+            light3.setPosition(INDICATOR_GREEN);
+        }
+        else if (shooterReady) {
+            light3.setPosition(INDICATOR_ORANGE);
+        }
+        else if (turretReady) {
+            light3.setPosition(INDICATOR_YELLOW);
+        }
+        else {
+            light3.setPosition(INDICATOR_BLACK);
+        }
+
     }
     public void InitBlinkin(HardwareMap hardwareMap) {
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class,"RevBLinkinLedDriver");
@@ -757,11 +780,11 @@ public class Gericka_Hardware {
 
     public boolean GetTurretAutoMode() { return autoTurretMode; }
     public void SetTurretAutoMode(boolean value) { autoTurretMode = value; }
-    void adjustTurretToTargetAprilTag(int detectionID){
+    void adjustTurretToTargetAprilTag(){
         double bearingToAprilTag = 0.0;
         double currentTurretAngle = getCurrentTurretAngle();
-        if (getAprilTagVisible(detectionID)){
-            bearingToAprilTag = getBearingToAprilTag(detectionID);
+        if (getAprilTagVisible(currentAprilTargetId)){
+            bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
             SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
         }
         else if (useRoadrunnerForTurretAnglesEnabled) {  //TODO need to enable this flag and test if really works

@@ -99,6 +99,8 @@ public class Blue_Far_Auto extends LinearOpMode {
                 theRobot.ShowTelemetry();
                 //control.ShowPinpointTelemetry();
 
+                theRobot.SetIndicatorLights();
+
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                 }

@@ -82,6 +82,7 @@ public class Red_Close_Auto extends LinearOpMode {
             while (!isStopRequested() && getRuntime() < 30) {
                 theRobot.ShowTelemetry();
                 //control.ShowPinpointTelemetry();
+                theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();

@@ -83,6 +83,8 @@ public class Blue_Close_Auto extends LinearOpMode {
                 theRobot.ShowTelemetry();
                 //control.ShowPinpointTelemetry();
 
+            theRobot.SetIndicatorLights();
+
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                 }

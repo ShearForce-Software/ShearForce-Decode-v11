@@ -5,9 +5,10 @@
 
 === Akshay
 
-- [ ] AUTO: Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
+- [x] AUTO: Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
 - [ ] AUTO: Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
 - [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
+- [ ] AUTO: Limit when intake motor is on to only when needed for the close autos
 
 === Gianna
 
@@ -26,9 +27,6 @@
 
 === Tong
 
-- [ ] Fix the pinpoint absolute function to return correct heading
-- [ ] Test new roadrunner telemetry messages just added, might be correct values without needing absolute methods
-- [ ] Test pinpoint telemetry during teleop after Auto -- does it start at same reported position as auto finished in, does it stay correct?
 - [ ] Test tracking of target to set turret rotation angle with pinpoint absolute values for the calculation
 
 == Next Level Stuff
