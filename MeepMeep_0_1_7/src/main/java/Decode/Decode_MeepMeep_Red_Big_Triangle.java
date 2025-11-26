@@ -7,7 +7,7 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 
-public class Decode_MeepMeep_Blue_Close_Auto_From_Big_Triangle {
+public class Decode_MeepMeep_Red_Big_Triangle {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
 
@@ -16,24 +16,24 @@ public class Decode_MeepMeep_Blue_Close_Auto_From_Big_Triangle {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
         myBot.runAction(
-        myBot.getDrive().actionBuilder(
-                new Pose2d(-60,-39,Math.toRadians(270)))
-                .waitSeconds(2)
-                .strafeToConstantHeading(new Vector2d(-11.4, -10))
-                .waitSeconds(2)
-                .turnTo(Math.toRadians(270))
-                .strafeToConstantHeading(new Vector2d(-11.4, -55))
-                .waitSeconds(2)
-                .strafeToConstantHeading(new Vector2d(-11.4, -10))
-                .waitSeconds(2)
-                .strafeToConstantHeading(new Vector2d(-54, -16))
+                myBot.getDrive().actionBuilder(
+                                new Pose2d(-60,-39,Math.toRadians(270)))
+                        .waitSeconds(2)
+                        .strafeToConstantHeading(new Vector2d(-11.4, -10))
+                        .waitSeconds(2)
+                        .turnTo(Math.toRadians(270))
+                        .strafeToConstantHeading(new Vector2d(-11.4, -55))
+                        .waitSeconds(2)
+                        .strafeToConstantHeading(new Vector2d(-11.4, -10))
+                        .waitSeconds(2)
+                        .strafeToConstantHeading(new Vector2d(-54, -16))
 
-                .waitSeconds(2)
-
-
+                        .waitSeconds(2)
 
 
-                .build()
+
+
+                        .build()
 
         );
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_OFFICIAL)
@@ -43,7 +43,7 @@ public class Decode_MeepMeep_Blue_Close_Auto_From_Big_Triangle {
                 .start();
     }
 
-    }
+}
 
 
 
