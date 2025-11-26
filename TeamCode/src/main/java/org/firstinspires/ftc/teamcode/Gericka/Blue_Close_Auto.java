@@ -53,22 +53,23 @@ public class Blue_Close_Auto extends LinearOpMode {
 
 
     DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(270)))
-            .strafeToLinearHeading(new Vector2d(-11.4, -10), Math.toRadians(210))
-
+            .strafeToConstantHeading(new Vector2d(-11.4, -10))
             .build();
 
     // Mid (-10, -10, 270) -> closest line (-10, -40)
-    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(210)))
-            .turnTo(Math.toRadians(270))
+    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(270)))
+
             .strafeToConstantHeading(new Vector2d(-11.4, -55))
             .build();
 
+
+
     DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, -55, Math.toRadians(270)))
-            .strafeToLinearHeading(new Vector2d(-11.4, -10), Math.toRadians(210))
+            .strafeToConstantHeading(new Vector2d(-11.4, -10))
             .build();
 
     // Closest line (-10, -40, 270) -> launch park (-54, -16)
-    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(210)))
+    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(270)))
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
@@ -92,11 +93,13 @@ public class Blue_Close_Auto extends LinearOpMode {
     secondaryThread.start();
 
     // Turret initial rough angle toward speaker (tune as needed)
-    double turretTargetAngle = 180;
+    double turretTargetAngle = 142
+
+            ;
     theRobot.SetTurretRotationAngle(turretTargetAngle);
-    sleep(1000);
+
     // turn off turret power so doesn't twitch
-    theRobot.turretMotor.setPower(0);
+    //theRobot.turretMotor.setPower(0);
 
     // *************************************
     //      Wait for start
@@ -113,7 +116,7 @@ public class Blue_Close_Auto extends LinearOpMode {
     theRobot.SetShooterSpeed(1.0);
 
 
-    Actions.runBlocking(new SleepAction((2.0)));
+    Actions.runBlocking(new SleepAction((1)));
     Actions.runBlocking(DriveStartToMidPosition);
 
     // Turn turret more directly to target for auto shooting (tune on field)
@@ -121,7 +124,7 @@ public class Blue_Close_Auto extends LinearOpMode {
     //control.SetTurretRotationAngle(turretTargetAngle);
 
     // Shooter RPM for big triangle shots (tune as needed)
-    double shooterSpeedRPM = 2900;
+    double shooterSpeedRPM = 2700;
     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
 
@@ -142,11 +145,11 @@ public class Blue_Close_Auto extends LinearOpMode {
             new SequentialAction(
                     // Mid -> closest line
                     DriveMidToClosestLine,
-                    new SleepAction(2.0),           // tiny sleep to finish ingesting rings
+                              // tiny sleep to finish ingesting rings
                     // Closest line -> launch park
 
-                    DriveClosestLineBackToMid,
-                    new SleepAction(2.0)
+                    DriveClosestLineBackToMid
+
                     )
     );
 
@@ -158,14 +161,17 @@ public class Blue_Close_Auto extends LinearOpMode {
         //theRobot.SetIntakeMotor(true, true);
         Actions.runBlocking(
                 new SequentialAction(
-                    DriveClosestLineBackToLaunchPark,
-                        new SleepAction(2.0)
+                    DriveClosestLineBackToLaunchPark
+
+
                 )
         );
 
 
 
-
+        turretTargetAngle = 0.0;
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        sleep(5000);
 
 
 
@@ -185,8 +191,7 @@ public class Blue_Close_Auto extends LinearOpMode {
     theRobot.SetIntakeMotor(false,false);
 
     // return turret to zero position
-    turretTargetAngle = 0.0;
-    theRobot.SetTurretRotationAngle(turretTargetAngle);
+
 
     Gericka_Hardware.autoTimeLeft = 30-getRuntime();
     telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
