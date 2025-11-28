@@ -226,15 +226,15 @@ public class Red_Far_Auto extends LinearOpMode {
 
     private void ShootBall(double shooterSpeedRPM) {
         // sleep some time to allow shooter wheel to spin back up if needed
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 200) ) {
-            theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-200);
-            sleep(20);
-        }
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100) ) {
+        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100) ) {
             theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-100);
             sleep(20);
         }
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 50) ) {
+            theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-50);
+            sleep(20);
+        }
+        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
                 theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) {
             theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             sleep(20);
