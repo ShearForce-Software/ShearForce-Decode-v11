@@ -44,7 +44,7 @@ public class Red_Close_Auto extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        theRobot.SetInitalPinpointPosition(-60, -39, 270);
+        theRobot.SetInitalPinpointPosition(-60, -39, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
@@ -53,24 +53,24 @@ public class Red_Close_Auto extends LinearOpMode {
 
 
         DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(-11.4, -10))
+                .strafeToConstantHeading(new Vector2d(-11.4, 10))
                 .build();
 
         // Mid (-10, -10, 270) -> closest line (-10, -40)
         DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(270)))
 
-                .strafeToConstantHeading(new Vector2d(-11.4, -55))
+                .strafeToConstantHeading(new Vector2d(-11.4, 55))
                 .build();
 
 
 
         DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, -55, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(-11.4, -10))
+                .strafeToConstantHeading(new Vector2d(-11.4, 10))
                 .build();
 
         // Closest line (-10, -40, 270) -> launch park (-54, -16)
         DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(270)))
-                .strafeToConstantHeading(new Vector2d(-54, -16))
+                .strafeToConstantHeading(new Vector2d(-54, 16))
                 .build();
 
         theRobot.SetAutoLifterMode(true);
