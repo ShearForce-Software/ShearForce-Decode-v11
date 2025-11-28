@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -98,6 +99,11 @@ public class Gericka_Hardware {
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
     double shooterTargetRPM = 0.0;
+    public static boolean shooterPIDF_Enabled = false;
+    public static double shooterP = 0.0;
+    public static double shooterI = 0.0;
+    public static double shooterD = 0.0;
+    public static double shooterF = 0.0;
     final float MAX_SHOOTER_RPM = 4500;
     final float MIN_SHOOTER_RPM = 0;
     final float MAX_TURRET_ANGLE = 179;
@@ -254,9 +260,14 @@ public class Gericka_Hardware {
         shooterMotorRight.setPower(0.0);
         turretMotor.setPower(0.0);
 
+        if (GetShooterPIDF_Enabled()) {
+            shooterMotorLeft.setVelocityPIDFCoefficients(shooterP, shooterI, shooterD, shooterF);
+            shooterMotorRight.setVelocityPIDFCoefficients(shooterP, shooterI, shooterD, shooterF);
+        }
 
 
-        // ****************** SERVOS ******************************************
+
+            // ****************** SERVOS ******************************************
         lifterServo = hardwareMap.get(Servo.class, "lifterServo");
         light1 = hardwareMap.get(Servo.class, "light1");
         light2 = hardwareMap.get(Servo.class, "light2");
@@ -300,11 +311,13 @@ public class Gericka_Hardware {
         ShowRoadrunnerPosition();
 
         opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));
-        //opMode.telemetry.addData("        ", "L-Vel: %.1f, R-Vel: %.1f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
-        opMode.telemetry.addData("        ", "L-Pow: %.1f, R-Pow: %.1f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
+        opMode.telemetry.addData("        ", "L-Vel: %.3f, R-Vel: %.3f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
+        opMode.telemetry.addData("        ", "L-Pow: %.3f, R-Pow: %.3f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
         //opMode.telemetry.addData("        ", "L-Amp: %.1f, R-Amp: %.1f" , shooterMotorLeft.getCurrent(CurrentUnit.AMPS), shooterMotorRight.getCurrent(CurrentUnit.AMPS));
         //opMode.telemetry.addData("Shooter Target Speed: ", shooterTargetSpeed);
         opMode.telemetry.addData("Shooter Target RPM: ", shooterTargetRPM);
+        ShowPIDF_Telemetry();
+
         opMode.telemetry.addData("Auto Shooter Mode: ", autoShooterMode);
         opMode.telemetry.addData("Auto Turret Mode: ", autoTurretMode);
         opMode.telemetry.addData("Auto Lifter Mode: ", autoLifterMode);
@@ -344,6 +357,27 @@ public class Gericka_Hardware {
 
         opMode.telemetry.update();
     }
+
+    public void ShowPIDF_Telemetry() {
+        PIDFCoefficients shooterPIDF = shooterMotorLeft.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        opMode.telemetry.addData("Shooter PIDF: ", "p: %.3f  i: %.2f  d: %.2f  f: %.2f", shooterPIDF.p, shooterPIDF.i, shooterPIDF.d, shooterPIDF.f);
+
+    }
+
+    public void SetShooterPIDFCoefficients() {
+        if (GetShooterPIDF_Enabled()) {
+            PIDFCoefficients shooterPIDF = shooterMotorLeft.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            // if the static PIDF coefficients changed (probably through the dashboard)
+            if ((shooterPIDF.p != shooterP) || (shooterPIDF.i != shooterI) || (shooterPIDF.d != shooterD) || (shooterPIDF.f != shooterF)) {
+                shooterMotorLeft.setVelocityPIDFCoefficients(shooterP, shooterI, shooterD, shooterF);
+                shooterMotorRight.setVelocityPIDFCoefficients(shooterP, shooterI, shooterD, shooterF);
+            }
+        }
+    }
+
+    public boolean GetShooterPIDF_Enabled() { return shooterPIDF_Enabled; }
+    public void SetShooterPIDF_Enabled(boolean value) { shooterPIDF_Enabled = value; }
 
     public void EndgameBuzzer(){
         if(opMode.getRuntime() < 84.5 && opMode.getRuntime() > 84.0){

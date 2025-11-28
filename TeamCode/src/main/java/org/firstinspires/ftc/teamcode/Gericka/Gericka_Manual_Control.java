@@ -66,6 +66,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetTurretAutoMode(true);   // auto adjusts the turret rotation angle to align with
         theRobot.SetUseRoadrunnerForTurretAnglesEnabled(false); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
         theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
+        //theRobot.SetShooterPIDF_Enabled(false);
 
         Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
         Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
@@ -90,6 +91,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         while (opModeIsActive()) {
             theRobot.EndgameBuzzer();
             theRobot.SetIndicatorLights();
+            theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
 
             gamepad1_options = gamepad1.optionsWasPressed();
             gamepad1_share = gamepad1.shareWasPressed();
