@@ -90,7 +90,7 @@ public class Gericka_Hardware {
     public final float LIFTER_DOWN_POSITION = 0.05f;
 
     private boolean useOnlyWebcamForDistance = true;
-    private boolean autoTurretMode = false;
+    private boolean autoTurretMode = true;
     private boolean autoLifterMode = false;
     private boolean autoIntakeMode = false;
     private boolean autoShooterMode = false;
@@ -817,30 +817,25 @@ public class Gericka_Hardware {
     void adjustTurretToTargetAprilTag(){
         double bearingToAprilTag = 0.0;
         double currentTurretAngle = getCurrentTurretAngle();
-        if (getAprilTagVisible(currentAprilTargetId)){
-            bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
-            SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
-        }
-        else if (useRoadrunnerForTurretAnglesEnabled) {  //TODO need to enable this flag and test if really works
-            bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, targetX, targetY, getCurrentTurretAngle());
+        while (currentTurretAngle > 180) currentTurretAngle -= 360;
+        while (currentTurretAngle < -180) currentTurretAngle += 360;
+        //if (getAprilTagVisible(currentAprilTargetId)){
+           // bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
+          //  SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
+        //}
+         if (useRoadrunnerForTurretAnglesEnabled) {  //TODO need to enable this flag and test if really works
+            bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, targetX, targetY, drive.localizer.getPose().heading.toDouble(), currentTurretAngle);
             SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
         }
     }
-    public static double calculateBearingToPointInDegrees(double robotXInInches, double robotYInInches, double targetXInInches, double targetYInInches, double turretHeadingDegrees) {
+    public static double calculateBearingToPointInDegrees(double robotXInInches, double robotYInInches, double targetXInInches, double targetYInInches, double robotHeadingDegrees, double turretHeading) {
         double deltaX = targetXInInches - robotXInInches;
         double deltaY = targetYInInches - robotYInInches;
-        double angleToTargetRadians = Math.atan2(deltaY, deltaX); // calculates the absolute angle to the target in field-relative coordinates
-        double relativeAngleRadians = angleToTargetRadians - Math.toRadians(turretHeadingDegrees);
-
-        // Normalize the value to -180 to 180 equivalent values
-        while (relativeAngleRadians > Math.PI) {
-            relativeAngleRadians -= 2 * Math.PI;
-        }
-        while (relativeAngleRadians < -Math.PI) {
-            relativeAngleRadians += 2 * Math.PI;
-        }
-
-        return Math.toDegrees(relativeAngleRadians);
+        double angleToTargetDeg = Math.toDegrees(Math.atan2(deltaY, deltaX));
+        double turretRelativeAngleDeg = angleToTargetDeg - robotHeadingDegrees;
+        while (turretRelativeAngleDeg > 180) turretRelativeAngleDeg -= 360;
+        while (turretRelativeAngleDeg < -180) turretRelativeAngleDeg += 360;
+        return turretHeading - robotHeadingDegrees - turretRelativeAngleDeg;
     }
 
     public boolean GetUseRoadrunnerForTurretAnglesEnabled() { return useRoadrunnerForTurretAnglesEnabled; }
