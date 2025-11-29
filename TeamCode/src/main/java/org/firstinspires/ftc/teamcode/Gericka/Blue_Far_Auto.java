@@ -33,7 +33,7 @@ public class Blue_Far_Auto extends LinearOpMode {
     int lifterDownSleepTime = 600;
 
     public void runOpMode() {
-        startPose = new Pose2d(60, -12, Math.toRadians(270));
+        startPose = new Pose2d(60, -12, Math.toRadians(-90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
 
@@ -47,14 +47,14 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        theRobot.SetRoadrunnerPosition(60, -12, 270);
+        theRobot.SetRoadrunnerPosition(60, -12, -90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
         // set lifter half up (so can get 3 ball loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
-        //control.imuOffsetInDegrees = 270; // Math.toDegrees(startPose.heading.toDouble());
+        //control.imuOffsetInDegrees = -90; // Math.toDegrees(startPose.heading.toDouble());
 
         // ***************************************************
         // ****  Define Trajectories    **********************
@@ -62,30 +62,30 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
 
-        DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(270)))
+        DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(270)))
+        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(11.5, -30))
                 .strafeToConstantHeading(new Vector2d(11.5, -55))
                 .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(270)))
+        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(270)))
+        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(34.75, -30))
                 .strafeToConstantHeading(new Vector2d(34.75, -55))
                 .build();
 
-        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -55, Math.toRadians(270)))
+        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -55, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(270)))
+        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .build();
 
@@ -227,20 +227,31 @@ public class Blue_Far_Auto extends LinearOpMode {
     }
 
     private void ShootBall(double shooterSpeedRPM) {
+        double timeout = getRuntime() + 2.0; // only allow a max of 2 seconds delay for spin up waiting
         // sleep some time to allow shooter wheel to spin back up if needed
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 200) ) {
-            theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-200);
-            sleep(20);
-        }
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100) ) {
+
+        // while neither motor is at least within 200 of our target speed
+        while ((theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 200)) &&
+                (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 200)) &&
+                (getRuntime() < timeout)) {
             theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-100);
             sleep(20);
         }
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
-                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) {
+        while ((theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) &&
+                (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100) ) &&
+                (getRuntime() < timeout)) {
+            theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-50);
+            sleep(20);
+        }
+        while ((theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) &&
+                (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+                        theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) &&
+                (getRuntime() < timeout)) {
             theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             sleep(20);
         }
+        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         /* **** SHOOT a BALL  **** */
         theRobot.SetLifterUp();

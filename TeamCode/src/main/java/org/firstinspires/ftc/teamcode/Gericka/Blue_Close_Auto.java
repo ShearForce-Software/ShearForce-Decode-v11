@@ -31,7 +31,7 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     public void runOpMode(){
     //We will start at big trianlge start
-    startPose = new Pose2d(-60,-39,Math.toRadians(270));
+    startPose = new Pose2d(-60,-39,Math.toRadians(-90));
     /* Initialize the Robot */
     theRobot.Init(hardwareMap, "BLUE");
 
@@ -44,7 +44,7 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
     // finish initializing the pinpoint
-    theRobot.SetInitalPinpointPosition(-60, -39, 270);
+    theRobot.SetInitalPinpointPosition(-60, -39, -90);
 
     blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -52,24 +52,24 @@ public class Blue_Close_Auto extends LinearOpMode {
     theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
 
-    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(270)))
+    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(-90)))
             .strafeToConstantHeading(new Vector2d(-11.4, -10))
             .build();
 
-    // Mid (-10, -10, 270) -> closest line (-10, -40)
-    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(270)))
+    // Mid (-10, -10, -90) -> closest line (-10, -40)
+    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(-90)))
 
             .strafeToConstantHeading(new Vector2d(-11.4, -55))
             .build();
 
 
 
-    DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, -55, Math.toRadians(270)))
+    DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, -55, Math.toRadians(-90)))
             .strafeToConstantHeading(new Vector2d(-11.4, -10))
             .build();
 
-    // Closest line (-10, -40, 270) -> launch park (-54, -16)
-    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(270)))
+    // Closest line (-10, -40, -90) -> launch park (-54, -16)
+    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(-90)))
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 

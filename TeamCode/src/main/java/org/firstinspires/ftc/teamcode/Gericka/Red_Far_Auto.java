@@ -221,25 +221,34 @@ public class Red_Far_Auto extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-
     }
 
     private void ShootBall(double shooterSpeedRPM) {
+        double timeout = getRuntime() + 2.0; // only allow a max of 2 seconds delay for spin up waiting
         // sleep some time to allow shooter wheel to spin back up if needed
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100) ) {
+
+        // while neither motor is at least within 200 of our target speed
+        while ((theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 200)) &&
+                (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 200)) &&
+                (getRuntime() < timeout)) {
             theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-100);
             sleep(20);
         }
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 50) ) {
+        while ((theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100)) &&
+                (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 100) ) &&
+                (getRuntime() < timeout)) {
             theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM-50);
             sleep(20);
         }
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
-                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) {
+        while ((theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) &&
+                (theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
+                        theRobot.CalculateMotorRPM(theRobot.shooterMotorRight.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 200)) &&
+                (getRuntime() < timeout)) {
             theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             sleep(20);
         }
-
+        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         /* **** SHOOT a BALL  **** */
         theRobot.SetLifterUp();

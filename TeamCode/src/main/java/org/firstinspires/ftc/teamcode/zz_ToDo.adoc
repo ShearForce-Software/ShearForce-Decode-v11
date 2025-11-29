@@ -21,18 +21,19 @@
 
 === Shrey
 
-- [ ] AUTO: change shoot spin up to be while < -200 set to be -100, while < -100 set to be -50 -- RETEST
-- [ ] AUTO: Add 2? second timeout on shots
 - Tune built-in PIDF using dashboard to achieve faster recovery without overshoots
-  * [ ] Run Manual, find velocity and power values for small triangle position, RECORD in comment in SetShooterPIDFCoefficients()
-  * [ ] Run Manual, find velocity and power values for AUTO Close position, RECORD in comment in SetShooterPIDFCoefficients()
-  * [ ] Run manual, find current PIDF values from telemetry, RECORD in comment in SetShooterPIDFCoefficients()
-  * [ ] Change shooterF to be 80% of velocity value for small triangle shot above, set shooterPIDF_Enabled to true
-  * [ ] Using Dashboard, and running manual, increase **shooterP** slowly until motor velocity starts to oscillate around target velocity
-  * [ ] Increase **shooterD** slowly to eliminate overshoot and minimize oscillations
-  * [ ] If velocity staying under target velocity, slowly increase **shooterI** until gets to target without significantly overshooting
-  * [ ] Tweak the 3 values until happy with shot recovery and spin up at small triangle location
-  * [ ] RECORD the 4 values in comments in SetShooterPIDFCoefficients(), change the defaults to match
+  * Run Manual - put notes in comments of SetShooterPIDFCoefficients()
+    ** [ ] RECORD velocity and power values for small triangle position
+    ** [ ] RECORD velocity and power values for AUTO Close position
+    ** [ ] RECORD current PIDF values from telemetry
+  * Run Manual with DASHBOARD connected from small triangle position
+    ** [ ] In Dashboard, change **shooterPIDF_Enabled** to be true
+    ** [ ] Change **shooterF** to be 80% of velocity value for small triangle shot above
+    ** [ ] Increase **shooterP** slowly until motor velocity starts to oscillate around target velocity
+    ** [ ] Increase **shooterD** slowly to eliminate overshoot and minimize oscillations
+    ** [ ] If velocity staying under target velocity, slowly increase **shooterI** until gets to target without significantly overshooting
+    ** [ ] Tweak the 3 values until happy with shot recovery and spin up at small triangle location
+    ** [ ] RECORD the 4 values in comments in SetShooterPIDFCoefficients(), change the defaults to match
   * [ ] Repeat the dashboard tuning process at the close up shooting position, determine if there is should be a second set of coefficients stored that could be swapped back and forth, or if the small triangle ones are sufficient for close up too
   * [ ] if PIDF seems effective, turn on for auto and remove the spin up while loops and RETEST
 
@@ -42,7 +43,7 @@
 
 === Tong
 
-- [ ] Test tracking of target to set turret rotation angle with pinpoint absolute values for the calculation
+- [ ] Test tracking of target to set turret rotation angle with roadrunner values for the calculation
 
 == Next Level Stuff
 
