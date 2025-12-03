@@ -92,6 +92,17 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.EndgameBuzzer();
             theRobot.SetIndicatorLights();
             theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
+            /*
+            small triangle
+            velocity:1620 L, 1600 R
+            power: 0.690 L, 0.690 R
+
+            close position
+            velocity:
+            power:
+
+            Current PIDF values
+            PIDF: 10, 3, 0, 0
 
             gamepad1_optionsWasPressed = gamepad1.optionsWasPressed();
             gamepad1_shareWasPressed = gamepad1.shareWasPressed();

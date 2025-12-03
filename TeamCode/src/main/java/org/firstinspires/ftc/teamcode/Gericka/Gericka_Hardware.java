@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Gericka;
 
 import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-
+@Config
 public class Gericka_Hardware {
     //ReentrantLock lock = new ReentrantLock();
     public static final String ALLIANCE_KEY = "Alliance";
