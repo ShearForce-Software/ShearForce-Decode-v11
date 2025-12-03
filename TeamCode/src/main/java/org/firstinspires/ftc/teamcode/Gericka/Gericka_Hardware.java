@@ -15,6 +15,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -147,6 +149,9 @@ public class Gericka_Hardware {
     //private NormalizedColorSensor ColorSensorRight;
     //private NormalizedColorSensor ColorSensorLeft;
 
+    //ModernRoboticsAnalogTouchSensor beamBreak1;
+    TouchSensor beamBreak1;
+
     //RevColorSensorV3 leftColorSensor;
     //RevColorSensorV3 rightColorSensor;
     //int redLeft = 0;
@@ -156,7 +161,6 @@ public class Gericka_Hardware {
     //int greenRight = 0;
     //int blueRight = 0;
     //private int position;
-
 /*
     // REV v3 color sensor variables
     public enum colorEnum {
@@ -292,6 +296,9 @@ public class Gericka_Hardware {
 
          //limelightbox = hardwareMap.get(Limelight3A.class, "limelight");
         //InitBlinkin(hardwareMap);
+
+        // ***** breakbeam *****
+        beamBreak1 =  hardwareMap.get(TouchSensor.class, "beamBreak1");
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -790,6 +797,12 @@ public class Gericka_Hardware {
     }
     public void RunAutoIntake()
     {
+        if (beamBreak1.isPressed()){
+            intakeMotor.setPower(INTAKE_POWER);
+    }
+        else {
+            intakeMotor.setPower(0);
+        }
         //TODO -- hook up to sensors to detect balls
         /* Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
          if (inside sensor says empty && outside sensor ball present) then turn intake on

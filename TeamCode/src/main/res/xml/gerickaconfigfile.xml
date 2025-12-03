@@ -18,6 +18,8 @@
             <Servo name="light1" port="0" />
             <Servo name="light2" port="1" />
             <Servo name="light3" port="2" />
+
+
         </LynxModule>
         <LynxModule name="Control Hub" port="173">
 
@@ -39,6 +41,9 @@
 
             <RevColorSensorV3 name="ColorSensorLeft" port="0" bus="2"/>
 
+            <TouchSensor name="beamBreak1" port="1"/>
+            <TouchSensor name="beamBreak2" port="3"/>
+            <TouchSensor name="beamBreak3" port="5"/>
 
             <goBILDAPinpoint name="pinpoint" port="0" bus="1"/>
 
