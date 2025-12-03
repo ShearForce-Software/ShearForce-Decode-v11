@@ -43,7 +43,7 @@
 
 === Tong
 
-- [ ] Test tracking of target to set turret rotation angle with roadrunner values for the calculation
+- [x] Test tracking of target to set turret rotation angle with roadrunner values for the calculation
 
 == Next Level Stuff
 

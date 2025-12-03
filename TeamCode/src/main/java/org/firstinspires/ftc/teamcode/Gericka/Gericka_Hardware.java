@@ -107,7 +107,7 @@ public class Gericka_Hardware {
     public static double shooterF = 0.0;
     final float MAX_SHOOTER_RPM = 4500;
     final float MIN_SHOOTER_RPM = 0;
-    final float MAX_TURRET_ANGLE = 179;
+    final float MAX_TURRET_ANGLE = 122;
     final float MIN_TURRET_ANGLE = -179;
     final double YELLOW_JACKET_19_1_TICKS = 537.7; // 19.2:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_1_1_TICKS = 28.0; // 1:1 - ticks per motor shaft revolution
@@ -835,14 +835,14 @@ public class Gericka_Hardware {
         // else can't see the april tag, try using the roadrunner position and robot heading to calculate the turret angle
         else if (useRoadrunnerForTurretAnglesEnabled) {  //TODO need to enable this flag and test if really works
             // calculate the bearing from the front of the robot to the april tag
-            bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, targetX, targetY, drive.localizer.getPose().heading.toDouble());
+            bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, targetX, targetY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             // convert that bearing into a turret angle (turret zero position points the opposite direction of the robot)
-            bearingToAprilTag += 180;
+            bearingToAprilTag += 180; 
             // normalize the bearing to be -180 to +180
             while (bearingToAprilTag > 180) bearingToAprilTag -= 360;
             while (bearingToAprilTag < -180) bearingToAprilTag += 360;
             // Command the turret to turn to that angle
-            SetTurretRotationAngle(bearingToAprilTag );
+            SetTurretRotationAngle(bearingToAprilTag);
         }
     }
     public static double calculateBearingToPointInDegrees(double robotXInInches, double robotYInInches, double targetXInInches, double targetYInInches, double robotHeadingDegrees) {
