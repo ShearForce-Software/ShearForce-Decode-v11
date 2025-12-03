@@ -125,7 +125,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
             // Press the triangle button / "y" while facing directly away from the driver to set the IMU correctly for field-centric mode if off
             if (gamepad1.triangleWasPressed()) {
-                if (gamepad1_optionsWasPressed) {
+                if (gamepad1_optionsWasPressed || gamepad1.options) {
                     theRobot.SetFieldCentricMode(true);
                 }
                 else {
@@ -135,7 +135,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // robot centric drive mode
             else if (gamepad1.squareWasPressed())
             {
-                if (gamepad1_optionsWasPressed) {
+                if (gamepad1_optionsWasPressed || gamepad1.options) {
                     theRobot.SetFieldCentricMode(false);
                 }
             }
@@ -221,7 +221,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
             }
             else if (gamepad2.dpadLeftWasPressed()){
-                if (gamepad2_optionsWasPressed){
+                if (gamepad2_optionsWasPressed || gamepad2.options){
                     theRobot.SetAutoShooterMode(false);
 
                     shooterSpeedRPM = 2100; //4500rpm was about the value observed when the Motor was commanded to 100%.
@@ -234,7 +234,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
             }
             else if (gamepad2.dpadRightWasPressed()){
-                if (gamepad2_optionsWasPressed){
+                if (gamepad2_optionsWasPressed || gamepad2.options){
                     theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM = 2950; //1950rpm was about the value observed when the Motor was commanded to 50%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
@@ -246,7 +246,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
             }
             else if (gamepad2.dpadDownWasPressed()) {
-                if (gamepad2_optionsWasPressed) {
+                if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM = 3500; //3200rpm was about the value observed when the Motor was commanded to 75%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);

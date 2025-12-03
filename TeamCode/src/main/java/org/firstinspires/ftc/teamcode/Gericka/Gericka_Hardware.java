@@ -10,6 +10,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
@@ -150,7 +151,9 @@ public class Gericka_Hardware {
     //private NormalizedColorSensor ColorSensorLeft;
 
     //ModernRoboticsAnalogTouchSensor beamBreak1;
-    TouchSensor beamBreak1;
+    DigitalChannel beamBreak1;
+    DigitalChannel beamBreak2;
+    DigitalChannel beamBreak3;
 
     //RevColorSensorV3 leftColorSensor;
     //RevColorSensorV3 rightColorSensor;
@@ -298,7 +301,9 @@ public class Gericka_Hardware {
         //InitBlinkin(hardwareMap);
 
         // ***** breakbeam *****
-        beamBreak1 =  hardwareMap.get(TouchSensor.class, "beamBreak1");
+        beamBreak1 =  hardwareMap.get(DigitalChannel.class, "beamBreak1");
+        beamBreak2 =  hardwareMap.get(DigitalChannel.class, "beamBreak2");
+        beamBreak3 =  hardwareMap.get(DigitalChannel.class, "beamBreak3");
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -630,7 +635,7 @@ public class Gericka_Hardware {
 
         // set light3 based on if shooter motor within tolerances and if turret is aligned
         double currentMotorRPM = CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS);
-        boolean shooterReady =  ((currentMotorRPM >= shooterTargetSpeed - 10) && (currentMotorRPM <= shooterTargetSpeed + 200));
+        boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 10) && (currentMotorRPM <= shooterTargetRPM + 200));
         boolean turretReady = ((turretMotor.getCurrentPosition() > (turretMotor.getTargetPosition() - 5)) && (turretMotor.getCurrentPosition() < (turretMotor.getTargetPosition() + 5)));  // 5 ticks is a little bit more than 2 degrees
         if (shooterReady && turretReady) {
             light3.setPosition(INDICATOR_GREEN);
@@ -797,9 +802,14 @@ public class Gericka_Hardware {
     }
     public void RunAutoIntake()
     {
-        if (beamBreak1.isPressed()){
+        // Read the state of the beam break sensor
+        // A 'true' value usually means the beam is NOT broken (light is detected)
+        // A 'false' value usually means the beam IS broken (light is interrupted)
+        boolean beamIsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
+
+        if (beamIsBroken){
             intakeMotor.setPower(INTAKE_POWER);
-    }
+        }
         else {
             intakeMotor.setPower(0);
         }

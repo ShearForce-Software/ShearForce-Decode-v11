@@ -5,14 +5,12 @@
 
 === Akshay
 
-- [x] AUTO: Create a Blue_Close_Auto to shoot 3 (from big triangle), intake closest line, shoot 3, park safely
-- [ ] AUTO: Create a Red_Close_Auto to shoot 3, intake closest line, shoot 3, park safely
 - [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
 - [ ] AUTO: Limit when intake motor is on to only when needed for the close autos
 
 === Gianna
 
-- [ ] INTAKE: Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
+- [ ] INTAKE: Integrate logic to use the ball break beam sensors to turn intake on/off automatically
 * if (inside sensor says empty && outside sensor ball present) then turn intake on
 * else if (inside sensor says ball present) then turn intake off
 * Example code for sensor is at:
@@ -23,9 +21,9 @@
 
 - Tune built-in PIDF using dashboard to achieve faster recovery without overshoots
   * Run Manual - put notes in comments of SetShooterPIDFCoefficients()
-    ** [ ] RECORD velocity and power values for small triangle position
+    ** [x] RECORD velocity and power values for small triangle position
     ** [ ] RECORD velocity and power values for AUTO Close position
-    ** [ ] RECORD current PIDF values from telemetry
+    ** [x] RECORD current PIDF values from telemetry
   * Run Manual with DASHBOARD connected from small triangle position
     ** [ ] In Dashboard, change **shooterPIDF_Enabled** to be true
     ** [ ] Change **shooterF** to be 80% of velocity value for small triangle shot above
@@ -43,23 +41,20 @@
 
 === Tong
 
-- [x] Test tracking of target to set turret rotation angle with roadrunner values for the calculation
+- [ ] AUTO: develop and test an auto to get the 3 balls on the wall
+- [ ] AUTO: develop and test an auto to shoot 3 balls, pick up 3 on wall and shoot them, pick up correct line, release the gate, then shoot 3 balls
 
 == Next Level Stuff
 
 - [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
 - [ ] Integrate April tag detection to the Autonomous routes, change intake order based on detected april tag
 - [ ] Develop lots of autonomous options and test them
-- [ ] AUTO: Implement Blue Large triangle start that can shoot 3 balls, and pick up correct line and shoot them then park for any of the 3 choices
-- [ ] AUTO: Implement Red Large triangles start that can shoot 3 balls, and pick up correct line and shoot them then park for any of the 3 choices
-- [ ] AUTO: Implement Blue small triangle start that can shoot 3 balls, and pick up correct line and shoot them then park for any of the 3 choices
-- [ ] AUTO: Implement Red small triangle start that can shoot 3 balls, and pick up correct line and shoot them then park for any of the 3 choices
+- [ ] AUTO: Implement Blue small triangle start that can shoot 6 balls, and pick up correct line and shoot them then park for any of the 3 choices
+- [ ] AUTO: Implement Red small triangle start that can shoot 6 balls, and pick up correct line and shoot them then park for any of the 3 choices
 
 
 == Advanced Shooter System Tasks
 
 - [ ] Develop function to calculate the optimum launcher ramp height
-- [ ] Setup PID controller for shooter motors
-- [ ] Setup PID controller for turret rotator
 
 
