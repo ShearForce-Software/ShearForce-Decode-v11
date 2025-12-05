@@ -33,7 +33,7 @@ public class Red_Close_Auto extends LinearOpMode {
         //We will start at big trianlge start
         startPose = new Pose2d(-60,39,Math.toRadians(90));
         /* Initialize the Robot */
-        theRobot.Init(hardwareMap, "BLUE");
+        theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
@@ -159,6 +159,8 @@ public class Red_Close_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
 
 
+        drive.localizer.update();
+
         //theRobot.SetIntakeMotor(true, true);
         Actions.runBlocking(
                 new SequentialAction(
@@ -172,7 +174,7 @@ public class Red_Close_Auto extends LinearOpMode {
 
         turretTargetAngle = 0.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
-        sleep(5000);
+        //sleep(5000);
 
 
 
@@ -198,7 +200,9 @@ public class Red_Close_Auto extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-
+        while ((getRuntime() < 29) && (!isStopRequested() )){
+            sleep(20);
+        }
     }
 
     private void ShootBall(double shooterSpeedRPM) {

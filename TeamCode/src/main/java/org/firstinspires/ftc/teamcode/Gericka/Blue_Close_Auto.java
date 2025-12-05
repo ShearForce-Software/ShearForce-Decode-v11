@@ -160,6 +160,8 @@ public class Blue_Close_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
 
 
+        drive.localizer.update();
+
         //theRobot.SetIntakeMotor(true, true);
         Actions.runBlocking(
                 new SequentialAction(
@@ -173,7 +175,7 @@ public class Blue_Close_Auto extends LinearOpMode {
 
         turretTargetAngle = 0.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
-        sleep(5000);
+        //sleep(5000);
 
 
 
@@ -199,6 +201,9 @@ public class Blue_Close_Auto extends LinearOpMode {
     telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
     telemetry.update();
 
+        while ((getRuntime() < 29) && (!isStopRequested() )){
+            sleep(20);
+        }
 
 }
 

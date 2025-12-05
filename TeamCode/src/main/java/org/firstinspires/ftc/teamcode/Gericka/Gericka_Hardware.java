@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -151,9 +152,9 @@ public class Gericka_Hardware {
     //private NormalizedColorSensor ColorSensorLeft;
 
     //ModernRoboticsAnalogTouchSensor beamBreak1;
-    DigitalChannel beamBreak1;
-    DigitalChannel beamBreak2;
-    DigitalChannel beamBreak3;
+    //DigitalChannel beamBreak1;
+    //DigitalChannel beamBreak2;
+    //DigitalChannel beamBreak3;
 
     //RevColorSensorV3 leftColorSensor;
     //RevColorSensorV3 rightColorSensor;
@@ -301,9 +302,9 @@ public class Gericka_Hardware {
         //InitBlinkin(hardwareMap);
 
         // ***** breakbeam *****
-        beamBreak1 =  hardwareMap.get(DigitalChannel.class, "beamBreak1");
-        beamBreak2 =  hardwareMap.get(DigitalChannel.class, "beamBreak2");
-        beamBreak3 =  hardwareMap.get(DigitalChannel.class, "beamBreak3");
+        //beamBreak1 =  hardwareMap.get(DigitalChannel.class, "beamBreak1");
+        //beamBreak2 =  hardwareMap.get(DigitalChannel.class, "beamBreak2");
+        //beamBreak3 =  hardwareMap.get(DigitalChannel.class, "beamBreak3");
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -404,6 +405,7 @@ public class Gericka_Hardware {
     public void InitRoadRunner(Gericka_MecanumDrive roadrunner)
     {
         drive = roadrunner;
+
     }
 
     public void ShowRoadrunnerPosition() {
@@ -800,19 +802,20 @@ public class Gericka_Hardware {
             intakeMotor.setPower(-INTAKE_POWER);
         }
     }
-    public void RunAutoIntake()
-    {
+
+   // public void RunAutoIntake()
+    //{
         // Read the state of the beam break sensor
         // A 'true' value usually means the beam is NOT broken (light is detected)
         // A 'false' value usually means the beam IS broken (light is interrupted)
-        boolean beamIsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
+       // boolean beamIsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
 
-        if (beamIsBroken){
-            intakeMotor.setPower(INTAKE_POWER);
-        }
-        else {
-            intakeMotor.setPower(0);
-        }
+        //if (beamIsBroken){
+         //   intakeMotor.setPower(INTAKE_POWER);
+       // }
+       // else {
+            //intakeMotor.setPower(0);
+       // }
         //TODO -- hook up to sensors to detect balls
         /* Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
          if (inside sensor says empty && outside sensor ball present) then turn intake on
@@ -820,13 +823,15 @@ public class Gericka_Hardware {
 
          Example code for sensor is at:
             FtcRobotController -> external.samples -> SensorDigitalTouch */
-    }
+  //  }
+
 
     // *************************************************************************
     //      Rotating Turret Functions
     // *************************************************************************
 
-    public void SetTurretRotationAngle(double degrees){
+    public void
+    SetTurretRotationAngle(double degrees){
         // normalize the angle to be -180 to +180
         while (degrees > 180) degrees -= 360;
         while (degrees < -180) degrees += 360;
@@ -837,7 +842,9 @@ public class Gericka_Hardware {
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(1.0);
     }
-
+    double getTurretTargetAngle(){
+        return turretTargetAngle;
+    }
     double getCurrentTurretAngle (){
         return turretMotor.getCurrentPosition()/TURRET_TICKS_IN_DEGREES;
     }
@@ -877,6 +884,20 @@ public class Gericka_Hardware {
         //while (turretRelativeAngleDeg < -180) turretRelativeAngleDeg += 360;
         //return turretHeading - robotHeadingDegrees - turretRelativeAngleDeg;
         return angleToTargetDeg - robotHeadingDegrees;  //TODO not sure if this should be + or -
+    }
+    public void resetTurret(){
+        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double headingDegrees = 0;
+        if (allianceColorString == "RED") {
+            headingDegrees = 90;
+        }
+        else if (allianceColorString == "BLUE") {
+            headingDegrees = -90;
+        }
+        SetInitalPinpointPosition(0, 0, headingDegrees);
+        Pose2d resetPose = new Pose2d(0,0,Math.toRadians(headingDegrees));
+        drive.localizer.setPose(resetPose);
+        drive.localizer.update();
     }
 
     public boolean GetUseRoadrunnerForTurretAnglesEnabled() { return useRoadrunnerForTurretAnglesEnabled; }

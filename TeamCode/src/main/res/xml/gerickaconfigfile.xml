@@ -40,9 +40,10 @@
 
             <RevColorSensorV3 name="ColorSensorLeft" port="0" bus="2"/>
 
-            <DigitalChannel name="beamBreak1" port="1"/>
-            <DigitalChannel name="beamBreak2" port="3"/>
-            <DigitalChannel name="beamBreak3" port="5"/>
+            <DigitalDevice name="beamBreak1" port="1"/>
+            <DigitalDevice name="beamBreak2" port="3"/>
+            <DigitalDevice name="beamBreak3" port="5"/>
+
 
             <goBILDAPinpoint name="pinpoint" port="0" bus="1"/>
 

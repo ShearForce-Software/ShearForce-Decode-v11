@@ -11,10 +11,19 @@ import java.util.Objects;
 public class Gericka_Manual_Control extends LinearOpMode {
     Gericka_Hardware theRobot;
     //public int turretTrackingID = 24; // default to Red
-    float turretRotationAngle = 0.0f;
-    final float TURRET_ROTATION_ANGLE_INCREMENT = 1.0f;
+    double turretRotationAngle = 0.0f;
+    final float TURRET_ROTATION_ANGLE_INCREMENT = 10.0f;
     double shooterSpeedRPM = 0.0;
     final double shooterSpeedRPMIncrement = 50;
+    boolean resetTurretEnabled = true;
+
+
+
+
+
+
+
+
 
     public void runOpMode() {
         theRobot = new Gericka_Hardware(true, true, this);
@@ -108,6 +117,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             PIDF: 0p, 2i, 70d, 15f
              */
 
+
             gamepad1_optionsWasPressed = gamepad1.optionsWasPressed();
             gamepad1_shareWasPressed = gamepad1.shareWasPressed();
             gamepad2_optionsWasPressed = gamepad2.optionsWasPressed();
@@ -130,6 +140,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
                 else {
                     theRobot.imu.resetYaw();
+                    if (resetTurretEnabled){
+                        theRobot.resetTurret();
+                    }
                 }
             }
             // robot centric drive mode
@@ -291,16 +304,16 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetShooterRPMFromRoadrunner();
                 }
             }
-            if (theRobot.GetAutoIntakeMode())
-            {
-                theRobot.RunAutoIntake();
-            }
+            //if (theRobot.GetAutoIntakeMode())
+            //{
+                //theRobot.RunAutoIntake();
+            //}
             if (theRobot.GetTurretAutoMode()) {
                 theRobot.adjustTurretToTargetAprilTag();
             }
             // Run the Auto Lift to Midway position (if enabled)
             theRobot.RunAutoLifter();
-
+            turretRotationAngle = theRobot.getTurretTargetAngle();
 
             /*
             24 inch - 2100rpm

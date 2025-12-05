@@ -219,9 +219,17 @@ public class Blue_Far_Auto extends LinearOpMode {
         turretTargetAngle = 0.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
 
+        // turn off intake to suck in any stuck balls
+        theRobot.SetIntakeMotor(false,true);
+
+
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
+
+        while ((getRuntime() < 29) && (!isStopRequested() )){
+            sleep(20);
+        }
 
 
     }
