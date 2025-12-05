@@ -121,6 +121,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     Actions.runBlocking(new SleepAction((1)));
     Actions.runBlocking(DriveStartToMidPosition);
 
+    theRobot.SetIntakeMotor(false,true);
+
     // Turn turret more directly to target for auto shooting (tune on field)
     //turretTargetAngle = 45;    // CHANGE LLATER
     //control.SetTurretRotationAngle(turretTargetAngle);
@@ -139,7 +141,8 @@ public class Blue_Close_Auto extends LinearOpMode {
         /* **** SHOOT BALL #3 **** */
         ShootBall(shooterSpeedRPM);
 
-    //Should we turn intake on while we go to the closest line
+        //Should we turn intake on while we go to the closest line
+        theRobot.SetIntakeMotor(true,true);
 
 
 
@@ -154,32 +157,30 @@ public class Blue_Close_Auto extends LinearOpMode {
 
                     )
     );
+        theRobot.SetIntakeMotor(false,true);
 
         ShootBall(shooterSpeedRPM);
         ShootBall(shooterSpeedRPM);
         ShootBall(shooterSpeedRPM);
 
-
-        drive.localizer.update();
-
-        //theRobot.SetIntakeMotor(true, true);
-        Actions.runBlocking(
-                new SequentialAction(
-                    DriveClosestLineBackToLaunchPark
-
-
-                )
-        );
-
-
-
+        // return turret to zero position
         turretTargetAngle = 0.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
         //sleep(5000);
 
+        // turn off shooter wheel
+        shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
+        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
+        // turn off intake motor
+        theRobot.SetIntakeMotor(false,false);
 
-        //TODO need to park away from the line
+        drive.updatePoseEstimate();
+        Actions.runBlocking(
+                new SequentialAction(
+                        DriveClosestLineBackToLaunchPark
+                )
+        );
 
         // store final exact position in blackboard, so can initialize absolute pinpoint with that position
         //control.pinpoint.update();
@@ -188,18 +189,10 @@ public class Blue_Close_Auto extends LinearOpMode {
         blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
         blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
 
-    // turn off shooter wheel
-    shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
-    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
-    theRobot.SetIntakeMotor(false,false);
-
-    // return turret to zero position
-
-
-    Gericka_Hardware.autoTimeLeft = 30-getRuntime();
-    telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
-    telemetry.update();
+       Gericka_Hardware.autoTimeLeft = 30-getRuntime();
+       telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
+       telemetry.update();
 
         while ((getRuntime() < 29) && (!isStopRequested() )){
             sleep(20);

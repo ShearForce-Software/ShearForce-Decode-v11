@@ -141,7 +141,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 else {
                     theRobot.imu.resetYaw();
                     if (resetTurretEnabled){
-                        theRobot.resetTurret();
+                        theRobot.resetTurretAndPosition();
                     }
                 }
             }

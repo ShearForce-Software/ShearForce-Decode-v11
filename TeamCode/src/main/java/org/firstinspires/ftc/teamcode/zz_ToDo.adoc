@@ -5,6 +5,7 @@
 
 === Akshay
 
+- [ ] AUTO: Test: Change Close Autos to initialize shooter motor to correct speed instead of max like it is currently doing
 - [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
 - [ ] AUTO: Limit when intake motor is on to only when needed for the close autos
 
@@ -16,6 +17,8 @@
 * Example code for sensor is at:
 ** FtcRobotController -> external.samples -> SensorDigitalTouch
 - [ ] Test all buttons, make them all work, in particular it appears a lot of the SHARE + buttons are not working correctly
+- [ ] Separate the resetTurretAndPosition() from the resetYaw logic.  Make 2 separate buttons, 1 to reset position (gamepad1), and 1 to reset turret (gamepad2), so can do only what we need and only have to drive to 0,0 when position is off
+- [ ] Add servo controls for new launch ramp
 
 === Shrey
 
@@ -41,7 +44,32 @@
 
 === Tong
 
+- [ ] Change Target positions to be back corner of goal instead of front center
+- [ ] Create a distance calculator that uses the roadrunner position instead of the apriltag
+- [ ] Test and get working the ability to update the roadrunner position based on the apriltag, needs to only do an update if off by xxx inches and velocity = 0
+- [ ] Update CalculateOptimumShooterRPM() to use dynamic range logic using a % of distance between measurements, rather than flat step functions
+  ** Example:
+```
+   double distanceAboveLower = 0.0;
+   double rpmDifferenceInRange = 0.0;
+   double differenceInMeasurements = 6.0; // inches
+   if (distanceInInches >= 100) { optimumShooterRPM = 3500; }
+   else if (distanceInInches >= 78) { optimumShooterRPM = 2950; }
+   else if (distanceInInches >= 72) {
+      distanceAboveLower = distanceInInches - 72;
+      rpmDifferenceInRange = 2950 - 2800;
+      optimumShooterRPM = 2800 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+   }
+   else if (distanceInInches >= 66) {
+      distanceAboveLower = distanceInInches - 66;
+      rpmDifferenceInRange = 2800 - 2750;
+      optimumShooterRPM = 2750 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+   }
+   etc...
+
+```
 - [ ] AUTO: develop and test an auto to get the 3 balls on the wall
+- [ ] Test shooter optimum RPMs over distances with new shooter structure
 - [ ] AUTO: develop and test an auto to shoot 3 balls, pick up 3 on wall and shoot them, pick up correct line, release the gate, then shoot 3 balls
 
 == Next Level Stuff

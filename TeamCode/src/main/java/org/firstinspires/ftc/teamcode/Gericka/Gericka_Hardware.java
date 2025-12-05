@@ -4,20 +4,17 @@ import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -55,40 +52,28 @@ public class Gericka_Hardware {
     boolean IsDriverControl;
     boolean IsFieldCentric;
 
-    DcMotorEx leftFront;
-    DcMotorEx leftRear;
-    DcMotorEx rightFront;
-    DcMotorEx rightRear;
+    private DcMotorEx leftFront;
+    private DcMotorEx leftRear;
+    private DcMotorEx rightFront;
+    private DcMotorEx rightRear;
 
-    DcMotorEx intakeMotor;
-    DcMotorEx shooterMotorRight;
-    DcMotorEx shooterMotorLeft;
-    DcMotorEx turretMotor;
-    Servo lifterServo;
-    Servo light1;
-    Servo light2;
-    Servo light3;
+    private DcMotorEx intakeMotor;
+    public DcMotorEx shooterMotorRight;
+    public DcMotorEx shooterMotorLeft;
+    private DcMotorEx turretMotor;
+    private Servo lifterServo;
+    private Servo light1;
+    private Servo light2;
+    private Servo light3;
 
     //pidf rotator variables
-    public static boolean pidfEnabled = false;
     public static double p = 0.004, i = 0, d = 0, f = 0.007; //0.0001 > p was .005
-    PIDController Right_controller = new PIDController(p, i, d);
-    PIDController Left_controller = new PIDController(p, i, d);
-
-    public static double Kp = 0.0035, Ki = 0, Kd = 0.00021, Kf = 0;
-    public static double Ktolerance = 5.0;
-    PIDController RightSlide_controller = new PIDController(Kp, Ki, Kd);
-    PIDController LeftSlide_controller = new PIDController(Kp, Ki, Kd);
-
-    public double finalX;
-    public double finalY;
 
     //Webcam
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
-    final double INTAKE_POWER = 0.6
-            ;
+    final double INTAKE_POWER = 0.6;
 
     public final float LIFTER_UP_POSITION = 0.85f;
     public final float LIFTER_MID_POSITION = 0.5f;
@@ -103,7 +88,7 @@ public class Gericka_Hardware {
 
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
-    double shooterTargetRPM = 0.0;
+    private double shooterTargetRPM = 0.0;
     public static boolean shooterPIDF_Enabled = false;
     public static double shooterP = 0.0;
     public static double shooterI = 0.0;
@@ -119,10 +104,7 @@ public class Gericka_Hardware {
     final double YELLOW_JACKET_13_1_TICKS = 384.5; // 13.7:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_5_1_TICKS = 145.1; // 5.2:1 - ticks per motor shaft revolution
     final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_5_1_TICKS; // 133/24 is the gear ratio
-    int turretTargetTicks = 0;
-    double turretTargetAngle = 0.0;
-    double lifterTargetPosition = 0.0;
-    double shooterTargetSpeed = 0.0;
+    private double turretTargetAngle = 0.0;
     //public Servo allianceIndicatorLight = null;
     private String allianceColorString = "UNKNOWN";
     final double INDICATOR_BLACK = 0;
@@ -746,7 +728,7 @@ public class Gericka_Hardware {
         return optimumShooterRPM;
     }
     public void SetShooterSpeed(double percent){
-        shooterTargetSpeed = Math.min(percent,MAX_SHOOTER_SPEED);
+        double shooterTargetSpeed = Math.min(percent,MAX_SHOOTER_SPEED);
         shooterTargetSpeed = Math.max(percent,MIN_SHOOTER_SPEED);
         shooterMotorRight.setPower(shooterTargetSpeed);
         shooterMotorLeft.setPower(shooterTargetSpeed);
@@ -837,7 +819,7 @@ public class Gericka_Hardware {
         while (degrees < -180) degrees += 360;
         turretTargetAngle = Math.min(degrees,MAX_TURRET_ANGLE);
         turretTargetAngle = Math.max(degrees,MIN_TURRET_ANGLE);
-        turretTargetTicks = Math.round((float)turretTargetAngle * (float)TURRET_TICKS_IN_DEGREES);
+        int turretTargetTicks = Math.round((float)turretTargetAngle * (float)TURRET_TICKS_IN_DEGREES);
         turretMotor.setTargetPosition(turretTargetTicks);
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(1.0);
@@ -847,6 +829,10 @@ public class Gericka_Hardware {
     }
     double getCurrentTurretAngle (){
         return turretMotor.getCurrentPosition()/TURRET_TICKS_IN_DEGREES;
+    }
+
+    public void TurnOffTurret() {
+        turretMotor.setPower(0.0);
     }
 
     public boolean GetTurretAutoMode() { return autoTurretMode; }
@@ -885,8 +871,14 @@ public class Gericka_Hardware {
         //return turretHeading - robotHeadingDegrees - turretRelativeAngleDeg;
         return angleToTargetDeg - robotHeadingDegrees;  //TODO not sure if this should be + or -
     }
-    public void resetTurret(){
+
+    public void resetTurret() {
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turretTargetAngle = 0.0;
+        turretMotor.setTargetPosition(0);
+    }
+
+    public void resetPositionToZero() {
         double headingDegrees = 0;
         if (allianceColorString == "RED") {
             headingDegrees = 90;
@@ -898,6 +890,12 @@ public class Gericka_Hardware {
         Pose2d resetPose = new Pose2d(0,0,Math.toRadians(headingDegrees));
         drive.localizer.setPose(resetPose);
         drive.localizer.update();
+        drive.updatePoseEstimate();
+    }
+    public void resetTurretAndPosition(){
+        resetTurret();
+
+        resetPositionToZero();
     }
 
     public boolean GetUseRoadrunnerForTurretAnglesEnabled() { return useRoadrunnerForTurretAnglesEnabled; }
@@ -908,7 +906,7 @@ public class Gericka_Hardware {
     // *************************************************************************
 
     public void SetLifterPosition(float position){
-        lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
+        double lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
         lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
         lifterServo.setPosition(lifterTargetPosition);
     }

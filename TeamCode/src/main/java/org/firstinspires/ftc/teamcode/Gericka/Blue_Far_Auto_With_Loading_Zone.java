@@ -125,7 +125,7 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
         theRobot.SetTurretRotationAngle(turretTargetAngle);
         sleep(1000);
         // turn off turret power so doesn't twitch
-        theRobot.turretMotor.setPower(0);
+        theRobot.TurnOffTurret();
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
