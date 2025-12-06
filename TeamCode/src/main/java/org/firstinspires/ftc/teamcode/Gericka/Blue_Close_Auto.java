@@ -115,8 +115,8 @@ public class Blue_Close_Auto extends LinearOpMode {
 
     theRobot.SetIntakeMotor(true,true);
     // spin up shooter wheel to max
-    theRobot.SetShooterSpeed(1.0);
-
+    //theRobot.SetShooterSpeed(1.0);
+    theRobot.SetShooterMotorToSpecificRPM(2700);
 
     Actions.runBlocking(new SleepAction((1)));
     Actions.runBlocking(DriveStartToMidPosition);

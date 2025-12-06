@@ -36,15 +36,15 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.Init(this.hardwareMap, "RED");
             theRobot.SetAprilTagTargetId(24);
             //turretTrackingID = 24;
-            theRobot.targetX = -56;
-            theRobot.targetY = 56;
+            theRobot.targetX = -60;
+            theRobot.targetY = 60;
             defaultHeadingDegrees = 90.0;
         } else{
             theRobot.Init(this.hardwareMap, "BLUE");
             theRobot.SetAprilTagTargetId(20);
             //turretTrackingID = 20;
-            theRobot.targetX = -56;
-            theRobot.targetY = -56;
+            theRobot.targetX = -60;
+            theRobot.targetY = -60;
             defaultHeadingDegrees = -90.0;
         }
 
