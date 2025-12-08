@@ -5,7 +5,7 @@
 
 === Akshay
 
-- [ ] AUTO: Test: Change Close Autos to initialize shooter motor to correct speed instead of max like it is currently doing
+- [x] AUTO: Test: Change Close Autos to initialize shooter motor to correct speed instead of max like it is currently doing
 - [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
 - [ ] AUTO: Limit when intake motor is on to only when needed for the close autos
 
@@ -44,9 +44,12 @@
 
 === Tong
 
-- [ ] Change Target positions to be back corner of goal instead of front center
-- [ ] Create a distance calculator that uses the roadrunner position instead of the apriltag
-- [ ] Test and get working the ability to update the roadrunner position based on the apriltag, needs to only do an update if off by xxx inches and velocity = 0
+- [x] Change Target positions to be back corner of goal instead of front center
+- [ ] Test the roadrunner distance calculator by changing SetUseOnlyWebcamForDistance(false) in manual control
+  * probably want to subtract the distance from -60,-60 to -56,-56 in calculation, since that is the measurements based on
+- [ ] Test the ability to update the roadrunner position based on the apriltag by setting SetUpdateRoadrunnerFromWebcamEnabled(true) in manual control
+  * use telemetry of roadrunner position to check
+  * physically pick up the robot and move it to force an update
 - [ ] Update CalculateOptimumShooterRPM() to use dynamic range logic using a % of distance between measurements, rather than flat step functions
   ** Example:
 ```

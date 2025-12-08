@@ -25,6 +25,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 //import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 //import org.firstinspires.ftc.teamcode.testign123;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -85,6 +87,7 @@ public class Gericka_Hardware {
     private boolean autoIntakeMode = false;
     private boolean autoShooterMode = false;
     private boolean useRoadrunnerForTurretAnglesEnabled = true;
+    private boolean updateRoadrunnerFromWebcamEnabled = false;
 
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
@@ -125,6 +128,7 @@ public class Gericka_Hardware {
     public int currentAprilTargetId = 20;
     GoBildaPinpointDriver pinpoint;
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
+    private int roadrunnerUpdatesFromWebcam = 0;
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -302,7 +306,7 @@ public class Gericka_Hardware {
 
     public void ShowTelemetry(){
 
-        ShowPinpointTelemetry();
+        //ShowPinpointTelemetry();
 
         ShowRoadrunnerPosition();
 
@@ -319,7 +323,7 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Auto Lifter Mode: ", autoLifterMode);
         opMode.telemetry.addData("Auto Intake Mode: ", autoIntakeMode);
         opMode.telemetry.addData("Use Only Webcam for Distance: ", GetUseOnlyWebcamForDistance());
-        opMode.telemetry.addData("Use pinpoint for turret angles: ", GetUseRoadrunnerForTurretAnglesEnabled());
+        opMode.telemetry.addData("Use roadrunner for turret angles: ", GetUseRoadrunnerForTurretAnglesEnabled());
 
         opMode.telemetry.addData("April Tag Target ID", currentAprilTargetId);
 
@@ -331,10 +335,10 @@ public class Gericka_Hardware {
 
         opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
 
-        opMode.telemetry.addData("Light Detected", ((OpticalDistanceSensor) ColorSensorLeft).getLightDetected());
+        opMode.telemetry.addData("Light Detected Left: ", ((OpticalDistanceSensor) ColorSensorLeft).getLightDetected());
         //NormalizedRGBA colorsLeft = ColorSensorLeft.getNormalizedColors();
 
-        opMode.telemetry.addData("Light Detected", ((OpticalDistanceSensor) ColorSensorRight).getLightDetected());
+        opMode.telemetry.addData("Light Detected Right: ", ((OpticalDistanceSensor) ColorSensorRight).getLightDetected());
         //NormalizedRGBA colorsRight = ColorSensorRight.getNormalizedColors();
         opMode.telemetry.addData("Light1", light1.getPosition());
         opMode.telemetry.addData("Light2", light2.getPosition());
@@ -395,9 +399,10 @@ public class Gericka_Hardware {
             drive.updatePoseEstimate();
             opMode.telemetry.addData("Roadrunner Position(inches): ", "x: %.1f, y: %.1f", drive.localizer.getPose().position.x, drive.localizer.getPose().position.y);
             opMode.telemetry.addData("Roadrunner Heading(deg): ", Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+            opMode.telemetry.addData("roadrunnerUpdatesFromWebcam: ", roadrunnerUpdatesFromWebcam);
         }
     }
-    public void SetRoadrunnerPosition(double xPositionInches, double yPositionInches, double headingDegrees){
+    public void SetRoadrunnerInitialPosition(double xPositionInches, double yPositionInches, double headingDegrees){
         startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
     }
     public Pose2D GetRoadrunnerAbsolutePosition(Pose2D pos){
@@ -486,26 +491,48 @@ public class Gericka_Hardware {
         startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
         //pinpoint.update();
     }
-    public void setPinpointPositionFromWebcam() {
-        double currentX = 0;
-        double currentY = 0;
 
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                // only use the two goals, the obelisk could be at a variable location
-                if ((detection.id == 20) || (detection.id == 24)) {
-                    currentX = detection.ftcPose.x;
-                    currentY = detection.ftcPose.y;
-                    if (!leftFront.isBusy() && !leftRear.isBusy() && !rightFront.isBusy() && !rightRear.isBusy()) {
-                        //if (pinpoint.getHeadingVelocity() = 0){
-                        SetInitalPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
+    public boolean GetUpdateRoadrunnerFromWebcamEnabled() { return updateRoadrunnerFromWebcamEnabled; }
+    public void SetUpdateRoadrunnerFromWebcamEnabled(boolean value) { updateRoadrunnerFromWebcamEnabled = value; }
+    public void SetRoadrunnerPositionFromWebcam() {
+        double aprilTagCalculatedCurrentX = 0;
+        double aprilTagCalculatedCurrentY = 0;
+
+        if (GetUpdateRoadrunnerFromWebcamEnabled()) {
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                if (detection.metadata != null) {
+                    // only use the two goals, the obelisk could be at a variable location
+                    if ((detection.id == 20) || (detection.id == 24)) {
+                        aprilTagCalculatedCurrentX = detection.ftcPose.x;
+                        aprilTagCalculatedCurrentY = detection.ftcPose.y;
+                        drive.updatePoseEstimate();
+                        pinpoint.update();
+                        double velocityX = pinpoint.getVelX(DistanceUnit.INCH);
+                        double velocityY = pinpoint.getVelY(DistanceUnit.INCH);
+                        double velocityHeading = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
+                        // if robot is essentially stopped
+                        if ((Math.abs(velocityX) < 0.1) && (Math.abs(velocityY) < 0.1) && (Math.abs(velocityHeading) < 0.1)) {
+                            //if (!leftFront.isBusy() && !leftRear.isBusy() && !rightFront.isBusy() && !rightRear.isBusy()) {
+                            // if distance from current position is wrong by XX inches
+                            double errorToleranceInches = 3.0;
+                            double errorDistance = Math.abs(CalculateDistanceToTarget(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, aprilTagCalculatedCurrentX, aprilTagCalculatedCurrentY));
+                            if (errorDistance > errorToleranceInches) {
+                                //if (pinpoint.getHeadingVelocity() = 0){
+                                //SetInitalPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
+                                Pose2d resetPose = new Pose2d(aprilTagCalculatedCurrentX, aprilTagCalculatedCurrentY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+                                drive.localizer.setPose(resetPose);
+                                drive.localizer.update();
+                                ++roadrunnerUpdatesFromWebcam;
+                            }
+                        }
                         break;
                     }
                 }
             }
+            //pinpoint.update();
+            drive.updatePoseEstimate();
         }
-        pinpoint.update();
 
     }
     public Pose2D GetPinpointAbsolutePosition(Pose2D pos){
@@ -726,6 +753,25 @@ public class Gericka_Hardware {
             optimumShooterRPM = 2500;
         }
         return optimumShooterRPM;
+
+
+        /*  Original Measured values:
+            24 inch - 2100rpm
+            30 inch - 2200rpm
+            36 inch - 2300rpm
+            42 inch - 2350rpm
+            48 inch - 2350rpm
+            54 inch - 2400rpm
+            60 inch - 2650rpm
+            66 inch - 2750rpm
+            72 inch - 2800rpm
+            78 inch - 2950rpm
+            far launch zone (120 inch) - 3500rpm
+
+            24, 80(tip of large triangle), 120 inch for tip of small triangle
+
+        */
+
     }
     public void SetShooterSpeed(double percent){
         double shooterTargetSpeed = Math.min(percent,MAX_SHOOTER_SPEED);
@@ -751,14 +797,6 @@ public class Gericka_Hardware {
         double deltaY = targetYInInches - currentYInInches;
 
         return Math.hypot(deltaX, deltaY);
-    }
-    public void SetShooterRPMFromPinpoint(){
-        //setPinpointPositionFromWebcam();
-        //pinpoint.update();
-        //TODO Swich this calculation to using the new absolute positions or maybe roadrunner positions if those are better
-        double distanceToTarget = CalculateDistanceToTarget(pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH),targetX,targetY);
-
-        SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
     }
     public void SetShooterRPMFromRoadrunner(){
         double distanceToTarget = CalculateDistanceToTarget(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y,targetX,targetY);
