@@ -134,7 +134,7 @@ public class Blue_Close_Auto extends LinearOpMode {
 
         /* **** SHOOT BALL #1 **** */
         ShootBall(shooterSpeedRPM);
-
+        theRobot.SetIntakeMotor(true,true);
         /* **** SHOOT BALL #2 **** */
         ShootBall(shooterSpeedRPM);
 
@@ -160,6 +160,7 @@ public class Blue_Close_Auto extends LinearOpMode {
         theRobot.SetIntakeMotor(false,true);
 
         ShootBall(shooterSpeedRPM);
+        theRobot.SetIntakeMotor(true,true);
         ShootBall(shooterSpeedRPM);
         ShootBall(shooterSpeedRPM);
 

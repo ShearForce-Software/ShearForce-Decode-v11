@@ -70,11 +70,10 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
         // set auto settings
         theRobot.SetAutoShooterMode(true);  // auto adjusts speed of shooter motors based on distance
+        theRobot.SetUseOnlyWebcamForDistance(true);  // true means only use webcam, false means use pinpoint and webcam for distance calculations of shooter speed
         theRobot.SetAutoLifterMode(true);   // auto lifts lifter half-way if ball detected on top of lifter arm
         theRobot.SetTurretAutoMode(true);   // auto adjusts the turret rotation angle to align with the target april tag
-        theRobot.SetUseOnlyWebcamForDistance(true);  // true means ONLY use webcam, false means use ONLY roadrunner position for distance calculations of shooter speed
-        theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use roadrunner position to calculate turret angles if webcam target not visible
-        theRobot.SetUpdateRoadrunnerFromWebcamEnabled(false); // if true then will use webcam apriltags to update roadrunner position if robot is stopped and position is wrong
+        theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
         theRobot.SetAutoIntakeMode(false);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         //theRobot.SetShooterPIDF_Enabled(false);
 
@@ -314,14 +313,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             // Run the Auto Lift to Midway position (if enabled)
             theRobot.RunAutoLifter();
-
-            // store the current turret target location, so can use if switch to manual turret control
             turretRotationAngle = theRobot.getTurretTargetAngle();
-
-            if (theRobot.GetUpdateRoadrunnerFromWebcamEnabled()) {
-                // update the roadrunner position based on Webcam detected april tag if enabled
-                theRobot.SetRoadrunnerPositionFromWebcam();
-            }
 
             /*
             24 inch - 2100rpm

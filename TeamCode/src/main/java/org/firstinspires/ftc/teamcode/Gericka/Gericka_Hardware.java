@@ -81,7 +81,7 @@ public class Gericka_Hardware {
     public final float LIFTER_MID_POSITION = 0.5f;
     public final float LIFTER_DOWN_POSITION = 0.05f;
 
-    private boolean useOnlyWebcamForDistance = true;
+    private boolean useOnlyWebcamForDistance = false;
     private boolean autoTurretMode = true;
     private boolean autoLifterMode = false;
     private boolean autoIntakeMode = false;
@@ -728,7 +728,59 @@ public class Gericka_Hardware {
     }
     public double CalculateOptimumShooterRPM(double distanceInInches){
         double optimumShooterRPM = 0;
-        double testDistance = 24;
+        double distanceAboveLower = 0.0;
+        double rpmDifferenceInRange = 0.0;
+        double differenceInMeasurements = 6.0; // inches
+        if (distanceInInches >= 100) { optimumShooterRPM = 3500; }
+        else if (distanceInInches >= 78) { optimumShooterRPM = 2950; }
+        else if (distanceInInches >= 72) {
+            distanceAboveLower = distanceInInches - 72;
+            rpmDifferenceInRange = 2950 - 2800;
+            optimumShooterRPM = 2800 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 66) {
+            distanceAboveLower = distanceInInches - 66;
+            rpmDifferenceInRange = 2800 - 2750;
+            optimumShooterRPM = 2750 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 60) {
+            distanceAboveLower = distanceInInches - 60;
+            rpmDifferenceInRange = 2750 - 2650;
+            optimumShooterRPM = 2650 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 54) {
+            distanceAboveLower = distanceInInches - 54;
+            rpmDifferenceInRange = 2650 - 2400;
+            optimumShooterRPM = 2400 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 48) {
+            distanceAboveLower = distanceInInches - 48;
+            rpmDifferenceInRange = 2400 - 2350;
+            optimumShooterRPM = 2350 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 42) {
+            optimumShooterRPM = 2350;
+        }
+        else if (distanceInInches >= 36) {
+            distanceAboveLower = distanceInInches - 36;
+            rpmDifferenceInRange = 2350 - 2300;
+            optimumShooterRPM = 2300 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 30) {
+            distanceAboveLower = distanceInInches - 30;
+            rpmDifferenceInRange = 2300 - 2200;
+            optimumShooterRPM = 2200 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 24) {
+            distanceAboveLower = distanceInInches - 24;
+            rpmDifferenceInRange = 2200 - 2100;
+            optimumShooterRPM = 2100 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else {
+            optimumShooterRPM = 2500;
+        }
+
+        /*double testDistance = 24;
         while (Math.min(distanceInInches,testDistance) != distanceInInches){
             if (testDistance != 84) {
                 testDistance += 6;
@@ -751,7 +803,7 @@ public class Gericka_Hardware {
         else if (testDistance == 120){ optimumShooterRPM = 3500; }
         else {
             optimumShooterRPM = 2500;
-        }
+        }*/
         return optimumShooterRPM;
 
 
