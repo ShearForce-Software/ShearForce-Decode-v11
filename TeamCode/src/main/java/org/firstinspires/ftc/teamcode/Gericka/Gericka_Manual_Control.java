@@ -17,14 +17,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
     final double shooterSpeedRPMIncrement = 50;
     boolean resetTurretEnabled = true;
 
-
-
-
-
-
-
-
-
     public void runOpMode() {
         theRobot = new Gericka_Hardware(true, true, this);
         telemetry.setMsTransmissionInterval(11);
@@ -75,7 +67,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetTurretAutoMode(true);   // auto adjusts the turret rotation angle to align with the target april tag
         theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
         theRobot.SetAutoIntakeMode(false);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
-        //theRobot.SetShooterPIDF_Enabled(false);
+        // theRobot.SetShooterPIDF_Enabled(false);
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
 
         Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
@@ -316,10 +308,15 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             // Run the Auto Lift to Midway position (if enabled)
             theRobot.RunAutoLifter();
+
+            // store the current turret target location, so can use if switch to manual turret control
             turretRotationAngle = theRobot.getTurretTargetAngle();
+
             if (theRobot.GetUpdateRoadrunnerFromWebcamEnabled()) {
+                // update the roadrunner position based on Webcam detected april tag if enabled
                 theRobot.SetRoadrunnerPositionFromWebcam();
             }
+
             /*
             24 inch - 2100rpm
             30 inch - 2200rpm

@@ -49,8 +49,6 @@ public class Gericka_Hardware {
     double imuPosition = 0;
 
     Gericka_MecanumDrive drive;
-    //private Gericka_Hardware theRobot;
-
 
     LinearOpMode opMode;
     public static double autoTimeLeft = 0.0;
@@ -140,115 +138,13 @@ public class Gericka_Hardware {
     RevBlinkinLedDriver blinkinLedDriver;
     RevColorSensorV3 ColorSensorRight;
     RevColorSensorV3 ColorSensorLeft;
-    //private NormalizedColorSensor ColorSensorRight;
-    //private NormalizedColorSensor ColorSensorLeft;
 
+    private int detectedObeliskId = -1;
+    private String obeliskPattern = "";
 
-
-
-    //---------------------------------------------------------------------------
-    public enum Motif {
-        GPP, PGP, PPG, UNKNOWN
-    }
-
-    private ObeliskReadingTest.Motif detectedMotif = ObeliskReadingTest.Motif.UNKNOWN;
-    private int detectedTagId = -1;
-
-    public int detectObeliskMotif() {
-
-        if (getAprilTagVisible(21)) {
-            detectedTagId = 21;
-            //return ObeliskReadingTest.Motif.GPP;
-            return detectedTagId;
-        }
-        if (getAprilTagVisible(22)) {
-            detectedTagId = 22;
-            return detectedTagId;
-        }
-        if (getAprilTagVisible(23)) {
-            detectedTagId = 23;
-            return detectedTagId;
-        }
-
-        // cannot see anythign
-        detectedTagId = -1;
-        return detectedTagId;
-    }
-
-    private String motifToCoreString(ObeliskReadingTest.Motif m) {
-        switch (m) {
-            case GPP: return "GPP";
-            case PGP: return "PGP";
-            case PPG: return "PPG";
-            default:  return "UNKNOWN";
-        }
-    }
-
-    private String expandToNine(String core) {
-        if (core.equals("UNKNOWN")) return "UNKNOWN";
-        // Repeat the 3-letter motif 3 times -> 9 indices for the ramp
-        return core + core + core;
-    }
-
-
-
-    //----------------------------------------------------------------------------
-
-
-
-
-
-
-    //ModernRoboticsAnalogTouchSensor beamBreak1;
     DigitalChannel beamBreak1;
     DigitalChannel beamBreak2;
     DigitalChannel beamBreak3;
-
-    //RevColorSensorV3 leftColorSensor;
-    //RevColorSensorV3 rightColorSensor;
-    //int redLeft = 0;
-    //int greenLeft = 0;
-    //int blueLeft = 0;
-    //int redRight = 0;
-    //int greenRight = 0;
-    //int blueRight = 0;
-    //private int position;
-/*
-    // REV v3 color sensor variables
-    public enum colorEnum {
-        noColor,
-        red,
-        //yellow,
-        blue
-    }
-
- */
-
-    /*
-    //colorEnum colorDetected = colorEnum.noColor;
-    //NAV TO TAG VARIABLES
-    final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
-    final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-    final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-    public static int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    //private VisionPortal visionPortal;               // Used to manage the video source.
-    private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
-    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-    double rangeError = 0;
-    double yawError = 0;
-    //double LimelightMountingHeight = 6;  //Adjust when robot is built
-    //double LimelightMountingAngle = Math.toDegrees(90);
-    //double distance_to_object = 0;
-    //double objectHeight = 0;
-    //double XDistance_to_object = 0;
-    //double YDistance_to_object = 0;
-    //double angletoObject = Math.toRadians(60);
-
-     */
 
     public Gericka_Hardware(boolean isDriverControl, boolean isFieldCentric, LinearOpMode opMode) {
         this.IsDriverControl = isDriverControl;
@@ -374,7 +270,8 @@ public class Gericka_Hardware {
         //ShowPinpointTelemetry();
 
         ShowRoadrunnerPosition();
-        opMode.telemetry.addData("Obelisk Id", detectedTagId);
+        opMode.telemetry.addData("Obelisk Id", detectedObeliskId);
+        opMode.telemetry.addData("Obelisk Pattern", obeliskPattern);
         opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));
         opMode.telemetry.addData("        ", "L-Vel: %.3f, R-Vel: %.3f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
         opMode.telemetry.addData("        ", "L-Pow: %.3f, R-Pow: %.3f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
@@ -693,16 +590,39 @@ public class Gericka_Hardware {
     public boolean GetUseOnlyWebcamForDistance() { return useOnlyWebcamForDistance; }
     public void SetUseOnlyWebcamForDistance(boolean value) { useOnlyWebcamForDistance = value; }
 
+    public int detectObeliskMotif() {
+
+        if (getAprilTagVisible(21)) {
+            detectedObeliskId = 21;
+            obeliskPattern = "G-P-P";
+        }
+        else if (getAprilTagVisible(22)) {
+            detectedObeliskId = 22;
+            obeliskPattern = "P-G-P";
+        }
+        else if (getAprilTagVisible(23)) {
+            detectedObeliskId = 23;
+            obeliskPattern = "P-P-G";
+        }
+        else {
+            // cannot see anything
+            detectedObeliskId = -1;
+            obeliskPattern = "UNKNOWN";
+        }
+        return detectedObeliskId;
+    }
+
+
     // *********************************************************
     // ****      LED Lights Controls and Utility functions
     // *********************************************************
 
     public void SetIndicatorLights() {
         // set light1 to red or blue based on alliance
-        if (allianceColorString == "RED") {
+        if (allianceColorString.equals("RED")) {
             light1.setPosition(INDICATOR_RED);
         }
-        else if (allianceColorString == "BLUE") {
+        else if (allianceColorString.equals("BLUE")) {
             light1.setPosition(INDICATOR_BLUE);
         }
         else {
@@ -950,7 +870,7 @@ public class Gericka_Hardware {
 
     public void RunAutoIntake()
     {
-        if (autoIntakeMode) {
+        if (GetAutoIntakeMode()) {
             // Read the state of the beam break sensor
             // A 'true' value usually means the beam is NOT broken (light is detected)
             // A 'false' value usually means the beam IS broken (light is interrupted)
@@ -969,13 +889,6 @@ public class Gericka_Hardware {
             }
 
         }
-        //TODO -- hook up to sensors to detect balls
-        /* Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
-         if (inside sensor says empty && outside sensor ball present) then turn intake on
-         else if (inside sensor says ball present) then turn intake off
-
-         Example code for sensor is at:
-            FtcRobotController -> external.samples -> SensorDigitalTouch */
     }
 
 
@@ -1020,7 +933,7 @@ public class Gericka_Hardware {
            // SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
         //}
         // else can't see the april tag, try using the roadrunner position and robot heading to calculate the turret angle
-         if (useRoadrunnerForTurretAnglesEnabled) {
+        if (useRoadrunnerForTurretAnglesEnabled) {
             // calculate the bearing from the front of the robot to the april tag
             bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, targetX, targetY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             // convert that bearing into a turret angle (turret zero position points the opposite direction of the robot)
@@ -1036,11 +949,8 @@ public class Gericka_Hardware {
         double deltaX = targetXInInches - robotXInInches;
         double deltaY = targetYInInches - robotYInInches;
         double angleToTargetDeg = Math.toDegrees(Math.atan2(deltaY, deltaX));
-        //double turretRelativeAngleDeg = angleToTargetDeg - robotHeadingDegrees;
-        //while (turretRelativeAngleDeg > 180) turretRelativeAngleDeg -= 360;
-        //while (turretRelativeAngleDeg < -180) turretRelativeAngleDeg += 360;
-        //return turretHeading - robotHeadingDegrees - turretRelativeAngleDeg;
-        return angleToTargetDeg - robotHeadingDegrees;  //TODO not sure if this should be + or -
+
+        return angleToTargetDeg - robotHeadingDegrees;
     }
 
     public void resetTurret() {
@@ -1051,10 +961,10 @@ public class Gericka_Hardware {
 
     public void resetPositionToZero() {
         double headingDegrees = 0;
-        if (allianceColorString == "RED") {
+        if (allianceColorString.equals("RED")) {
             headingDegrees = 90;
         }
-        else if (allianceColorString == "BLUE") {
+        else if (allianceColorString.equals("BLUE")) {
             headingDegrees = -90;
         }
         SetInitalPinpointPosition(0, 0, headingDegrees);

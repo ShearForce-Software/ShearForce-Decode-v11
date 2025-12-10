@@ -5,20 +5,25 @@
 
 === Akshay
 
-- [x] AUTO: Test: Change Close Autos to initialize shooter motor to correct speed instead of max like it is currently doing
-- [ ] AUTO: Read the obelisk and set a variable for what pattern is being shown
-- [ ] AUTO: Limit when intake motor is on to only when needed for the close autos
+- [ ] AUTO-OBELISK: Add "detectObeliskMotif()" to every existing Auto routine
+- [ ] AUTO-OBELISK: Create a NEW blue-far that goes to the correct line based on the obelisk motif instead of always going to the second line
 
 === Gianna
 
-- [ ] INTAKE: Integrate logic to use the ball break beam sensors to turn intake on/off automatically
-* if (inside sensor says empty && outside sensor ball present) then turn intake on
-* else if (inside sensor says ball present) then turn intake off
-* Example code for sensor is at:
-** FtcRobotController -> external.samples -> SensorDigitalTouch
-- [ ] Test all buttons, make them all work, in particular it appears a lot of the SHARE + buttons are not working correctly
-- [ ] Separate the resetTurretAndPosition() from the resetYaw logic.  Make 2 separate buttons, 1 to reset position (gamepad1), and 1 to reset turret (gamepad2), so can do only what we need and only have to drive to 0,0 when position is off
-- [ ] Add servo controls for new launch ramp
+- [ ] Separate the resetTurretAndPosition() from the resetYaw logic.
+  1. Connect theRobot.resetPositionToZero to (gamepad1.dpadUp + options),
+  2. Connect theRobot.resetTurret to (gamepad2.square + options)
+  2. Make the resetTurretAndPosition() harder to accidentally do (gamepad1.triangle + share)
+  3. Make triangle only back to just doing a resetYaw
+- [ ] Make manual turret controls work with gamepad2.right_stickX (so easier to manually fix turret)
+  * Can leave existing controls in place too, make it an OR condition
+- [ ] INTAKE-1: Add logic for the auto intake to be on if the lifter is in the UP position
+  * this ensures that if a ball is stuck on the intake it gets pushed through
+- [ ] INTAKE-2: Test the new break beams, ensure auto logic is working right
+  * should be able to just drive around and auto intake balls and shoot them when you see green middle
+- [ ] INTAKE-3: Add auto intake logic to second thread in redFarAuto, comment out other intake commands, TEST
+  * be sure to put inside a check that run has been started (don't want auto intake running during init)
+- [ ] INTAKE-4: if redFarAuto changes work, then implement and test on the other auto routines
 
 === Shrey
 
@@ -44,48 +49,25 @@
 
 === Tong
 
-- [x] Change Target positions to be back corner of goal instead of front center
-- [x] Test the roadrunner distance calculator by changing SetUseOnlyWebcamForDistance(false) in manual control
-  * probably want to subtract the distance from -60,-60 to -56,-56 in calculation, since that is the measurements based on
-- [ ] Test the ability to update the roadrunner position based on the apriltag by setting SetUpdateRoadrunnerFromWebcamEnabled(true) in manual control
-  * use telemetry of roadrunner position to check
-  * physically pick up the robot and move it to force an update
-- [x] Update CalculateOptimumShooterRPM() to use dynamic range logic using a % of distance between measurements, rather than flat step functions
-  ** Example:
-```
-   double distanceAboveLower = 0.0;
-   double rpmDifferenceInRange = 0.0;
-   double differenceInMeasurements = 6.0; // inches
-   if (distanceInInches >= 100) { optimumShooterRPM = 3500; }
-   else if (distanceInInches >= 78) { optimumShooterRPM = 2950; }
-   else if (distanceInInches >= 72) {
-      distanceAboveLower = distanceInInches - 72;
-      rpmDifferenceInRange = 2950 - 2800;
-      optimumShooterRPM = 2800 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
-   }
-   else if (distanceInInches >= 66) {
-      distanceAboveLower = distanceInInches - 66;
-      rpmDifferenceInRange = 2800 - 2750;
-      optimumShooterRPM = 2750 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
-   }
-   etc...
-
-```
+- [ ] Add servo controls for new launch ramp
+  1. Add servo to HW Init calls
+  2. Create SetPosition routine for the launchRampServo
+  3. Add telemetry to show the current commanded position
+  4. Add manual controls (gamepad2.leftStickY -- note this analog not push-button, needs a dead zone)
+  5. Create auto boolean mode flag in HW class (default to true, with manual overriding)
+  6. Add manual method to change auto mode (gamepad2.dpadDown + Share)
+- [ ] MEASURE shooter optimum RPMs over distances with new shooter structure at different ramp positions
+- [ ] SHOOTER: Develop new optimum RPM calculator using new data, probably need optimum ramp calculator too
 - [ ] AUTO: develop and test an auto to get the 3 balls on the wall
-- [ ] Test shooter optimum RPMs over distances with new shooter structure
 - [ ] AUTO: develop and test an auto to shoot 3 balls, pick up 3 on wall and shoot them, pick up correct line, release the gate, then shoot 3 balls
 
 == Next Level Stuff
 
 - [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
-- [ ] Integrate April tag detection to the Autonomous routes, change intake order based on detected april tag
 - [ ] Develop lots of autonomous options and test them
 - [ ] AUTO: Implement Blue small triangle start that can shoot 6 balls, and pick up correct line and shoot them then park for any of the 3 choices
 - [ ] AUTO: Implement Red small triangle start that can shoot 6 balls, and pick up correct line and shoot them then park for any of the 3 choices
 
 
-== Advanced Shooter System Tasks
-
-- [ ] Develop function to calculate the optimum launcher ramp height
 
 
