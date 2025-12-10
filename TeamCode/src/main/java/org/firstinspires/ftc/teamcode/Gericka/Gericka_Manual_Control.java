@@ -123,6 +123,8 @@ public class Gericka_Manual_Control extends LinearOpMode {
             gamepad2_optionsWasPressed = gamepad2.optionsWasPressed();
             gamepad2_shareWasPressed = gamepad2.shareWasPressed();
 
+            //theRobot.detectObeliskMotif();
+
             /* *************************************************
              *************************************************
              * Driver Controls (gamepad1)

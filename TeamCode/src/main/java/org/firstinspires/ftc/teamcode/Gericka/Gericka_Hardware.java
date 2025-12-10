@@ -49,6 +49,8 @@ public class Gericka_Hardware {
     double imuPosition = 0;
 
     Gericka_MecanumDrive drive;
+    //private Gericka_Hardware theRobot;
+
 
     LinearOpMode opMode;
     public static double autoTimeLeft = 0.0;
@@ -137,6 +139,62 @@ public class Gericka_Hardware {
     RevColorSensorV3 ColorSensorLeft;
     //private NormalizedColorSensor ColorSensorRight;
     //private NormalizedColorSensor ColorSensorLeft;
+
+
+
+
+    //---------------------------------------------------------------------------
+    public enum Motif {
+        GPP, PGP, PPG, UNKNOWN
+    }
+
+    private ObeliskReadingTest.Motif detectedMotif = ObeliskReadingTest.Motif.UNKNOWN;
+    private int detectedTagId = -1;
+
+    public int detectObeliskMotif() {
+
+        if (getAprilTagVisible(21)) {
+            detectedTagId = 21;
+            //return ObeliskReadingTest.Motif.GPP;
+            return detectedTagId;
+        }
+        if (getAprilTagVisible(22)) {
+            detectedTagId = 22;
+            return detectedTagId;
+        }
+        if (getAprilTagVisible(23)) {
+            detectedTagId = 23;
+            return detectedTagId;
+        }
+
+        // cannot see anythign
+        detectedTagId = -1;
+        return detectedTagId;
+    }
+
+    private String motifToCoreString(ObeliskReadingTest.Motif m) {
+        switch (m) {
+            case GPP: return "GPP";
+            case PGP: return "PGP";
+            case PPG: return "PPG";
+            default:  return "UNKNOWN";
+        }
+    }
+
+    private String expandToNine(String core) {
+        if (core.equals("UNKNOWN")) return "UNKNOWN";
+        // Repeat the 3-letter motif 3 times -> 9 indices for the ramp
+        return core + core + core;
+    }
+
+
+
+    //----------------------------------------------------------------------------
+
+
+
+
+
 
     //ModernRoboticsAnalogTouchSensor beamBreak1;
     DigitalChannel beamBreak1;
@@ -313,7 +371,7 @@ public class Gericka_Hardware {
         //ShowPinpointTelemetry();
 
         ShowRoadrunnerPosition();
-
+        opMode.telemetry.addData("Obelisk Id", detectedTagId);
         opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));
         opMode.telemetry.addData("        ", "L-Vel: %.3f, R-Vel: %.3f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
         opMode.telemetry.addData("        ", "L-Pow: %.3f, R-Pow: %.3f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());

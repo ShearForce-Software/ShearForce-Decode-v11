@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "Gericka Obelisk Reader", group = "Gericka")
 public class ObeliskReadingTest extends LinearOpMode {
 
+
+
     private Gericka_Hardware theRobot;
 
 
@@ -69,6 +71,7 @@ public class ObeliskReadingTest extends LinearOpMode {
 
 
         while (!isStarted() && !isStopRequested()) {
+
             Motif current = detectObeliskMotifOnce();
             if (current != Motif.UNKNOWN) {
                 detectedMotif = current;
@@ -83,7 +86,7 @@ public class ObeliskReadingTest extends LinearOpMode {
             telemetry.addData("Expanded Pattern (9)", fullPattern);
             telemetry.addLine("Looking for tag IDs 21, 22, 23...");
 
-            // Store in blackboard so other OpModes (autos, teleop) can read it
+            //now we can put in th ein blackboard so other OpModes (autos, teleop) can read it
             blackboard.put("OBELISK_TAG_ID", detectedTagId);
             blackboard.put("OBELISK_MOTIF", core);
             blackboard.put("OBELISK_PATTERN_9", fullPattern);
@@ -95,11 +98,21 @@ public class ObeliskReadingTest extends LinearOpMode {
         // Wait for official start
         waitForStart();
 
-        // POST-START: Just hold the final result and keep showing it
+        //  Just hold the final result and keep showing it
         String finalCore = motifToCoreString(detectedMotif);
         String finalPattern = expandToNine(finalCore);
 
         while (opModeIsActive()) {
+            Motif current = detectObeliskMotifOnce();
+            if(current !=Motif.UNKNOWN){
+                detectedMotif = current;
+            }
+            //String core = motifToCoreString(detectedMotif);
+           // String fullPattern = expandToNine(core);
+            finalCore = motifToCoreString(detectedMotif);
+            finalPattern = expandToNine(finalCore);
+
+
             telemetry.addLine("=== Obelisk Reader RUNNING ===");
             telemetry.addData("Final Obelisk Tag ID", detectedTagId);
             telemetry.addData("Final Motif (3)", finalCore);
