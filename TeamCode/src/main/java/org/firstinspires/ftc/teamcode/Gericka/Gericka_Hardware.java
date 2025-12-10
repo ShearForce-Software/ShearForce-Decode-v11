@@ -108,6 +108,7 @@ public class Gericka_Hardware {
     final double YELLOW_JACKET_13_1_TICKS = 384.5; // 13.7:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_5_1_TICKS = 145.1; // 5.2:1 - ticks per motor shaft revolution
     final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_5_1_TICKS; // 133/24 is the gear ratio
+    final double DISTANCE_FROM_FRONT_TO_BACK_OF_TARGET = 18.25;
     private double turretTargetAngle = 0.0;
     //public Servo allianceIndicatorLight = null;
     private String allianceColorString = "UNKNOWN";
@@ -130,6 +131,8 @@ public class Gericka_Hardware {
     GoBildaPinpointDriver pinpoint;
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
     private int roadrunnerUpdatesFromWebcam = 0;
+    double distanceToTarget = 0;
+
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -356,7 +359,7 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
         //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
         //opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
-
+        opMode.telemetry.addData("Distance To Target (in.):", distanceToTarget);
         opMode.telemetry.addData("Alliance: ", allianceColorString);
 
         telemetryAprilTag();
@@ -487,7 +490,9 @@ public class Gericka_Hardware {
             opMode.telemetry.addData("pinpoint Relative Pos(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosX(DistanceUnit.INCH), pinpoint.getPosY(DistanceUnit.INCH));
             opMode.telemetry.addData("pinpoint Relative Position(inches): ", "x: %.1f, y: %.1f", pinpoint.getPosition().getX(DistanceUnit.INCH), pinpoint.getPosition().getY(DistanceUnit.INCH));
             opMode.telemetry.addData("pinpoint Relative Heading(deg): ", pinpoint.getPosition().getHeading(AngleUnit.DEGREES));
-
+            opMode.telemetry.addData("pinpoint x velocity",pinpoint.getVelX(DistanceUnit.INCH));
+            opMode.telemetry.addData("pinpoint y velocity",pinpoint.getVelY(DistanceUnit.INCH));
+            opMode.telemetry.addData("pinpoint velocity heading:",pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES));
             Pose2D currentPosition = GetPinpointAbsolutePosition(startPose);
             opMode.telemetry.addData("pinpoint Absolute Position(inches): ", "x: %.1f, y: %.1f", currentPosition.getX(DistanceUnit.INCH), currentPosition.getY(DistanceUnit.INCH));
             opMode.telemetry.addData("pinpoint Absolute Heading(deg): ", currentPosition.getHeading(AngleUnit.DEGREES));
@@ -512,8 +517,8 @@ public class Gericka_Hardware {
                 if (detection.metadata != null) {
                     // only use the two goals, the obelisk could be at a variable location
                     if ((detection.id == 20) || (detection.id == 24)) {
-                        aprilTagCalculatedCurrentX = detection.ftcPose.x;
-                        aprilTagCalculatedCurrentY = detection.ftcPose.y;
+                        aprilTagCalculatedCurrentX = detection.robotPose.getPosition().x;
+                        aprilTagCalculatedCurrentY = detection.robotPose.getPosition().y;
                         drive.updatePoseEstimate();
                         pinpoint.update();
                         double velocityX = pinpoint.getVelX(DistanceUnit.INCH);
@@ -525,10 +530,11 @@ public class Gericka_Hardware {
                             // if distance from current position is wrong by XX inches
                             double errorToleranceInches = 3.0;
                             double errorDistance = Math.abs(CalculateDistanceToTarget(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, aprilTagCalculatedCurrentX, aprilTagCalculatedCurrentY));
-                            if (errorDistance > errorToleranceInches) {
+                            if (errorDistance > errorToleranceInches)
+                            {
                                 //if (pinpoint.getHeadingVelocity() = 0){
                                 //SetInitalPinpointPosition(currentX, currentY, pinpoint.getHeading(AngleUnit.DEGREES));
-                                Pose2d resetPose = new Pose2d(aprilTagCalculatedCurrentX, aprilTagCalculatedCurrentY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+                                Pose2d resetPose = new Pose2d(aprilTagCalculatedCurrentX, aprilTagCalculatedCurrentY,drive.localizer.getPose().heading.toDouble());
                                 drive.localizer.setPose(resetPose);
                                 drive.localizer.update();
                                 ++roadrunnerUpdatesFromWebcam;
@@ -573,7 +579,8 @@ public class Gericka_Hardware {
                 opMode.telemetry.addData("Range", "%.1f in", detection.ftcPose.range);
                 opMode.telemetry.addData("Bearing", "%.1f°", detection.ftcPose.bearing);
                 opMode.telemetry.addData("Elevation", "%.1f°", detection.ftcPose.elevation);
-
+                opMode.telemetry.addData("X", "%.1f°", detection.robotPose.getPosition().x);
+                opMode.telemetry.addData("Y", "%.1f°", detection.robotPose.getPosition().y);
             } else {
                 opMode.telemetry.addLine(String.format("Webcam Tag ID %d (Unknown)", detection.id));
             }
@@ -859,9 +866,9 @@ public class Gericka_Hardware {
         return Math.hypot(deltaX, deltaY);
     }
     public void SetShooterRPMFromRoadrunner(){
-        double distanceToTarget = CalculateDistanceToTarget(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y,targetX,targetY);
-
-        SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
+        double distanceTarget = CalculateDistanceToTarget(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y,targetX,targetY);
+        distanceToTarget = distanceTarget;
+        SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceTarget - DISTANCE_FROM_FRONT_TO_BACK_OF_TARGET));
     }
 
 
@@ -950,12 +957,12 @@ public class Gericka_Hardware {
         while (currentTurretAngle > 180) currentTurretAngle -= 360;
         while (currentTurretAngle < -180) currentTurretAngle += 360;
         // if can see the april tag, just use the bearing to that
-        if (getAprilTagVisible(currentAprilTargetId)){
-            bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
-            SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
-        }
+        //if (getAprilTagVisible(currentAprilTargetId)){
+           // bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
+           // SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
+        //}
         // else can't see the april tag, try using the roadrunner position and robot heading to calculate the turret angle
-        else if (useRoadrunnerForTurretAnglesEnabled) {  //TODO need to enable this flag and test if really works
+         if (useRoadrunnerForTurretAnglesEnabled) {
             // calculate the bearing from the front of the robot to the april tag
             bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, targetX, targetY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             // convert that bearing into a turret angle (turret zero position points the opposite direction of the robot)
