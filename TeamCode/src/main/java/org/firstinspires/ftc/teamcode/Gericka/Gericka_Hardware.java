@@ -10,6 +10,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
@@ -138,9 +139,9 @@ public class Gericka_Hardware {
     //private NormalizedColorSensor ColorSensorLeft;
 
     //ModernRoboticsAnalogTouchSensor beamBreak1;
-    //DigitalChannel beamBreak1;
-    //DigitalChannel beamBreak2;
-    //DigitalChannel beamBreak3;
+    DigitalChannel beamBreak1;
+    DigitalChannel beamBreak2;
+    DigitalChannel beamBreak3;
 
     //RevColorSensorV3 leftColorSensor;
     //RevColorSensorV3 rightColorSensor;
@@ -288,9 +289,12 @@ public class Gericka_Hardware {
         //InitBlinkin(hardwareMap);
 
         // ***** breakbeam *****
-        //beamBreak1 =  hardwareMap.get(DigitalChannel.class, "beamBreak1");
-        //beamBreak2 =  hardwareMap.get(DigitalChannel.class, "beamBreak2");
-        //beamBreak3 =  hardwareMap.get(DigitalChannel.class, "beamBreak3");
+        beamBreak1 =  hardwareMap.get(DigitalChannel.class, "beamBreak1");
+        beamBreak2 =  hardwareMap.get(DigitalChannel.class, "beamBreak2");
+        beamBreak3 =  hardwareMap.get(DigitalChannel.class, "beamBreak3");
+        beamBreak1.setMode(DigitalChannel.Mode.INPUT);
+        beamBreak2.setMode(DigitalChannel.Mode.INPUT);
+        beamBreak3.setMode(DigitalChannel.Mode.INPUT);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -344,6 +348,10 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Light2", light2.getPosition());
         opMode.telemetry.addData("Light3", light3.getPosition());
 
+        opMode.telemetry.addData("beamBreak1", beamBreak1.getState());
+        opMode.telemetry.addData("beamBreak2", beamBreak2.getState());
+        opMode.telemetry.addData("beamBreak3", beamBreak3.getState());
+
         opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
         //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
@@ -366,7 +374,7 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("ShooterR PIDF: ", "p: %.3f  i: %.2f  d: %.2f  f: %.2f", shooterPIDF_Right.p, shooterPIDF_Right.i, shooterPIDF_Right.d, shooterPIDF_Right.f);
 
     }
-
+    
     public void SetShooterPIDFCoefficients() {
         if (GetShooterPIDF_Enabled()) {
             PIDFCoefficients shooterPIDF = shooterMotorLeft.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -875,19 +883,27 @@ public class Gericka_Hardware {
         }
     }
 
-   // public void RunAutoIntake()
-    //{
-        // Read the state of the beam break sensor
-        // A 'true' value usually means the beam is NOT broken (light is detected)
-        // A 'false' value usually means the beam IS broken (light is interrupted)
-       // boolean beamIsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
+    public void RunAutoIntake()
+    {
+        if (autoIntakeMode) {
+            // Read the state of the beam break sensor
+            // A 'true' value usually means the beam is NOT broken (light is detected)
+            // A 'false' value usually means the beam IS broken (light is interrupted)
+            boolean beamIsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
+            boolean beam2IsBroken = !beamBreak2.getState();
 
-        //if (beamIsBroken){
-         //   intakeMotor.setPower(INTAKE_POWER);
-       // }
-       // else {
-            //intakeMotor.setPower(0);
-       // }
+            if (beamIsBroken) {
+                if (beam2IsBroken){
+                    intakeMotor.setPower(0);
+                }
+                else {
+                    intakeMotor.setPower(INTAKE_POWER);
+                }
+            } else {
+                intakeMotor.setPower(0);
+            }
+
+        }
         //TODO -- hook up to sensors to detect balls
         /* Integrate logic to use the ball distance detection sensors to turn intake on/off automatically
          if (inside sensor says empty && outside sensor ball present) then turn intake on
@@ -895,7 +911,7 @@ public class Gericka_Hardware {
 
          Example code for sensor is at:
             FtcRobotController -> external.samples -> SensorDigitalTouch */
-  //  }
+    }
 
 
     // *************************************************************************

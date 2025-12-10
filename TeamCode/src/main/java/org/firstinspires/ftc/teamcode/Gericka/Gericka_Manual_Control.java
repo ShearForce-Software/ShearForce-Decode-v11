@@ -304,10 +304,10 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetShooterRPMFromRoadrunner();
                 }
             }
-            //if (theRobot.GetAutoIntakeMode())
-            //{
-                //theRobot.RunAutoIntake();
-            //}
+            if (theRobot.GetAutoIntakeMode())
+            {
+                theRobot.RunAutoIntake();
+            }
             if (theRobot.GetTurretAutoMode()) {
                 theRobot.adjustTurretToTargetAprilTag();
             }
