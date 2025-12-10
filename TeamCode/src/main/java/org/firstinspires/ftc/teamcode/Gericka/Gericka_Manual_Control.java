@@ -36,15 +36,15 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.Init(this.hardwareMap, "RED");
             theRobot.SetAprilTagTargetId(24);
             //turretTrackingID = 24;
-            theRobot.targetX = -60;
-            theRobot.targetY = 60;
+            theRobot.targetX = -72;
+            theRobot.targetY = 72;
             defaultHeadingDegrees = 90.0;
         } else{
             theRobot.Init(this.hardwareMap, "BLUE");
             theRobot.SetAprilTagTargetId(20);
             //turretTrackingID = 20;
-            theRobot.targetX = -60;
-            theRobot.targetY = -60;
+            theRobot.targetX = -72;
+            theRobot.targetY = -72;
             defaultHeadingDegrees = -90.0;
         }
 
@@ -70,12 +70,13 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
         // set auto settings
         theRobot.SetAutoShooterMode(true);  // auto adjusts speed of shooter motors based on distance
-        theRobot.SetUseOnlyWebcamForDistance(true);  // true means only use webcam, false means use pinpoint and webcam for distance calculations of shooter speed
+        theRobot.SetUseOnlyWebcamForDistance(false);  // true means only use webcam, false means use pinpoint and webcam for distance calculations of shooter speed
         theRobot.SetAutoLifterMode(true);   // auto lifts lifter half-way if ball detected on top of lifter arm
         theRobot.SetTurretAutoMode(true);   // auto adjusts the turret rotation angle to align with the target april tag
         theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
         theRobot.SetAutoIntakeMode(false);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         //theRobot.SetShooterPIDF_Enabled(false);
+        theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
 
         Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
         Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
@@ -316,7 +317,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // Run the Auto Lift to Midway position (if enabled)
             theRobot.RunAutoLifter();
             turretRotationAngle = theRobot.getTurretTargetAngle();
-
+            if (theRobot.GetUpdateRoadrunnerFromWebcamEnabled()) {
+                theRobot.SetRoadrunnerPositionFromWebcam();
+            }
             /*
             24 inch - 2100rpm
             30 inch - 2200rpm

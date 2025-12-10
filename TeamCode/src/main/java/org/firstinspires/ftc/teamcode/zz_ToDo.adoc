@@ -45,12 +45,12 @@
 === Tong
 
 - [x] Change Target positions to be back corner of goal instead of front center
-- [ ] Test the roadrunner distance calculator by changing SetUseOnlyWebcamForDistance(false) in manual control
+- [x] Test the roadrunner distance calculator by changing SetUseOnlyWebcamForDistance(false) in manual control
   * probably want to subtract the distance from -60,-60 to -56,-56 in calculation, since that is the measurements based on
 - [ ] Test the ability to update the roadrunner position based on the apriltag by setting SetUpdateRoadrunnerFromWebcamEnabled(true) in manual control
   * use telemetry of roadrunner position to check
   * physically pick up the robot and move it to force an update
-- [ ] Update CalculateOptimumShooterRPM() to use dynamic range logic using a % of distance between measurements, rather than flat step functions
+- [x] Update CalculateOptimumShooterRPM() to use dynamic range logic using a % of distance between measurements, rather than flat step functions
   ** Example:
 ```
    double distanceAboveLower = 0.0;
