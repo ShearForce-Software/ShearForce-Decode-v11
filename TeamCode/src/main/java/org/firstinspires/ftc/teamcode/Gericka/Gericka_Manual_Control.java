@@ -31,7 +31,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.targetX = -72;
             theRobot.targetY = 72;
             defaultHeadingDegrees = 90.0;
-        } else{
+        } else {
             theRobot.Init(this.hardwareMap, "BLUE");
             theRobot.SetAprilTagTargetId(20);
             //turretTrackingID = 20;
@@ -69,7 +69,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetAutoIntakeMode(false);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         // theRobot.SetShooterPIDF_Enabled(false);
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
-
+        theRobot.SetAutoLaunchRampMode(true);
         Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
         Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
@@ -132,17 +132,15 @@ public class Gericka_Manual_Control extends LinearOpMode {
             if (gamepad1.triangleWasPressed()) {
                 if (gamepad1_optionsWasPressed || gamepad1.options) {
                     theRobot.SetFieldCentricMode(true);
-                }
-                else {
+                } else {
                     theRobot.imu.resetYaw();
-                    if (resetTurretEnabled){
+                    if (resetTurretEnabled) {
                         theRobot.resetTurretAndPosition();
                     }
                 }
             }
             // robot centric drive mode
-            else if (gamepad1.squareWasPressed())
-            {
+            else if (gamepad1.squareWasPressed()) {
                 if (gamepad1_optionsWasPressed || gamepad1.options) {
                     theRobot.SetFieldCentricMode(false);
                 }
@@ -174,119 +172,112 @@ public class Gericka_Manual_Control extends LinearOpMode {
                         theRobot.SetAprilTagTargetId(20);
                         theRobot.SetTurretAutoMode(true);
                     }
-                }
-                else {
+                } else {
                     //Turn intake off
                     //theRobot.SetIntakeMotor(true,true);
                     theRobot.SetIntakeMotor(false, false);
                     theRobot.SetAutoIntakeMode(false);
                 }
-            }
-
-            else if (gamepad2.circleWasPressed() && !gamepad2_optionsWasPressed ){
+            } else if (gamepad2.circleWasPressed() && !gamepad2_optionsWasPressed) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
                     //Turn Turret clockwise
                     turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
                     theRobot.SetTurretRotationAngle(turretRotationAngle);
                     theRobot.SetTurretAutoMode(false);
-                }
-                else {
+                } else {
                     //Turn intake on
                     theRobot.SetIntakeMotor(true, true);
                     theRobot.SetAutoIntakeMode(false);
                 }
-            }
-
-            else if (gamepad2.squareWasPressed() && !gamepad2_optionsWasPressed ){
+            } else if (gamepad2.squareWasPressed() && !gamepad2_optionsWasPressed) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
                     //Turn Turret counterclockwise
                     turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
                     theRobot.SetTurretRotationAngle(turretRotationAngle);
                     theRobot.SetTurretAutoMode(false);
-                }
-                else {
+                } else {
                     //Turn outtake system on
                     theRobot.SetIntakeMotor(true, false);
                     theRobot.SetAutoIntakeMode(false);
                 }
-            }
-
-            else if(gamepad2.crossWasPressed() && !gamepad2_optionsWasPressed ){
+            } else if (gamepad2.crossWasPressed() && !gamepad2_optionsWasPressed) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
                     // toggling turret goal auto centering/tracking on/off
                     theRobot.SetTurretAutoMode(!theRobot.GetTurretAutoMode());
-                }
-                else {
+                } else {
                     // toggling auto intake on/off
                     theRobot.SetAutoIntakeMode(!theRobot.GetAutoIntakeMode());
                 }
             }
 
             // ********   SHOOTER MOTOR CONTROLS ***********************
-            else if (gamepad2.dpadUpWasPressed()){
+            else if (gamepad2.dpadUpWasPressed()) {
                 theRobot.SetAutoShooterMode(false);
                 shooterSpeedRPM = 0.0;
                 theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-            }
-            else if (gamepad2.dpadLeftWasPressed()){
-                if (gamepad2_optionsWasPressed || gamepad2.options){
+            } else if (gamepad2.dpadLeftWasPressed()) {
+                if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
 
                     shooterSpeedRPM = 2100; //4500rpm was about the value observed when the Motor was commanded to 100%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-                }
-                else {
+                } else {
                     theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM -= shooterSpeedRPMIncrement;
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
-            }
-            else if (gamepad2.dpadRightWasPressed()){
-                if (gamepad2_optionsWasPressed || gamepad2.options){
+            } else if (gamepad2.dpadRightWasPressed()) {
+                if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM = 2950; //1950rpm was about the value observed when the Motor was commanded to 50%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-                }
-                else {
+                } else {
                     theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM += shooterSpeedRPMIncrement;
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
                 }
-            }
-            else if (gamepad2.dpadDownWasPressed()) {
+            } else if (gamepad2.dpadDownWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
                     shooterSpeedRPM = 3500; //3200rpm was about the value observed when the Motor was commanded to 75%.
                     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-                }
-                else {
+                } else {
                     theRobot.SetAutoShooterMode(!theRobot.GetAutoShooterMode());
                 }
             }
+            // ********   LAUNCH RAMP CONTROLS ***********************
+            else if (gamepad2.left_stick_y > 0.1){
+                theRobot.SetLaunchRampPosition(theRobot.GetLaunchRampPosition() - 0.1);
+                theRobot.SetAutoLaunchRampMode(false);
+            }
+            else if (gamepad2.left_stick_y < -0.1) {
+                theRobot.SetLaunchRampPosition(theRobot.GetLaunchRampPosition() + 0.1);
+                theRobot.SetAutoLaunchRampMode(false);
+            }
+            else if (gamepad2.dpadDownWasPressed()){
+                if (gamepad2.shareWasPressed()){
+                    theRobot.SetAutoLaunchRampMode(!theRobot.GetAutoLaunchRampMode());
+                }
+            }
+
             // ********   LIFTER CONTROLS ***********************
             else if (gamepad2.rightBumperWasPressed()) {
                 //Set lifter position to up
                 theRobot.SetLifterUp();
-            }
-            else if (gamepad2.rightBumperWasReleased()){
+            } else if (gamepad2.rightBumperWasReleased()) {
                 theRobot.SetLifterDown();
-            }
-            else if (gamepad1.rightBumperWasPressed()) {
+            } else if (gamepad1.rightBumperWasPressed()) {
                 //Set lifter position to up
                 theRobot.SetLifterUp();
-            }
-            else if (gamepad1.rightBumperWasReleased()){
+            } else if (gamepad1.rightBumperWasReleased()) {
                 theRobot.SetLifterDown();
-            }
-            else if (gamepad2.leftBumperWasPressed()){
+            } else if (gamepad2.leftBumperWasPressed()) {
                 //Set lifter position to down
                 theRobot.SetLifterDown();
-            }
-            else if (gamepad2.left_trigger > 0.2){
+            } else if (gamepad2.left_trigger > 0.2) {
                 //Set lifter position to middle
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
-            }
-            else if (gamepad2.right_trigger > 0.2){
+            } else if (gamepad2.right_trigger > 0.2) {
                 if (gamepad2.shareWasPressed()) {
                     theRobot.SetAutoLifterMode(!theRobot.GetAutoLifterMode());
                 }
@@ -299,8 +290,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetShooterRPMFromRoadrunner();
                 }
             }
-            if (theRobot.GetAutoIntakeMode())
-            {
+            if (theRobot.GetAutoIntakeMode()) {
                 theRobot.RunAutoIntake();
             }
             if (theRobot.GetTurretAutoMode()) {
@@ -340,4 +330,5 @@ public class Gericka_Manual_Control extends LinearOpMode {
         } // end while (opModeIsActive())
 
     }
-    }
+}
+

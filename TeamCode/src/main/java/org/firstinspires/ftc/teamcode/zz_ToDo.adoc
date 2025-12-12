@@ -49,7 +49,7 @@
 
 === Tong
 
-- [ ] Add servo controls for new launch ramp
+- [x] Add servo controls for new launch ramp
   1. Add servo to HW Init calls
   2. Create SetPosition routine for the launchRampServo
   3. Add telemetry to show the current commanded position

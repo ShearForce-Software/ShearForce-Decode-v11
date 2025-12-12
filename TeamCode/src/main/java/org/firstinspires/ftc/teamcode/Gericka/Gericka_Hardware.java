@@ -64,6 +64,7 @@ public class Gericka_Hardware {
     public DcMotorEx shooterMotorRight;
     public DcMotorEx shooterMotorLeft;
     private DcMotorEx turretMotor;
+    private Servo launchRampServo;
     private Servo lifterServo;
     private Servo light1;
     private Servo light2;
@@ -89,7 +90,7 @@ public class Gericka_Hardware {
     private boolean autoShooterMode = false;
     private boolean useRoadrunnerForTurretAnglesEnabled = true;
     private boolean updateRoadrunnerFromWebcamEnabled = false;
-
+    private boolean autoLaunchRampMode = true;
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
     private double shooterTargetRPM = 0.0;
@@ -121,6 +122,8 @@ public class Gericka_Hardware {
     final double INDICATOR_YELLOW = 0.388;
     final double INDICATOR_SAGE_GREEN = 0.444;
     final double INDICATOR_VIOLET = 0.722;
+    final double LAUNCH_RAMP_UP_POSITION = 1;
+    final double LAUNCH_RAMP_DOWN_POSITION = 0;
     double indicatorLightValue = 0;
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
@@ -221,6 +224,7 @@ public class Gericka_Hardware {
 
 
             // ****************** SERVOS ******************************************
+        launchRampServo = hardwareMap.get(Servo.class, "launchRampServo");
         lifterServo = hardwareMap.get(Servo.class, "lifterServo");
         light1 = hardwareMap.get(Servo.class, "light1");
         light2 = hardwareMap.get(Servo.class, "light2");
@@ -279,6 +283,8 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("Shooter Target Speed: ", shooterTargetSpeed);
         opMode.telemetry.addData("Shooter Target RPM: ", shooterTargetRPM);
         ShowPIDF_Telemetry();
+
+        opMode.telemetry.addData("Launch Ramp Position", GetLaunchRampPosition());
 
         opMode.telemetry.addData("Auto Shooter Mode: ", autoShooterMode);
         opMode.telemetry.addData("Auto Turret Mode: ", autoTurretMode);
@@ -982,6 +988,20 @@ public class Gericka_Hardware {
     public boolean GetUseRoadrunnerForTurretAnglesEnabled() { return useRoadrunnerForTurretAnglesEnabled; }
     public void SetUseRoadrunnerForTurretAnglesEnabled(boolean value) { useRoadrunnerForTurretAnglesEnabled = value; }
 
+    // *************************************************************************
+    //      Launch Ramp Functions
+    // *************************************************************************
+    public void SetLaunchRampPosition(double position){
+        double launchRampTargetPosition = 0;
+        launchRampTargetPosition = Math.min(position,LAUNCH_RAMP_UP_POSITION);
+        launchRampTargetPosition = Math.max(position,LAUNCH_RAMP_DOWN_POSITION);
+        launchRampServo.setPosition(launchRampTargetPosition);
+    }
+    public double GetLaunchRampPosition(){
+        return launchRampServo.getPosition();
+    }
+    public boolean GetAutoLaunchRampMode(){return autoLaunchRampMode;}
+    public void SetAutoLaunchRampMode(boolean value) {autoLaunchRampMode = value;}
     // *************************************************************************
     //      Lifter Arm Functions
     // *************************************************************************

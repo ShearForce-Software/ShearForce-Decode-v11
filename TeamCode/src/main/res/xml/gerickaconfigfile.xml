@@ -33,7 +33,7 @@
 
             <!-- Servos -->
             <Servo name="lifterServo"    port="0" />
-            <Servo name="IndicatorLight" port="1" />
+            <Servo name="launchRampServo" port="1" />
 
             <!-- <BHI260IMU name="imu" bus="0" /> -->
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
