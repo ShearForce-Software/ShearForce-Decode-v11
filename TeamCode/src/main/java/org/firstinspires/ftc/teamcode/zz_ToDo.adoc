@@ -5,11 +5,14 @@
 
 === Akshay
 
+- [ ] MEASURE shooter optimum RPMs over distances with new shooter structure at different ramp positions
 - [ ] AUTO-OBELISK: Add "detectObeliskMotif()" to every existing Auto routine
 - [ ] AUTO-OBELISK: Create a NEW blue-far that goes to the correct line based on the obelisk motif instead of always going to the second line
 
 === Gianna
 
+- [ ] MEASURE shooter optimum RPMs over distances with new shooter structure at different ramp positions
+- [ ] Test lowering the RunAutoLifter() sensor distance (currently at 1.5 inches, probably needs to be smaller, like 3/4 or 1.0)
 - [ ] Separate the resetTurretAndPosition() from the resetYaw logic.
   1. Connect theRobot.resetPositionToZero to (gamepad1.dpadUp + options),
   2. Connect theRobot.resetTurret to (gamepad2.square + options)
@@ -17,16 +20,13 @@
   3. Make triangle only back to just doing a resetYaw
 - [ ] Make manual turret controls work with gamepad2.right_stickX (so easier to manually fix turret)
   * Can leave existing controls in place too, make it an OR condition
-- [ ] INTAKE-1: Add logic for the auto intake to be on if the lifter is in the UP position
-  * this ensures that if a ball is stuck on the intake it gets pushed through
-- [ ] INTAKE-2: Test the new break beams, ensure auto logic is working right
-  * should be able to just drive around and auto intake balls and shoot them when you see green middle
-- [ ] INTAKE-3: Add auto intake logic to second thread in redFarAuto, comment out other intake commands, TEST
+- [ ] INTAKE-1: Add auto intake logic to second thread in redFarAuto, comment out other intake commands, TEST
   * be sure to put inside a check that run has been started (don't want auto intake running during init)
-- [ ] INTAKE-4: if redFarAuto changes work, then implement and test on the other auto routines
+- [ ] INTAKE-2: if redFarAuto changes work, then implement and test on the other auto routines
 
 === Shrey
 
+- [ ] MEASURE shooter optimum RPMs over distances with new shooter structure at different ramp positions
 - Tune built-in PIDF using dashboard to achieve faster recovery without overshoots
   * Run Manual - put notes in comments of SetShooterPIDFCoefficients()
     ** [x] RECORD velocity and power values for small triangle position
@@ -49,15 +49,14 @@
 
 === Tong
 
-- [x] Add servo controls for new launch ramp
-  1. Add servo to HW Init calls
-  2. Create SetPosition routine for the launchRampServo
-  3. Add telemetry to show the current commanded position
-  4. Add manual controls (gamepad2.leftStickY -- note this analog not push-button, needs a dead zone)
-  5. Create auto boolean mode flag in HW class (default to true, with manual overriding)
-  6. Add manual method to change auto mode (gamepad2.dpadDown + Share)
-- [ ] MEASURE shooter optimum RPMs over distances with new shooter structure at different ramp positions
 - [ ] SHOOTER: Develop new optimum RPM calculator using new data, probably need optimum ramp calculator too
+- [x] Add servo controls for new launch ramp
+1. Add servo to HW Init calls
+2. Create SetPosition routine for the launchRampServo
+3. Add telemetry to show the current commanded position
+4. Add manual controls (gamepad2.leftStickY -- note this analog not push-button, needs a dead zone)
+5. Create auto boolean mode flag in HW class (default to true, with manual overriding)
+6. Add manual method to change auto mode (gamepad2.dpadDown + Share)
 - [ ] AUTO: develop and test an auto to get the 3 balls on the wall
 - [ ] AUTO: develop and test an auto to shoot 3 balls, pick up 3 on wall and shoot them, pick up correct line, release the gate, then shoot 3 balls
 

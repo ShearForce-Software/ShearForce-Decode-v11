@@ -11,9 +11,7 @@ import java.util.Objects;
 public class Gericka_Manual_Control extends LinearOpMode {
     Gericka_Hardware theRobot;
     //public int turretTrackingID = 24; // default to Red
-    double turretRotationAngle = 0.0f;
     final float TURRET_ROTATION_ANGLE_INCREMENT = 10.0f;
-    double shooterSpeedRPM = 0.0;
     final double shooterSpeedRPMIncrement = 50;
     boolean resetTurretEnabled = true;
 
@@ -181,8 +179,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             } else if (gamepad2.circleWasPressed() && !gamepad2_optionsWasPressed) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
                     //Turn Turret clockwise
-                    turretRotationAngle += TURRET_ROTATION_ANGLE_INCREMENT;
-                    theRobot.SetTurretRotationAngle(turretRotationAngle);
+                    theRobot.SetTurretRotationAngle(theRobot.getTurretTargetAngle() + TURRET_ROTATION_ANGLE_INCREMENT);
                     theRobot.SetTurretAutoMode(false);
                 } else {
                     //Turn intake on
@@ -192,8 +189,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             } else if (gamepad2.squareWasPressed() && !gamepad2_optionsWasPressed) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
                     //Turn Turret counterclockwise
-                    turretRotationAngle -= TURRET_ROTATION_ANGLE_INCREMENT;
-                    theRobot.SetTurretRotationAngle(turretRotationAngle);
+                    theRobot.SetTurretRotationAngle(theRobot.getTurretTargetAngle() - TURRET_ROTATION_ANGLE_INCREMENT);
                     theRobot.SetTurretAutoMode(false);
                 } else {
                     //Turn outtake system on
@@ -213,34 +209,27 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // ********   SHOOTER MOTOR CONTROLS ***********************
             else if (gamepad2.dpadUpWasPressed()) {
                 theRobot.SetAutoShooterMode(false);
-                shooterSpeedRPM = 0.0;
-                theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+                theRobot.SetShooterMotorToSpecificRPM(0.0);
             } else if (gamepad2.dpadLeftWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
-
-                    shooterSpeedRPM = 2100; //4500rpm was about the value observed when the Motor was commanded to 100%.
-                    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+                    theRobot.SetShooterMotorToSpecificRPM(2100);
                 } else {
                     theRobot.SetAutoShooterMode(false);
-                    shooterSpeedRPM -= shooterSpeedRPMIncrement;
-                    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+                    theRobot.SetShooterMotorToSpecificRPM(theRobot.GetShooterTargetRPM() - shooterSpeedRPMIncrement);
                 }
             } else if (gamepad2.dpadRightWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
-                    shooterSpeedRPM = 2950; //1950rpm was about the value observed when the Motor was commanded to 50%.
-                    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+                    theRobot.SetShooterMotorToSpecificRPM(2950);
                 } else {
                     theRobot.SetAutoShooterMode(false);
-                    shooterSpeedRPM += shooterSpeedRPMIncrement;
-                    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+                    theRobot.SetShooterMotorToSpecificRPM(theRobot.GetShooterTargetRPM() + shooterSpeedRPMIncrement);
                 }
             } else if (gamepad2.dpadDownWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
-                    shooterSpeedRPM = 3500; //3200rpm was about the value observed when the Motor was commanded to 75%.
-                    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+                    theRobot.SetShooterMotorToSpecificRPM(3500);
                 } else {
                     theRobot.SetAutoShooterMode(!theRobot.GetAutoShooterMode());
                 }
@@ -283,6 +272,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
             }
 
+            theRobot.CalculateDistanceToTarget(); // always call this, even if not using it so that we can get the telemetry data
             if (theRobot.GetAutoShooterMode()) {
                 if (theRobot.GetUseOnlyWebcamForDistance()) {
                     theRobot.SetShooterRPMFromWebCam(theRobot.currentAprilTargetId);
@@ -290,6 +280,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetShooterRPMFromRoadrunner();
                 }
             }
+
             if (theRobot.GetAutoIntakeMode()) {
                 theRobot.RunAutoIntake();
             }
@@ -298,9 +289,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             // Run the Auto Lift to Midway position (if enabled)
             theRobot.RunAutoLifter();
-
-            // store the current turret target location, so can use if switch to manual turret control
-            turretRotationAngle = theRobot.getTurretTargetAngle();
 
             if (theRobot.GetUpdateRoadrunnerFromWebcamEnabled()) {
                 // update the roadrunner position based on Webcam detected april tag if enabled

@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -276,6 +275,7 @@ public class Gericka_Hardware {
         ShowRoadrunnerPosition();
         opMode.telemetry.addData("Obelisk Id", detectedObeliskId);
         opMode.telemetry.addData("Obelisk Pattern", obeliskPattern);
+
         opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));
         opMode.telemetry.addData("        ", "L-Vel: %.3f, R-Vel: %.3f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
         opMode.telemetry.addData("        ", "L-Pow: %.3f, R-Pow: %.3f" , shooterMotorLeft.getPower(), shooterMotorRight.getPower());
@@ -294,33 +294,30 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Use roadrunner for turret angles: ", GetUseRoadrunnerForTurretAnglesEnabled());
 
         opMode.telemetry.addData("April Tag Target ID", currentAprilTargetId);
+        opMode.telemetry.addData("Distance To Target (in.):", distanceToTarget);
 
         opMode.telemetry.addData("Turret ", "ticks: %d, tgt-Angle: %.1f", turretMotor.getCurrentPosition(),turretTargetAngle);
         //opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));
 
         opMode.telemetry.addData("Intake ", "Pow: %.1f, Amp: %.1f", intakeMotor.getPower(), intakeMotor.getCurrent(CurrentUnit.AMPS));
         //opMode.telemetry.addData("       ", "Vel: %.1f", intakeMotor.getVelocity());
+        opMode.telemetry.addData("beamBreak1", !beamBreak1.getState());
+        opMode.telemetry.addData("beamBreak2", !beamBreak2.getState());
+        opMode.telemetry.addData("beamBreak3", !beamBreak3.getState());
 
         opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
+        opMode.telemetry.addData("Lifter Sensor Left  (inch)", ColorSensorLeft.getDistance(DistanceUnit.INCH));
+        opMode.telemetry.addData("Lifter Sensor Right (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
 
-        opMode.telemetry.addData("Light Detected Left: ", ((OpticalDistanceSensor) ColorSensorLeft).getLightDetected());
-        //NormalizedRGBA colorsLeft = ColorSensorLeft.getNormalizedColors();
+        //opMode.telemetry.addData("Light1", light1.getPosition());
+        //opMode.telemetry.addData("Light2", light2.getPosition());
+        //opMode.telemetry.addData("Light3", light3.getPosition());
 
-        opMode.telemetry.addData("Light Detected Right: ", ((OpticalDistanceSensor) ColorSensorRight).getLightDetected());
-        //NormalizedRGBA colorsRight = ColorSensorRight.getNormalizedColors();
-        opMode.telemetry.addData("Light1", light1.getPosition());
-        opMode.telemetry.addData("Light2", light2.getPosition());
-        opMode.telemetry.addData("Light3", light3.getPosition());
 
-        opMode.telemetry.addData("beamBreak1", beamBreak1.getState());
-        opMode.telemetry.addData("beamBreak2", beamBreak2.getState());
-        opMode.telemetry.addData("beamBreak3", beamBreak3.getState());
-
-        opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
+        //opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
         //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
         //opMode.telemetry.addData("imu yaw: ", (imu.getRobotYawPitchRollAngles().getYaw()));
-        opMode.telemetry.addData("Distance To Target (in.):", distanceToTarget);
         opMode.telemetry.addData("Alliance: ", allianceColorString);
 
         telemetryAprilTag();
@@ -490,7 +487,7 @@ public class Gericka_Hardware {
                             //if (!leftFront.isBusy() && !leftRear.isBusy() && !rightFront.isBusy() && !rightRear.isBusy()) {
                             // if distance from current position is wrong by XX inches
                             double errorToleranceInches = 3.0;
-                            double errorDistance = Math.abs(CalculateDistanceToTarget(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, aprilTagCalculatedCurrentX, aprilTagCalculatedCurrentY));
+                            double errorDistance = Math.abs(CalculateDistanceToPoint(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, aprilTagCalculatedCurrentX, aprilTagCalculatedCurrentY));
                             if (errorDistance > errorToleranceInches)
                             {
                                 //if (pinpoint.getHeadingVelocity() = 0){
@@ -843,16 +840,26 @@ public class Gericka_Hardware {
         shooterMotorLeft.setVelocity(shooterTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
         shooterMotorRight.setVelocity(shooterTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
     }
-    public double CalculateDistanceToTarget(double currentXInInches, double currentYInInches, double targetXInInches, double targetYInInches) {
+
+    public double GetShooterTargetRPM() { return shooterTargetRPM; }
+    private double CalculateDistanceToPoint(double currentXInInches, double currentYInInches, double targetXInInches, double targetYInInches) {
         double deltaX = targetXInInches - currentXInInches;
         double deltaY = targetYInInches - currentYInInches;
 
         return Math.hypot(deltaX, deltaY);
     }
+
+    public void CalculateDistanceToTarget() {
+        double targetDistance = CalculateDistanceToPoint(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y,targetX,targetY);
+        distanceToTarget = targetDistance - DISTANCE_FROM_FRONT_TO_BACK_OF_TARGET;
+    }
     public void SetShooterRPMFromRoadrunner(){
-        double distanceTarget = CalculateDistanceToTarget(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y,targetX,targetY);
-        distanceToTarget = distanceTarget;
-        SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceTarget - DISTANCE_FROM_FRONT_TO_BACK_OF_TARGET));
+
+        CalculateDistanceToTarget();
+
+        if (!GetUseOnlyWebcamForDistance() && GetAutoShooterMode()) {
+            SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
+        }
     }
 
 
@@ -880,19 +887,24 @@ public class Gericka_Hardware {
             // Read the state of the beam break sensor
             // A 'true' value usually means the beam is NOT broken (light is detected)
             // A 'false' value usually means the beam IS broken (light is interrupted)
-            boolean beamIsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
+            boolean beam1IsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
             boolean beam2IsBroken = !beamBreak2.getState();
 
-            if (beamIsBroken) {
-                if (beam2IsBroken){
+            if (lifterServo.getPosition() == LIFTER_UP_POSITION) {
+                // briefly turn on the intake when the lifter is up, to unstick anything in the intake
+                intakeMotor.setPower(INTAKE_POWER);
+            }
+            else if (beam1IsBroken)
+            {
+                if (beam2IsBroken) {
                     intakeMotor.setPower(0);
-                }
-                else {
+                } else {
                     intakeMotor.setPower(INTAKE_POWER);
                 }
             } else {
                 intakeMotor.setPower(0);
             }
+
 
         }
     }
@@ -1019,14 +1031,10 @@ public class Gericka_Hardware {
             if (((lifterServo.getPosition() <= LIFTER_DOWN_POSITION))) {
                 if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0))
                         && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.5)) {
-                    opMode.telemetry.addData("Distance (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
                     lifterServo.setPosition(LIFTER_MID_POSITION);
-                    light1.setPosition(INDICATOR_GREEN);
                 } else if (((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0))
                         && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.5)) {
-                    opMode.telemetry.addData("Distance (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
                     lifterServo.setPosition(LIFTER_MID_POSITION);
-                    light1.setPosition(INDICATOR_GREEN);
                 }
             }
         }
