@@ -64,7 +64,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetAutoLifterMode(true);   // auto lifts lifter half-way if ball detected on top of lifter arm
         theRobot.SetTurretAutoMode(true);   // auto adjusts the turret rotation angle to align with the target april tag
         theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
-        theRobot.SetAutoIntakeMode(false);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
+        theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         // theRobot.SetShooterPIDF_Enabled(false);
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
         theRobot.SetAutoLaunchRampMode(true);

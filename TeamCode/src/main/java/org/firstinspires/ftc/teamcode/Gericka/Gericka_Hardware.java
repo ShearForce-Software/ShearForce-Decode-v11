@@ -79,7 +79,7 @@ public class Gericka_Hardware {
     final double INTAKE_POWER = 0.6;
 
     public final float LIFTER_UP_POSITION = 0.85f;
-    public final float LIFTER_MID_POSITION = 0.5f;
+    public final float LIFTER_MID_POSITION = 0.45f;
     public final float LIFTER_DOWN_POSITION = 0.05f;
 
     private boolean useOnlyWebcamForDistance = false;
@@ -902,10 +902,9 @@ public class Gericka_Hardware {
                     intakeMotor.setPower(INTAKE_POWER);
                 }
             } else {
+                SpecialSleep(250);
                 intakeMotor.setPower(0);
             }
-
-
         }
     }
 
@@ -1030,10 +1029,10 @@ public class Gericka_Hardware {
         if (autoLifterMode) {
             if (((lifterServo.getPosition() <= LIFTER_DOWN_POSITION))) {
                 if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0))
-                        && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.5)) {
+                        && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.2)) {
                     lifterServo.setPosition(LIFTER_MID_POSITION);
                 } else if (((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0))
-                        && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.5)) {
+                        && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.2)) {
                     lifterServo.setPosition(LIFTER_MID_POSITION);
                 }
             }
