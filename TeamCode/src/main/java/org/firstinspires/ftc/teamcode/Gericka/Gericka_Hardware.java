@@ -290,6 +290,7 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Auto Turret Mode: ", autoTurretMode);
         opMode.telemetry.addData("Auto Lifter Mode: ", autoLifterMode);
         opMode.telemetry.addData("Auto Intake Mode: ", autoIntakeMode);
+        opMode.telemetry.addData("Auto LaunchRamp Mode: ", GetAutoLaunchRampMode());
         opMode.telemetry.addData("Use Only Webcam for Distance: ", GetUseOnlyWebcamForDistance());
         opMode.telemetry.addData("Use roadrunner for turret angles: ", GetUseRoadrunnerForTurretAnglesEnabled());
 
@@ -718,62 +719,136 @@ public class Gericka_Hardware {
     public void SetShooterRPMFromWebCam(int currentTargetId){
 
         if (getAprilTagVisible(currentTargetId)){
-            SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(getDistanceToAprilTag(currentTargetId)));
+            double distance = getDistanceToAprilTag(currentTargetId);
+            if (GetAutoLaunchRampMode()) {
+                SetLaunchRampPosition(CalculateOptimumLaunchRampPosition(distance));
+            }
+            SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distance));
             currentAprilTargetId = currentTargetId;
         }
+    }
+    public double CalculateOptimumLaunchRampPosition(double distanceInInches) {
+        double optimumLaunchPosition = 0;
+
+        if      (distanceInInches >= 126) { optimumLaunchPosition = 1.0; }
+        else if (distanceInInches >= 120) { optimumLaunchPosition = 1.0; }
+        else if (distanceInInches >= 114) { optimumLaunchPosition = 0.9; }
+        else if (distanceInInches >= 108) { optimumLaunchPosition = 0.9; }
+        else if (distanceInInches >= 102) { optimumLaunchPosition = 0.9; }
+        else if (distanceInInches >= 96)  { optimumLaunchPosition = 0.7; }
+        else if (distanceInInches >= 90)  { optimumLaunchPosition = 0.7; }
+        else if (distanceInInches >= 84)  { optimumLaunchPosition = 0.7; }
+        else if (distanceInInches >= 78)  { optimumLaunchPosition = 0.6; }
+        else if (distanceInInches >= 72)  { optimumLaunchPosition = 0.5; }
+        else if (distanceInInches >= 66)  { optimumLaunchPosition = 0.4; }
+        else if (distanceInInches >= 60)  { optimumLaunchPosition = 0.4; }
+        else if (distanceInInches >= 54)  { optimumLaunchPosition = 0.4; }
+        else if (distanceInInches >= 48)  { optimumLaunchPosition = 0.3; }
+        else if (distanceInInches >= 42)  { optimumLaunchPosition = 0.3; }
+        else if (distanceInInches >= 36)  { optimumLaunchPosition = 0.3; }
+        else if (distanceInInches >= 30)  { optimumLaunchPosition = 0.0; }
+        else if (distanceInInches >= 24)  { optimumLaunchPosition = 0.0; }
+        else if (distanceInInches >= 18)  { optimumLaunchPosition = 0.0; }
+        else if (distanceInInches >= 12)  { optimumLaunchPosition = 0.0; }
+        else {
+            optimumLaunchPosition = 0.0;
+        }
+
+        return optimumLaunchPosition;
     }
     public double CalculateOptimumShooterRPM(double distanceInInches){
         double optimumShooterRPM = 0;
         double distanceAboveLower = 0.0;
         double rpmDifferenceInRange = 0.0;
         double differenceInMeasurements = 6.0; // inches
-        if (distanceInInches >= 100) { optimumShooterRPM = 3500; }
-        else if (distanceInInches >= 78) { optimumShooterRPM = 2950; }
+        if (distanceInInches >= 126) { optimumShooterRPM = 3600; }
+        else if (distanceInInches >= 120) {
+            distanceAboveLower = distanceInInches - 120;
+            rpmDifferenceInRange = 3600 - 3550;
+            optimumShooterRPM = 3550 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 114) {
+            distanceAboveLower = distanceInInches - 114;
+            rpmDifferenceInRange = 3550 - 3450;
+            optimumShooterRPM = 3450 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 108) {
+            distanceAboveLower = distanceInInches - 108;
+            rpmDifferenceInRange = 3450 - 3350;
+            optimumShooterRPM = 3350 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 102) {
+            distanceAboveLower = distanceInInches - 102;
+            rpmDifferenceInRange = 3350 - 3250;
+            optimumShooterRPM = 3250 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 96) {
+            distanceAboveLower = distanceInInches - 96;
+            rpmDifferenceInRange = 3250 - 3100;
+            optimumShooterRPM = 3100 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 90) {
+            distanceAboveLower = distanceInInches - 90;
+            rpmDifferenceInRange = 3100 - 3000;
+            optimumShooterRPM = 3000 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 84) {
+            distanceAboveLower = distanceInInches - 84;
+            rpmDifferenceInRange = 3000 - 2900;
+            optimumShooterRPM = 2900 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
+        else if (distanceInInches >= 78) {
+            distanceAboveLower = distanceInInches - 78;
+            rpmDifferenceInRange = 2900 - 2800;
+            optimumShooterRPM = 2800 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+        }
         else if (distanceInInches >= 72) {
             distanceAboveLower = distanceInInches - 72;
-            rpmDifferenceInRange = 2950 - 2800;
-            optimumShooterRPM = 2800 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+            rpmDifferenceInRange = 2800 - 2600;
+            optimumShooterRPM = 2600 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 66) {
             distanceAboveLower = distanceInInches - 66;
-            rpmDifferenceInRange = 2800 - 2750;
-            optimumShooterRPM = 2750 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+            rpmDifferenceInRange = 2600 - 2550;
+            optimumShooterRPM = 2550 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 60) {
             distanceAboveLower = distanceInInches - 60;
-            rpmDifferenceInRange = 2750 - 2650;
-            optimumShooterRPM = 2650 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+            rpmDifferenceInRange = 2550 - 2500;
+            optimumShooterRPM = 2500 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 54) {
-            distanceAboveLower = distanceInInches - 54;
-            rpmDifferenceInRange = 2650 - 2400;
-            optimumShooterRPM = 2400 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+            optimumShooterRPM = 2500;
         }
         else if (distanceInInches >= 48) {
             distanceAboveLower = distanceInInches - 48;
-            rpmDifferenceInRange = 2400 - 2350;
+            rpmDifferenceInRange = 2490 - 2350;
             optimumShooterRPM = 2350 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 42) {
-            optimumShooterRPM = 2350;
-        }
-        else if (distanceInInches >= 36) {
-            distanceAboveLower = distanceInInches - 36;
+            distanceAboveLower = distanceInInches - 42;
             rpmDifferenceInRange = 2350 - 2300;
             optimumShooterRPM = 2300 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
+        else if (distanceInInches >= 36) {
+            optimumShooterRPM = 2300;
+        }
         else if (distanceInInches >= 30) {
-            distanceAboveLower = distanceInInches - 30;
+            optimumShooterRPM = 2300;
+        }
+        else if (distanceInInches >= 24) {
+            optimumShooterRPM = 2300;
+        }
+        else if (distanceInInches >= 18) {
+            optimumShooterRPM = 2300;
+        }
+        else if (distanceInInches >= 12) {
+            distanceAboveLower = distanceInInches - 12;
             rpmDifferenceInRange = 2300 - 2200;
             optimumShooterRPM = 2200 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
-        else if (distanceInInches >= 24) {
-            distanceAboveLower = distanceInInches - 24;
-            rpmDifferenceInRange = 2200 - 2100;
-            optimumShooterRPM = 2100 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
-        }
         else {
-            optimumShooterRPM = 2500;
+            optimumShooterRPM = 2200;
         }
 
         /*double testDistance = 24;
@@ -858,6 +933,9 @@ public class Gericka_Hardware {
         CalculateDistanceToTarget();
 
         if (!GetUseOnlyWebcamForDistance() && GetAutoShooterMode()) {
+            if (GetAutoLaunchRampMode()) {
+                SetLaunchRampPosition(CalculateOptimumLaunchRampPosition(distanceToTarget));
+            }
             SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
         }
     }
@@ -901,8 +979,10 @@ public class Gericka_Hardware {
                 } else {
                     intakeMotor.setPower(INTAKE_POWER);
                 }
-            } else {
-                SpecialSleep(250);
+            }
+            else if (intakeMotor.getPower() != 0) {
+                // if ready to turn off, leave on a tiny bit to push the last ball away
+                opMode.sleep(250);
                 intakeMotor.setPower(0);
             }
         }

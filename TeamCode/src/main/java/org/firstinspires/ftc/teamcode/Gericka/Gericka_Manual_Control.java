@@ -68,6 +68,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         // theRobot.SetShooterPIDF_Enabled(false);
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
         theRobot.SetAutoLaunchRampMode(true);
+
         Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
         Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
@@ -76,8 +77,34 @@ public class Gericka_Manual_Control extends LinearOpMode {
         //theRobot.light1Color();
 
         theRobot.ShowTelemetry();
-        telemetry.update();
 
+        // ***************************************************
+        // ****  Secondary Thread to run all the time ********
+        // ***************************************************
+        Thread SecondaryThread = new Thread(() -> {
+            while (!isStopRequested() ) {
+                //control.ShowPinpointTelemetry();
+
+                theRobot.SetIndicatorLights();
+
+                if (isStarted()) {
+                    theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
+
+                    // Run the Auto Lift to Midway position (if enabled)
+                    theRobot.RunAutoLifter();
+
+                    if (theRobot.GetAutoIntakeMode()) {
+                        theRobot.RunAutoIntake();  // this method may sleep for a little while, so needs to be in a separate thread from main
+                    }
+
+                }
+
+                theRobot.ShowTelemetry();
+
+                sleep(20);
+            }
+        });
+        SecondaryThread.start();
 
         waitForStart();
         resetRuntime();
@@ -90,8 +117,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
         while (opModeIsActive()) {
             theRobot.EndgameBuzzer();
-            theRobot.SetIndicatorLights();
-            theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
             /*
             small triangle
             velocity:1620.000 L, 1600.000 R
@@ -281,14 +306,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
             }
 
-            if (theRobot.GetAutoIntakeMode()) {
-                theRobot.RunAutoIntake();
-            }
             if (theRobot.GetTurretAutoMode()) {
                 theRobot.adjustTurretToTargetAprilTag();
             }
-            // Run the Auto Lift to Midway position (if enabled)
-            theRobot.RunAutoLifter();
 
             if (theRobot.GetUpdateRoadrunnerFromWebcamEnabled()) {
                 // update the roadrunner position based on Webcam detected april tag if enabled
@@ -314,7 +334,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
              */
 
 
-            theRobot.ShowTelemetry();
+            //theRobot.ShowTelemetry();
         } // end while (opModeIsActive())
 
     }
