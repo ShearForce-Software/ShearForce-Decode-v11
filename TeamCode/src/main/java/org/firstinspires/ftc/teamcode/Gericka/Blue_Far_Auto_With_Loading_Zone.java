@@ -30,6 +30,8 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
     Action DriveToFirstMark;
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
+    Action DriveToThirdMark;
+    Action DriveThirdMarkToSmallTriangle;
     int lifterUpSleepTime = 500;
     int lifterDownSleepTime = 600;
 
@@ -75,6 +77,15 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(60,-12))
                 .build();
 
+        DriveToThirdMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(-11.75, -30))
+                .strafeToConstantHeading(new Vector2d(-11.75, -55))
+                .build();
+
+        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(-11.75, -55, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(48, -12))
+                .build();
+
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(11.5, -30))
                 .strafeToConstantHeading(new Vector2d(11.5, -55))
@@ -99,6 +110,8 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
                 .build();
 
         theRobot.SetAutoLifterMode(true);
+
+        double obeliskID = theRobot.detectObeliskMotif();
 
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
@@ -185,14 +198,36 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
 
         // Drive to middle line, get balls, and return to launch zone
-        Actions.runBlocking(
-                new SequentialAction(
-                        // Drive to the middle line and turn the intake on
-                        new ParallelAction(DriveToSecondMark, setIntakeOn()),
-                        new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
-                         // Return to launch zone and turn intake off
-                        new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
-                        ));
+        if (obeliskID == 21) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            // Drive to the middle line and turn the intake on
+                            new ParallelAction(DriveToFirstMark, setIntakeOn()),
+                            new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
+                            // Return to launch zone and turn intake off
+                            new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff())
+                    ));
+        }
+        if (obeliskID == 22) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            // Drive to the middle line and turn the intake on
+                            new ParallelAction(DriveToSecondMark, setIntakeOn()),
+                            new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
+                            // Return to launch zone and turn intake off
+                            new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
+                    ));
+        }
+        if (obeliskID == 23) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            // Drive to the middle line and turn the intake on
+                            new ParallelAction(DriveToThirdMark, setIntakeOn()),
+                            new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
+                            // Return to launch zone and turn intake off
+                            new ParallelAction(DriveThirdMarkToSmallTriangle, setIntakeOff())
+                    ));
+        }
                         // Shoot 3 balls
 
         /* **** SHOOT BALL #7 **** */
@@ -250,7 +285,6 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
-
 
     }
 
