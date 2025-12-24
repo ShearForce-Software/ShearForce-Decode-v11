@@ -819,11 +819,13 @@ public class Gericka_Hardware {
             optimumShooterRPM = 2500 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 54) {
-            optimumShooterRPM = 2500;
+            distanceAboveLower = distanceInInches - 54;
+            rpmDifferenceInRange = 2500 - 2450;
+            optimumShooterRPM = 2450 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 48) {
             distanceAboveLower = distanceInInches - 48;
-            rpmDifferenceInRange = 2490 - 2350;
+            rpmDifferenceInRange = 2450 - 2350;
             optimumShooterRPM = 2350 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 42) {
