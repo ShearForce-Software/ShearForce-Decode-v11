@@ -225,6 +225,7 @@ public class Gericka_Hardware {
             // ****************** SERVOS ******************************************
         launchRampServo = hardwareMap.get(Servo.class, "launchRampServo");
         lifterServo = hardwareMap.get(Servo.class, "lifterServo");
+        lifterServo.setDirection(Servo.Direction.REVERSE);
         light1 = hardwareMap.get(Servo.class, "light1");
         light2 = hardwareMap.get(Servo.class, "light2");
         light3 = hardwareMap.get(Servo.class, "light3");
