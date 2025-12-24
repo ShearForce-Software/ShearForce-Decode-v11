@@ -78,8 +78,8 @@ public class Gericka_Hardware {
 
     final double INTAKE_POWER = 0.6;
 
-    public final float LIFTER_UP_POSITION = 0.85f;
-    public final float LIFTER_MID_POSITION = 0.45f;
+    public final float LIFTER_UP_POSITION = 0.35f;
+    public final float LIFTER_MID_POSITION = 0.25f;
     public final float LIFTER_DOWN_POSITION = 0.05f;
 
     private boolean useOnlyWebcamForDistance = false;
