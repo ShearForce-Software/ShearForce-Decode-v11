@@ -208,7 +208,7 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
                             new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff())
                     ));
         }
-        if (obeliskID == 22) {
+        else if (obeliskID == 22) {
             Actions.runBlocking(
                     new SequentialAction(
                             // Drive to the middle line and turn the intake on
@@ -218,7 +218,7 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
                             new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
                     ));
         }
-        if (obeliskID == 23) {
+        else if (obeliskID == 23) {
             Actions.runBlocking(
                     new SequentialAction(
                             // Drive to the middle line and turn the intake on
@@ -228,7 +228,7 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
                             new ParallelAction(DriveThirdMarkToSmallTriangle, setIntakeOff())
                     ));
         }
-                        // Shoot 3 balls
+        // Shoot 3 balls
 
         /* **** SHOOT BALL #7 **** */
         ShootBall(shooterSpeedRPM);
@@ -238,34 +238,6 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
 
         /* **** SHOOT BALL #9 **** */
         ShootBall(shooterSpeedRPM);
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        // Drive to closest line and turn intake on and lower lifter
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
-
-                ));
-
-        Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
-        if (Gericka_Hardware.autoTimeLeft >= 8) {
-            Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
-
-            /* **** SHOOT BALL #10 **** */
-            ShootBall(shooterSpeedRPM);
-
-            /* **** SHOOT BALL #11 **** */
-            ShootBall(shooterSpeedRPM);
-
-            /* **** SHOOT BALL #12 **** */
-            ShootBall(shooterSpeedRPM);
-
-            // Drive to Parking spot
-            turretTargetAngle = 0;
-            theRobot.SetTurretRotationAngle(turretTargetAngle);
-            Actions.runBlocking(DriveOutofLaunchZone);
-        }
-
 
         // store final exact position in blackboard, so can initialize absolute pinpoint with that position
         //control.pinpoint.update();
