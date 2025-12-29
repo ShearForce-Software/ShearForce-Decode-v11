@@ -14,41 +14,78 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Autonomous(name="Blue Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
+@Autonomous(name="Blue Far Auto obelisk", preselectTeleOp ="Gericka 1 Manual Control")
 
-public class Blue_Far_Auto extends LinearOpMode {
+public class Blue_Far_Auto_Obelisk extends LinearOpMode {
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
 
     // Trajectories
 
-    Action DriveToSecondMark;
+
     Action DriveToShootingPosition;
     Action DriveSecondMarkToSmallTriangle;
     Action DriveToFirstMark;
+    Action DriveToSecondMark;
+    Action DriveToThirdMark;
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
+    Action ReturnFromFirstMark;
+    Action ReturnFromSecondMark;
+    Action ReturnFromThirdMark;
+
     int lifterUpSleepTime = 500;
     int lifterDownSleepTime = 600;
+
+    public enum SampleLine{
+        FIRST, //
+        SECOND,
+        THIRD,
+        IDK;
+    }
+
+
+
+    public SampleLine getSampleLineForObeliskId(int id, String alliance) {
+        switch (id) {
+            case 21:
+                return SampleLine.FIRST; // GPP
+            case 22:
+                return SampleLine.SECOND; // PGP
+            case 23:
+                return SampleLine.THIRD; // PPG
+        }
+        return SampleLine.IDK;
+    }
 
     public void runOpMode() {
         startPose = new Pose2d(60, -12, Math.toRadians(-90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
-
-        // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
-
-
-        // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
 
-        int obeliskId = theRobot.detectObeliskMotif(3000);
+        // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
+        double turretTargetAngle = 91.0;
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        sleep(1000); // allow turret to reach position
+        // turn off turret power so it doesn't twitch during init
+        theRobot.TurnOffTurret();
 
+        // Now scan for the obelisk motif for up to 3 seconds
+        int obeliskId = theRobot.detectObeliskMotif(3000);
         telemetry.addData("Final Obelisk ID", obeliskId);
+
+        SampleLine line = getSampleLineForObeliskId(obeliskId, "BLUE");
+
+        telemetry.addData("Final Obeelisk ID", obeliskId);
+        telemetry.addData("Final Obelisk ID", obeliskId);
+        telemetry.addData("Sample Line", line);
         telemetry.update();
+
+        // initialize the webcam
 
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
@@ -72,24 +109,47 @@ public class Blue_Far_Auto extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(11.5, -30))
-                .strafeToConstantHeading(new Vector2d(11.5, -55))
-                .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(20, -12))
-                .strafeToConstantHeading(new Vector2d(48, -12))
-                .build();
+        // BLUE indexing (MeepMeep view):
+// FIRST  = far-right strip (closest to GOAL side)
+// SECOND = center strip
+// THIRD  = far-left strip
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(34.75, -30))
-                .strafeToConstantHeading(new Vector2d(34.75, -55))
+                // FIRST (far-right) path (from Blue_ID21 script)
+                .strafeToConstantHeading(new Vector2d(36, -35))
+                .strafeToConstantHeading(new Vector2d(36, -50))
                 .build();
 
-        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -55, Math.toRadians(-90)))
+        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                // SECOND (center) path (from Blue_ID22 script)
+                .strafeToConstantHeading(new Vector2d(11.5, -30))
+                .strafeToConstantHeading(new Vector2d(11.5, -48))
+                .build();
+
+        DriveToThirdMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                // THIRD (far-left) path (from Blue_ID23 script)
+                .strafeToConstantHeading(new Vector2d(-12, -32))
+                .strafeToConstantHeading(new Vector2d(-12, -53))
+                .build();
+
+        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(36, -50, Math.toRadians(-90)))
+                // Return from FIRST (far-right)
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
+
+        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, -48, Math.toRadians(-90)))
+                // Return from SECOND (center)
+                .strafeToConstantHeading(new Vector2d(11.5, -30))
+                .strafeToConstantHeading(new Vector2d(48, -12))
+                .build();
+
+        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-12, -53, Math.toRadians(-90)))
+                // Return from THIRD (far-left)
+                .strafeToConstantHeading(new Vector2d(-12, -32))
+                .strafeToConstantHeading(new Vector2d(48, -12))
+                .build();
+
 
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
@@ -102,7 +162,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
+                //theRobot.ShowTelemetry();
                 //control.ShowPinpointTelemetry();
 
                 theRobot.SetIndicatorLights();
@@ -117,12 +177,6 @@ public class Blue_Far_Auto extends LinearOpMode {
         });
         SecondaryThread.start();
 
-        // turn turret to face the obelisk
-        double turretTargetAngle = 91.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
-        sleep(1000);
-        // turn off turret power so doesn't twitch
-        theRobot.TurnOffTurret();
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
@@ -140,11 +194,10 @@ public class Blue_Far_Auto extends LinearOpMode {
         double shooterSpeedRPM = 3200;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
-        //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
-
         // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = 115.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
+
 
         // drive to the start triangle
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition, setIntakeOff()));
@@ -162,17 +215,49 @@ public class Blue_Far_Auto extends LinearOpMode {
         /* **** SHOOT BALL #3 **** */
         ShootBall(shooterSpeedRPM);
 
+
+
+        Action pickLineAction = DriveToSecondMark;
+        Action returnFromPickedLineAction = ReturnFromSecondMark;
+        Action repeatPickLineAction = DriveToFirstMark;
+        Action returnFromRepeatPickedLineAction = ReturnFromFirstMark;
+        switch(line){
+            case FIRST:
+                pickLineAction = DriveToFirstMark;
+                returnFromPickedLineAction = ReturnFromFirstMark;
+                repeatPickLineAction = DriveToSecondMark;
+                returnFromRepeatPickedLineAction = ReturnFromSecondMark;
+                break;
+            case SECOND:
+                pickLineAction = DriveToSecondMark;
+                returnFromPickedLineAction = ReturnFromSecondMark;
+                repeatPickLineAction = DriveToFirstMark;
+                returnFromRepeatPickedLineAction = ReturnFromFirstMark;
+                break;
+            case THIRD:
+                pickLineAction = DriveToThirdMark;
+                returnFromPickedLineAction = ReturnFromThirdMark;
+                repeatPickLineAction = DriveToSecondMark;
+                returnFromRepeatPickedLineAction = ReturnFromSecondMark;
+                break;
+            default:
+                pickLineAction = DriveToFirstMark;
+                returnFromPickedLineAction=ReturnFromFirstMark;
+                break;
+        }
+
         // Drive to middle line, get balls, and return to launch zone
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to the middle line and turn the intake on
-                        new ParallelAction(DriveToSecondMark, setIntakeOn()),
+                        new ParallelAction(pickLineAction, setIntakeOn()),
                         new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
-                         // Return to launch zone and turn intake off
-                        new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
-                        ));
-                        // Shoot 3 balls
+                        // Return to launch zone and turn intake off
+                        new ParallelAction(returnFromPickedLineAction, setIntakeOff())
+                ));
+        // Shoot 3 balls
 
+        Action returnAction;
         /* **** SHOOT BALL #4 **** */
         ShootBall(shooterSpeedRPM);
 
@@ -182,17 +267,19 @@ public class Blue_Far_Auto extends LinearOpMode {
         /* **** SHOOT BALL #6 **** */
         ShootBall(shooterSpeedRPM);
 
+
+
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to closest line and turn intake on and lower lifter
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(repeatPickLineAction, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
 
                 ));
 
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         if (Gericka_Hardware.autoTimeLeft >= 8) {
-            Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
+            Actions.runBlocking(new ParallelAction(returnFromRepeatPickedLineAction, setIntakeOff()));
 
             /* **** SHOOT BALL #7 **** */
             ShootBall(shooterSpeedRPM);
@@ -292,26 +379,26 @@ public class Blue_Far_Auto extends LinearOpMode {
             theRobot.SetIntakeMotor(true, true);
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+
+    public Action setIntakeOff() {
+        return new setIntakeOff();
+    }
+
+    public class setIntakeOff implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
             }
+            theRobot.SetIntakeMotor(false, false);
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
-
-        public Action setIntakeOff() {
-            return new setIntakeOff();
-        }
-
-        public class setIntakeOff implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-                    initialized = true;
-                }
-                theRobot.SetIntakeMotor(false, false);
-                packet.put("lock purple pixel", 0);
-                return false;  // returning true means not done, and will be called again.  False means action is completely done
-            }
-        }
+    }
 
     public class SetLifterUp implements Action {
         private boolean initialized = false;

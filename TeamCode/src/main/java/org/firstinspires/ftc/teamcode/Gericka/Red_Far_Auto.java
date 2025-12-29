@@ -41,6 +41,7 @@ public class Red_Far_Auto extends LinearOpMode {
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
 
+
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
 

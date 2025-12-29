@@ -38,11 +38,18 @@ import java.util.concurrent.TimeUnit;
 @Config
 public class Gericka_Hardware {
     //ReentrantLock lock = new ReentrantLock();
+    public enum SampleLine{
+        FIRST,
+        SECOND,
+        THIRD
+    }
     public static final String ALLIANCE_KEY = "Alliance";
     public static final String FINAL_X_POSITION = "Final_X_Position";
     public static final String FINAL_Y_POSITION = "Final_Y_Position";
     public static final String FINAL_HEADING_DEGREES = "Final_Heading_Degrees";
 
+    public static final String OBELISK_TAG_ID_KEY = "OBELISK_TAG_ID";
+    public int detectedTagId;
     IMU imu;
     public double imuOffsetInDegrees = 0.0;
     double imuPosition = 0;
@@ -142,7 +149,90 @@ public class Gericka_Hardware {
     RevColorSensorV3 ColorSensorLeft;
 
     private int detectedObeliskId = -1;
-    private String obeliskPattern = "";
+
+
+
+    public void updateObeliskFromCamera(){
+        if(detectedObeliskId == -1){
+            int id = readObeliskId();
+
+            if(id != -1){
+                detectedObeliskId=id;
+            }
+        }
+        else{
+            readObeliskId();
+        }
+    }
+
+    public int getDetectedObeliskId(){
+        return detectedObeliskId;
+    }
+
+    public int detectObeliskMotif(long timeoutMs){
+        detectedObeliskId = -1; // here we will reset the latched value
+        long startTime = System.currentTimeMillis();
+
+        while(opMode.opModeInInit()
+            && !opMode.isStopRequested() && detectedObeliskId == -1 && System.currentTimeMillis() - startTime < timeoutMs){
+            updateObeliskFromCamera(); // uses the method here
+            ShowTelemetry(); // ask if this logic is fine????
+            opMode.sleep(20); // i don't want to spam our telemetry
+        }
+        return detectedObeliskId; // it will be -1 if we never saw one
+    }
+
+    private int readObeliskId() {
+
+        if (getAprilTagVisible(21)) {
+            detectedTagId = 21;
+            return 21;
+        }
+        if (getAprilTagVisible(22)) {
+            detectedTagId = 22;
+            return 22;
+        }
+        if (getAprilTagVisible(23)) {
+            detectedTagId = 23;
+            return 23;
+        }
+
+        // cannot see anythign
+        detectedTagId = -1;
+        return -1;
+    }
+
+    public SampleLine getSampleLineForObeliskId(int obeliskId, String alliance) {
+        // TODO: adjust mapping once you confirm with coach
+
+        if ("BLUE".equals(alliance)) {
+            switch (obeliskId) {
+                case 21:
+                    return SampleLine.FIRST;
+                case 22:
+                    return SampleLine.SECOND;
+                case 23:
+                    return SampleLine.THIRD;
+                default:
+                    return SampleLine.SECOND; // safe default if no tag seen
+            }
+        } else {
+            // RED side (can tweak separately later)
+            switch (obeliskId) {
+                case 21:
+                    return SampleLine.FIRST;
+                case 22:
+                    return SampleLine.SECOND;
+                case 23:
+                    return SampleLine.THIRD;
+                default:
+                    return SampleLine.SECOND;
+            }
+        }
+    }
+
+
+
 
     DigitalChannel beamBreak1;
     DigitalChannel beamBreak2;
@@ -275,7 +365,7 @@ public class Gericka_Hardware {
 
         ShowRoadrunnerPosition();
         opMode.telemetry.addData("Obelisk Id", detectedObeliskId);
-        opMode.telemetry.addData("Obelisk Pattern", obeliskPattern);
+        //opMode.telemetry.addData("Obelisk Pattern", obeliskPattern);
 
         opMode.telemetry.addData("Shooter ", "L-RPM: %.1f, R-RPM: %.1f", CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS), CalculateMotorRPM(shooterMotorRight.getVelocity(), YELLOW_JACKET_1_1_TICKS));
         opMode.telemetry.addData("        ", "L-Vel: %.3f, R-Vel: %.3f" , shooterMotorLeft.getVelocity(), shooterMotorRight.getVelocity());
@@ -595,27 +685,7 @@ public class Gericka_Hardware {
     public boolean GetUseOnlyWebcamForDistance() { return useOnlyWebcamForDistance; }
     public void SetUseOnlyWebcamForDistance(boolean value) { useOnlyWebcamForDistance = value; }
 
-    public int detectObeliskMotif() {
 
-        if (getAprilTagVisible(21)) {
-            detectedObeliskId = 21;
-            obeliskPattern = "G-P-P";
-        }
-        else if (getAprilTagVisible(22)) {
-            detectedObeliskId = 22;
-            obeliskPattern = "P-G-P";
-        }
-        else if (getAprilTagVisible(23)) {
-            detectedObeliskId = 23;
-            obeliskPattern = "P-P-G";
-        }
-        else {
-            // cannot see anything
-            detectedObeliskId = -1;
-            obeliskPattern = "UNKNOWN";
-        }
-        return detectedObeliskId;
-    }
 
 
     // *********************************************************
