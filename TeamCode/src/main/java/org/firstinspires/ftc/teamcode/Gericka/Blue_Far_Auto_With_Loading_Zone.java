@@ -111,7 +111,7 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
 
         theRobot.SetAutoLifterMode(true);
 
-        double obeliskID = theRobot.detectObeliskMotif();
+        double obeliskID = theRobot.detectObeliskMotif(2000);
 
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
