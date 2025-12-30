@@ -74,20 +74,20 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(11.5, -30))
-                .strafeToConstantHeading(new Vector2d(11.5, -55))
+                .strafeToConstantHeading(new Vector2d(11.5, -60))
                 .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(-90)))
+        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(34.75, -30))
-                .strafeToConstantHeading(new Vector2d(34.75, -55))
+                .strafeToConstantHeading(new Vector2d(34.75, -60))
                 .build();
 
-        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -55, Math.toRadians(-90)))
+        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
@@ -123,6 +123,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         sleep(1000);
         // turn off turret power so doesn't twitch
         theRobot.TurnOffTurret();
+        theRobot.SetLaunchRampPosition(1.0);
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
@@ -175,12 +176,14 @@ public class Blue_Far_Auto extends LinearOpMode {
 
         /* **** SHOOT BALL #4 **** */
         ShootBall(shooterSpeedRPM);
+        theRobot.SetIntakeMotor(true,true);
 
         /* **** SHOOT BALL #5 **** */
         ShootBall(shooterSpeedRPM);
 
         /* **** SHOOT BALL #6 **** */
         ShootBall(shooterSpeedRPM);
+        theRobot.SetIntakeMotor(true,true);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -196,13 +199,14 @@ public class Blue_Far_Auto extends LinearOpMode {
 
             /* **** SHOOT BALL #7 **** */
             ShootBall(shooterSpeedRPM);
+            theRobot.SetIntakeMotor(true,true);
 
             /* **** SHOOT BALL #8 **** */
             ShootBall(shooterSpeedRPM);
 
             /* **** SHOOT BALL #9 **** */
             ShootBall(shooterSpeedRPM);
-
+            theRobot.SetIntakeMotor(true,true);
             // Drive to Parking spot
             turretTargetAngle = 0;
             theRobot.SetTurretRotationAngle(turretTargetAngle);
