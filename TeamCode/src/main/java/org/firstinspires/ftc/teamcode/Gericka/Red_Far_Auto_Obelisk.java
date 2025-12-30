@@ -14,9 +14,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Autonomous(name="Blue Far Auto obelisk", preselectTeleOp ="Gericka 1 Manual Control")
+@Autonomous(name="RED Far Auto obelisk", preselectTeleOp ="Gericka 1 Manual Control")
 
-public class Blue_Far_Auto_Obelisk extends LinearOpMode {
+public class Red_Far_Auto_Obelisk extends LinearOpMode {
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
@@ -60,15 +60,15 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
     }
 
     public void runOpMode() {
-        startPose = new Pose2d(60, -12, Math.toRadians(-90));
+        startPose = new Pose2d(60, 12, Math.toRadians(90));
         /* Initialize the Robot */
-        theRobot.Init(hardwareMap, "BLUE");
+        theRobot.Init(hardwareMap, "RED");
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
         theRobot.WebcamInit(this.hardwareMap);
 
         // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
-        double turretTargetAngle = 91.0;
+        double turretTargetAngle = -91.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
         theRobot.SetLaunchRampPosition(1.0);
 
@@ -80,7 +80,7 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
         int obeliskId = theRobot.detectObeliskMotif(3000);
         telemetry.addData("Final Obelisk ID", obeliskId);
 
-        SampleLine line = getSampleLineForObeliskId(obeliskId, "BLUE");
+        SampleLine line = getSampleLineForObeliskId(obeliskId, "RED");
 
         telemetry.addData("Final Obeelisk ID", obeliskId);
         telemetry.addData("Final Obelisk ID", obeliskId);
@@ -92,9 +92,9 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        theRobot.SetRoadrunnerInitialPosition(60, -12, -90);
+        theRobot.SetRoadrunnerInitialPosition(60, 12, 90);
 
-        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
         // set lifter half up (so can get 3 ball loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
@@ -105,55 +105,55 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
-        // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
 
-        DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(48, -12))
+
+        DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
 
-        // BLUE indexing (MeepMeep view):
+
 // FIRST  = far-right strip (closest to GOAL side)
 // SECOND = center strip
 // THIRD  = far-left strip
 
-        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                // FIRST (far-right) path (from Blue_ID21 script)
-                .strafeToConstantHeading(new Vector2d(34.75, -30))
-                .strafeToConstantHeading(new Vector2d(34.75, -60))
+        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+
+                .strafeToConstantHeading(new Vector2d(34.75, 30))
+                .strafeToConstantHeading(new Vector2d(34.75, 60))
                 .build();
 
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                // SECOND (center) path (from Blue_ID22 script)
-                .strafeToConstantHeading(new Vector2d(11.5, -30))
-                .strafeToConstantHeading(new Vector2d(11.5, -60))
+        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+
+                .strafeToConstantHeading(new Vector2d(11.5, 30))
+                .strafeToConstantHeading(new Vector2d(11.5, 60))
                 .build();
 
-        DriveToThirdMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                // THIRD (far-left) path (from Blue_ID23 script)
-                .strafeToConstantHeading(new Vector2d(-12, -32))
-                .strafeToConstantHeading(new Vector2d(-12, -55))
+        DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+
+                .strafeToConstantHeading(new Vector2d(-12, 32))
+                .strafeToConstantHeading(new Vector2d(-12, 55))
                 .build();
 
-        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(48, -12))
-                .build();
-
-
-        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(20, -12))
-                .strafeToConstantHeading(new Vector2d(48, -12))
-                .build();
-
-        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-12, -55, Math.toRadians(-90)))
-                // Return from THIRD (far-left)
-                .strafeToConstantHeading(new Vector2d(-12, -32))
-                .strafeToConstantHeading(new Vector2d(48, -12))
+        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
 
-        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(20, -12))
+        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(20, 12))
+                .strafeToConstantHeading(new Vector2d(48, 12))
+                .build();
+
+        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-12, 55, Math.toRadians(90)))
+
+                .strafeToConstantHeading(new Vector2d(-12, 32))
+                .strafeToConstantHeading(new Vector2d(48, 12))
+                .build();
+
+
+        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(20, 12))
                 .build();
 
         theRobot.SetAutoLifterMode(true);
@@ -188,7 +188,7 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
         resetRuntime();
         if(obeliskId==-1){
             obeliskId = theRobot.detectObeliskMotif(1500);
-            line = getSampleLineForObeliskId(obeliskId, "BLUE");
+            line = getSampleLineForObeliskId(obeliskId, "RED");
         }
         telemetry.addData("Final Obelisk ID", obeliskId);
         Gericka_Hardware.autoTimeLeft = 0.0;
@@ -201,7 +201,7 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // Turn Turret towards target, can leave turret there the whole time
-        turretTargetAngle = 115.0;
+        turretTargetAngle = -115.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
 
 
