@@ -269,7 +269,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetAutoLaunchRampMode(false);
             }
             else if (gamepad2.dpadDownWasPressed()){
-                if (gamepad2.shareWasPressed()){
+                if (gamepad2_shareWasPressed || gamepad2.share){
                     theRobot.SetAutoLaunchRampMode(!theRobot.GetAutoLaunchRampMode());
                 }
             }
@@ -292,7 +292,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 //Set lifter position to middle
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             } else if (gamepad2.right_trigger > 0.2) {
-                if (gamepad2.shareWasPressed()) {
+                if (gamepad2_shareWasPressed || gamepad2.share) {
                     theRobot.SetAutoLifterMode(!theRobot.GetAutoLifterMode());
                 }
             }
