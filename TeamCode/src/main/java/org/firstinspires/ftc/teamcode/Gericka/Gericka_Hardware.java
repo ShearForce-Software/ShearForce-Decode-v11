@@ -1180,7 +1180,7 @@ public class Gericka_Hardware {
     public void SetAutoLifterMode(boolean value) { autoLifterMode = value; }
     public void RunAutoLifter() {
         if (autoLifterMode) {
-            if (((lifterServo.getPosition() <= LIFTER_DOWN_POSITION))) {
+            if (((lifterServo.getPosition() <= (LIFTER_DOWN_POSITION + 0.06)))) {
                 if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0))
                         && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.2)) {
                     lifterServo.setPosition(LIFTER_MID_POSITION);
