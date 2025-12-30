@@ -6,9 +6,15 @@
 
 - [ ] TEST new manual auto shooter + auto launch ramp values (drive around and shoot)
   * Can adjust CalculateOptimumLaunchRampPosition() and/or CalculateOptimumShooterRPM() if needed
-- [ ] AUTO: Add new theRobot.RunAutoIntake() method to Second thread in an auto routine
-  * remove manual intake on/off commands in the auto opMode, then test if works effectively, if it does make all autos do it
-  * be sure to put inside a check that run has been started (don't want auto intake running during init)
+
+=== Akshay
+
+- [ ] Test Red Far Obelisk for accuracy of shots
+- [ ] Test Blue Far Obelisk for accuracy of shots
+- [ ] Test and update the 2 close autos, probably need to set ramp and speed to align with new shooter table
+
+=== Gianna
+
 - [ ] Parking Stand Servos Integration
   1. Add 2 new servos to config file (control hub, ports 2 and 3)
   2. Add the 2 new servos to Gericka_Hardware::Init() method
@@ -16,15 +22,7 @@
   4. Add max and min limits of (max = 0.3, min = 0.0) for the new servos
   5. Create a method in the HW class to set the servo to a position, limit to max and min
   6. Add 2 buttons on Gamepad1 to command the parking stand position to the two positions
-  7. TEST it once the mechanical team installs it
-
-=== Akshay
-
-- [ ] AUTO-OBELISK: Add "detectObeliskMotif()" to every existing Auto routine
-- [ ] AUTO-OBELISK: Create a NEW blue-far that goes to the correct line based on the obelisk motif instead of always going to the second line
-
-=== Gianna
-
+  7. TEST it
 - [ ] Separate the resetTurretAndPosition() from the resetYaw logic.
   1. Connect theRobot.resetPositionToZero to (gamepad1.dpadUp + options),
   2. Connect theRobot.resetTurret to (gamepad2.square + options)
@@ -35,7 +33,9 @@
 
 === Shrey
 
-- [ ] MEASURE shooter optimum RPMs over distances with new shooter structure at different ramp positions
+- [ ] AUTO: Add new theRobot.RunAutoIntake() method to Second thread in an auto routine
+  * remove manual intake on/off commands in the auto opMode, then test if works effectively, if it does make all autos do it
+  * be sure to put inside a check that run has been started (don't want auto intake running during init)
 - Tune built-in PIDF using dashboard to achieve faster recovery without overshoots
   * Run Manual - put notes in comments of SetShooterPIDFCoefficients()
     ** [x] RECORD velocity and power values for small triangle position

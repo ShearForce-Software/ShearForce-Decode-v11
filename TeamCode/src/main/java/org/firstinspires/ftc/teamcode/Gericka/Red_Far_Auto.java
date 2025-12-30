@@ -47,7 +47,7 @@ public class Red_Far_Auto extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        theRobot.SetInitalPinpointPosition(60, 12, 90);
+        theRobot.SetRoadrunnerInitialPosition(60, 12, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
@@ -116,6 +116,7 @@ public class Red_Far_Auto extends LinearOpMode {
         sleep(1000);
         // turn off turret power so doesn't twitch
         theRobot.TurnOffTurret();
+        theRobot.SetLaunchRampPosition(1.0);
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
@@ -168,12 +169,14 @@ public class Red_Far_Auto extends LinearOpMode {
 
         /* **** SHOOT BALL #4 **** */
         ShootBall(shooterSpeedRPM);
+        theRobot.SetIntakeMotor(true,true);
 
         /* **** SHOOT BALL #5 **** */
         ShootBall(shooterSpeedRPM);
 
         /* **** SHOOT BALL #6 **** */
         ShootBall(shooterSpeedRPM);
+        theRobot.SetIntakeMotor(true,true);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -189,13 +192,14 @@ public class Red_Far_Auto extends LinearOpMode {
 
             /* **** SHOOT BALL #7 **** */
             ShootBall(shooterSpeedRPM);
+            theRobot.SetIntakeMotor(true,true);
 
             /* **** SHOOT BALL #8 **** */
             ShootBall(shooterSpeedRPM);
 
             /* **** SHOOT BALL #9 **** */
             ShootBall(shooterSpeedRPM);
-
+            theRobot.SetIntakeMotor(true,true);
             // Drive to Parking spot
             turretTargetAngle = 0;
             theRobot.SetTurretRotationAngle(turretTargetAngle);

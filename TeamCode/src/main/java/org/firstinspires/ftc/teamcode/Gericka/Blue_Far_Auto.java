@@ -72,6 +72,12 @@ public class Blue_Far_Auto extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
+
+        // BLUE indexing (MeepMeep view):
+// FIRST  = far-right strip (closest to GOAL side)
+// SECOND = center strip
+// THIRD  = far-left strip
+
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(11.5, -30))
                 .strafeToConstantHeading(new Vector2d(11.5, -60))
