@@ -168,7 +168,12 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetFieldCentricMode(false);
                 }
             }
-
+            // ********  KICKSTAND CONTROLS ***********************
+            if (gamepad1.circleWasPressed()){
+                theRobot.setKickstandsUp();
+            } else if (gamepad1.crossWasPressed()){
+                theRobot.setKickstandsDown();
+            }
             /* *************************************************
              *************************************************
              * Arm Controls (gamepad2)

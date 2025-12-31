@@ -19,7 +19,7 @@
             <Servo name="light1" port="0" />
             <Servo name="light2" port="1" />
             <Servo name="light3" port="2" />
-
+            <Servo name="rightKickstand" port="5" />
         </LynxModule>
         <LynxModule name="Control Hub" port="173">
 
@@ -34,6 +34,7 @@
             <!-- Servos -->
             <Servo name="lifterServo"    port="0" />
             <Servo name="launchRampServo" port="1" />
+            <Servo name="leftKickstand" port="5" />
 
             <!-- <BHI260IMU name="imu" bus="0" /> -->
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />

@@ -75,6 +75,8 @@ public class Gericka_Hardware {
     private Servo light1;
     private Servo light2;
     private Servo light3;
+    private Servo rightKickstand;
+    private Servo leftKickstand;
 
     //pidf rotator variables
     public static double p = 0.004, i = 0, d = 0, f = 0.007; //0.0001 > p was .005
@@ -130,6 +132,8 @@ public class Gericka_Hardware {
     final double INDICATOR_VIOLET = 0.722;
     final double LAUNCH_RAMP_UP_POSITION = 1;
     final double LAUNCH_RAMP_DOWN_POSITION = 0;
+    final float MAX_KICKSTAND_POSITION = 0.3f;
+    final float MIN_KICKSTAND_POSITION = 0.0f;
     double indicatorLightValue = 0;
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
@@ -320,6 +324,10 @@ public class Gericka_Hardware {
         light2 = hardwareMap.get(Servo.class, "light2");
         light3 = hardwareMap.get(Servo.class, "light3");
 
+        rightKickstand = hardwareMap.get(Servo.class, "rightKickstand");
+        leftKickstand = hardwareMap.get(Servo.class, "leftKickstand");
+        leftKickstand.setDirection(Servo.Direction.REVERSE);
+        rightKickstand.setDirection(Servo.Direction.FORWARD);
         // ********** Color Sensors ********************
         ColorSensorRight = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
         ColorSensorLeft = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
@@ -400,7 +408,8 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
         opMode.telemetry.addData("Lifter Sensor Left  (inch)", ColorSensorLeft.getDistance(DistanceUnit.INCH));
         opMode.telemetry.addData("Lifter Sensor Right (inch)", ColorSensorRight.getDistance(DistanceUnit.INCH));
-
+        opMode.telemetry.addData("Right Kickstand Position: ", rightKickstand.getPosition());
+        opMode.telemetry.addData("Left Kickstand Position: ", leftKickstand.getPosition());
         //opMode.telemetry.addData("Light1", light1.getPosition());
         //opMode.telemetry.addData("Light2", light2.getPosition());
         //opMode.telemetry.addData("Light3", light3.getPosition());
@@ -1200,7 +1209,17 @@ public class Gericka_Hardware {
 
         SetLifterPosition(LIFTER_DOWN_POSITION);
     }
-
+    // *************************************************************************
+    //     Kickstand Functions
+    // *************************************************************************
+    public void setKickstandsDown(){
+       leftKickstand.setPosition(MAX_KICKSTAND_POSITION);
+       rightKickstand.setPosition(MAX_KICKSTAND_POSITION);
+    }
+    public void setKickstandsUp(){
+        leftKickstand.setPosition(MIN_KICKSTAND_POSITION);
+        rightKickstand.setPosition(MIN_KICKSTAND_POSITION);
+    }
     // *************************************************************************
     //      Drive Control Functions
     // *************************************************************************
