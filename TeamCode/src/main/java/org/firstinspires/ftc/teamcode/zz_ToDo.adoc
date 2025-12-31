@@ -15,7 +15,7 @@
 
 === Gianna
 
-- [ ] Parking Stand Servos Integration
+- [x] Parking Stand Servos Integration
   1. Add 2 new servos to config file (control hub, ports 2 and 3)
   2. Add the 2 new servos to Gericka_Hardware::Init() method
   3. Print out the current position of the 2 servos in the ShowTelemetry() routine
@@ -23,7 +23,7 @@
   5. Create a method in the HW class to set the servo to a position, limit to max and min
   6. Add 2 buttons on Gamepad1 to command the parking stand position to the two positions
   7. TEST it
-- [ ] Separate the resetTurretAndPosition() from the resetYaw logic.
+- [x] Separate the resetTurretAndPosition() from the resetYaw logic.
   1. Connect theRobot.resetPositionToZero to (gamepad1.dpadUp + options),
   2. Connect theRobot.resetTurret to (gamepad2.square + options)
   2. Make the resetTurretAndPosition() harder to accidentally do (gamepad1.triangle + share)
