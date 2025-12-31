@@ -131,8 +131,8 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
 
         DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(-12, 32))
-                .strafeToConstantHeading(new Vector2d(-12, 55))
+                .strafeToConstantHeading(new Vector2d(-15, 32))
+                .strafeToConstantHeading(new Vector2d(-15, 55))
                 .build();
 
         ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
@@ -145,11 +145,13 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
-        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-12, 55, Math.toRadians(90)))
+        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-15, 55, Math.toRadians(90)))
 
                 .strafeToConstantHeading(new Vector2d(-12, 32))
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
+
+
 
 
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
