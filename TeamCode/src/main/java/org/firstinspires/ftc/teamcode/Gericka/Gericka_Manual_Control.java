@@ -155,11 +155,19 @@ public class Gericka_Manual_Control extends LinearOpMode {
             if (gamepad1.triangleWasPressed()) {
                 if (gamepad1_optionsWasPressed || gamepad1.options) {
                     theRobot.SetFieldCentricMode(true);
-                } else {
+                } else if (gamepad1_shareWasPressed || gamepad1.share){
+                    theRobot.resetTurretAndPosition();
+                }
+                else {
                     theRobot.imu.resetYaw();
-                    if (resetTurretEnabled) {
+                   /* if (resetTurretEnabled) {
                         theRobot.resetTurretAndPosition();
-                    }
+                    }*/
+                }
+            }
+            if (gamepad1.dpadUpWasPressed()) {
+                if (gamepad1_optionsWasPressed || gamepad1.options) {
+                    theRobot.resetPositionToZero();
                 }
             }
             // robot centric drive mode
@@ -216,11 +224,13 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetIntakeMotor(true, true);
                     theRobot.SetAutoIntakeMode(false);
                 }
-            } else if (gamepad2.squareWasPressed() && !gamepad2_optionsWasPressed) {
+            } else if (gamepad2.squareWasPressed()) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
                     //Turn Turret counterclockwise
                     theRobot.SetTurretRotationAngle(theRobot.getTurretTargetAngle() - TURRET_ROTATION_ANGLE_INCREMENT);
                     theRobot.SetTurretAutoMode(false);
+                }else if (gamepad2_optionsWasPressed || gamepad2.options) {
+                    theRobot.resetTurret();
                 } else {
                     //Turn outtake system on
                     theRobot.SetIntakeMotor(true, false);
