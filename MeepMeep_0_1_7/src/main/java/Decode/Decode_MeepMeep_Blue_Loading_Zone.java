@@ -6,6 +6,8 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+import java.util.Vector;
+
 public class Decode_MeepMeep_Blue_Loading_Zone {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
@@ -19,8 +21,10 @@ public class Decode_MeepMeep_Blue_Loading_Zone {
                 // shoot 3 balls
                 .waitSeconds(2)
                 //to launch zone
-                .strafeToConstantHeading(new Vector2d(60,-59))
-                .strafeToConstantHeading(new Vector2d(60,-12))
+                .strafeToConstantHeading(new Vector2d(48,-12))
+                .strafeToLinearHeading(new Vector2d(40,-62),Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(62,-62),Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(48,-12),Math.toRadians(-90))
                 //shoot 3 balls
                 .waitSeconds(2)
                 // get line 2

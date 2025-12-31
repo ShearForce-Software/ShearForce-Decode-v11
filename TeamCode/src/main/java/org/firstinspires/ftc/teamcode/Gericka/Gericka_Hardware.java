@@ -157,7 +157,7 @@ public class Gericka_Hardware {
             int id = readObeliskId();
 
             if(id != -1){
-                detectedObeliskId=id;
+                detectedObeliskId = id;
             }
         }
         else{

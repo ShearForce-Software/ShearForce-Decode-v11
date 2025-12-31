@@ -22,6 +22,11 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
     Pose2d startPose;
 
     // Trajectories
+    Action DriveToLoadingZoneAndBack;
+    Action ReleaseGateFromFirstMark;
+    Action ReleaseGateFromSecondMark;
+    Action ReleaseGateFromThirdMark;
+    Action GateToSmallTriangle;
     Action DriveToLoadingZone;
     Action DriveLoadingZoneToSmallTriangle;
     Action DriveToSecondMark;
@@ -29,9 +34,8 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
     Action DriveSecondMarkToSmallTriangle;
     Action DriveToFirstMark;
     Action DriveFirstMarkToSmallTriangle;
-    Action DriveOutofLaunchZone;
+    Action DriveOutOfLaunchZone;
     Action DriveToThirdMark;
-    Action DriveThirdMarkToSmallTriangle;
     int lifterUpSleepTime = 500;
     int lifterDownSleepTime = 600;
 
@@ -65,17 +69,39 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
 
         // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
 
+        ReleaseGateFromFirstMark = drive.actionBuilder(new Pose2d(34.75, -55, Math.toRadians(-90)))
+                .strafeToSplineHeading(new Vector2d(0, -34),Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(0,-58))
+                .strafeToSplineHeading(new Vector2d(0, -48),Math.toRadians(-90))
+                .build();
+
+        ReleaseGateFromSecondMark = drive.actionBuilder(new Pose2d(11.5, -55, Math.toRadians(-90)))
+                .strafeToSplineHeading(new Vector2d(0, -34),Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(0,-58))
+                .strafeToSplineHeading(new Vector2d(0, -48),Math.toRadians(-90))
+                .build();
+
+        ReleaseGateFromThirdMark = drive.actionBuilder(new Pose2d(-11.75, -55, Math.toRadians(-90)))
+                .strafeToSplineHeading(new Vector2d(0, -34),Math.toRadians(0))
+                .strafeToConstantHeading(new Vector2d(0,-58))
+                .strafeToSplineHeading(new Vector2d(0, -48),Math.toRadians(-90))
+                .build();
+
+        GateToSmallTriangle = drive.actionBuilder(new Pose2d(0, -48, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(48,-12))
+                .build();
+
         DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveToLoadingZone = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(60, -59))
+        DriveToLoadingZoneAndBack = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .strafeToLinearHeading(new Vector2d(48,-50),Math.toRadians(-25))
+                .strafeToLinearHeading(new Vector2d(41,-59),Math.toRadians(-25))
+                .strafeToLinearHeading(new Vector2d(60,-62),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(48,-12),Math.toRadians(-90))
                 .build();
 
-        DriveLoadingZoneToSmallTriangle = drive.actionBuilder(new Pose2d(60,-59, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(60,-12))
-                .build();
 
         DriveToThirdMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(-11.75, -30))
@@ -105,7 +131,7 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+        DriveOutOfLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .build();
 
@@ -139,7 +165,7 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
         sleep(1000);
         // turn off turret power so doesn't twitch
         theRobot.TurnOffTurret();
-
+        theRobot.SetLaunchRampPosition(1.0);
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
         // ***************************************************
@@ -155,8 +181,6 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
         double shooterSpeedRPM = 3200;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-
-        //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
         // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = 115.0;
@@ -178,13 +202,10 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
         /* **** SHOOT BALL #3 **** */
         ShootBall(shooterSpeedRPM);
         //drive to loading zone, get balls, and return to launch zone
+        theRobot.SetIntakeMotor(true,true);
         Actions.runBlocking(
                 new SequentialAction(
-                        // Drive to the middle line and turn the intake on
-                        new ParallelAction(DriveToLoadingZone, setIntakeOn()),
-                        new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
-                        // Return to launch zone and turn intake off
-                        new ParallelAction(DriveLoadingZoneToSmallTriangle, setIntakeOff())
+                DriveToLoadingZoneAndBack, setIntakeOff()
                 ));
         // Shoot 3 balls
 
@@ -199,35 +220,46 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
 
         // Drive to middle line, get balls, and return to launch zone
         if (obeliskID == 21) {
+
+            setIntakeOn();
             Actions.runBlocking(
                     new SequentialAction(
                             // Drive to the middle line and turn the intake on
-                            new ParallelAction(DriveToFirstMark, setIntakeOn()),
+                            DriveToFirstMark,
                             new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
                             // Return to launch zone and turn intake off
-                            new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff())
+                            setIntakeOff(),
+                            ReleaseGateFromFirstMark,
+                            GateToSmallTriangle
                     ));
         }
         else if (obeliskID == 22) {
+            setIntakeOn();
             Actions.runBlocking(
                     new SequentialAction(
                             // Drive to the middle line and turn the intake on
-                            new ParallelAction(DriveToSecondMark, setIntakeOn()),
+                            DriveToSecondMark,
                             new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
                             // Return to launch zone and turn intake off
-                            new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
+                            setIntakeOff(),
+                            ReleaseGateFromSecondMark,
+                            GateToSmallTriangle
                     ));
         }
         else if (obeliskID == 23) {
+            setIntakeOn();
             Actions.runBlocking(
                     new SequentialAction(
                             // Drive to the middle line and turn the intake on
-                            new ParallelAction(DriveToThirdMark, setIntakeOn()),
+                            DriveToThirdMark,
                             new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
                             // Return to launch zone and turn intake off
-                            new ParallelAction(DriveThirdMarkToSmallTriangle, setIntakeOff())
+                            setIntakeOff(),
+                            ReleaseGateFromThirdMark,
+                            GateToSmallTriangle
                     ));
         }
+
         // Shoot 3 balls
 
         /* **** SHOOT BALL #7 **** */
