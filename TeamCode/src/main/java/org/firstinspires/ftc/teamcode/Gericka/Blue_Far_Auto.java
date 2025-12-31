@@ -29,8 +29,8 @@ public class Blue_Far_Auto extends LinearOpMode {
     Action DriveToFirstMark;
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
-    int lifterUpSleepTime = 500;
-    int lifterDownSleepTime = 600;
+    int lifterUpSleepTime = 500; //300 works very well, can probably go lower to 200
+    int lifterDownSleepTime = 600; //400 works well, can probably go lower to 300 maybe 200
 
     public void runOpMode() {
         startPose = new Pose2d(60, -12, Math.toRadians(-90));
@@ -97,6 +97,7 @@ public class Blue_Far_Auto extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
+
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .build();
@@ -139,21 +140,27 @@ public class Blue_Far_Auto extends LinearOpMode {
         // ********* STARTED ********************************
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
-
+        turretTargetAngle = 115.0;
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true,true);
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3200;
+        double shooterSpeedRPM = 3400;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
 
         // Turn Turret towards target, can leave turret there the whole time
-        turretTargetAngle = 115.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+
+
 
         // drive to the start triangle
+        drive.updatePoseEstimate();
+
+
+
+
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition, setIntakeOff()));
         shooterSpeedRPM = 3400;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
@@ -170,11 +177,12 @@ public class Blue_Far_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
 
         // Drive to middle line, get balls, and return to launch zone
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to the middle line and turn the intake on
                         new ParallelAction(DriveToSecondMark, setIntakeOn()),
-                        new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
+                        //new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
                          // Return to launch zone and turn intake off
                         new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
                         ));
@@ -191,16 +199,18 @@ public class Blue_Far_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
         theRobot.SetIntakeMotor(true,true);
 
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to closest line and turn intake on and lower lifter
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
+                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown())
+                        //new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
 
                 ));
 
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
-        if (Gericka_Hardware.autoTimeLeft >= 8) {
+        if (Gericka_Hardware.autoTimeLeft >= 1) {
+            drive.updatePoseEstimate();
             Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
 
             /* **** SHOOT BALL #7 **** */
@@ -216,6 +226,7 @@ public class Blue_Far_Auto extends LinearOpMode {
             // Drive to Parking spot
             turretTargetAngle = 0;
             theRobot.SetTurretRotationAngle(turretTargetAngle);
+            drive.updatePoseEstimate();
             Actions.runBlocking(DriveOutofLaunchZone);
         }
 
@@ -246,7 +257,6 @@ public class Blue_Far_Auto extends LinearOpMode {
         while ((getRuntime() < 29) && (!isStopRequested() )){
             sleep(20);
         }
-
 
     }
 
