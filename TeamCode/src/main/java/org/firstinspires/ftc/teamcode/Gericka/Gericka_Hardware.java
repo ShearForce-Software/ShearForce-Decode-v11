@@ -54,7 +54,7 @@ public class Gericka_Hardware {
     public double imuOffsetInDegrees = 0.0;
     double imuPosition = 0;
 
-    Gericka_MecanumDrive drive;
+    public Gericka_MecanumDrive drive;
 
     LinearOpMode opMode;
     public static double autoTimeLeft = 0.0;
@@ -98,7 +98,7 @@ public class Gericka_Hardware {
     private boolean autoShooterMode = false;
     private boolean useRoadrunnerForTurretAnglesEnabled = true;
     private boolean updateRoadrunnerFromWebcamEnabled = false;
-    private boolean autoLaunchRampMode = true;
+    private boolean autoHoodMode = true;
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
     private double shooterTargetRPM = 0.0;
@@ -389,7 +389,7 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Auto Turret Mode: ", autoTurretMode);
         opMode.telemetry.addData("Auto Lifter Mode: ", autoLifterMode);
         opMode.telemetry.addData("Auto Intake Mode: ", autoIntakeMode);
-        opMode.telemetry.addData("Auto LaunchRamp Mode: ", GetAutoLaunchRampMode());
+        opMode.telemetry.addData("Auto LaunchRamp Mode: ", GetAutoHoodMode());
         opMode.telemetry.addData("Use Only Webcam for Distance: ", GetUseOnlyWebcamForDistance());
         opMode.telemetry.addData("Use roadrunner for turret angles: ", GetUseRoadrunnerForTurretAnglesEnabled());
 
@@ -466,7 +466,6 @@ public class Gericka_Hardware {
 
     public void ShowRoadrunnerPosition() {
         if (drive != null) {
-            drive.updatePoseEstimate();
             opMode.telemetry.addData("Roadrunner Position(inches): ", "x: %.1f, y: %.1f", drive.localizer.getPose().position.x, drive.localizer.getPose().position.y);
             opMode.telemetry.addData("Roadrunner Heading(deg): ", Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             opMode.telemetry.addData("roadrunnerUpdatesFromWebcam: ", roadrunnerUpdatesFromWebcam);
@@ -475,13 +474,6 @@ public class Gericka_Hardware {
     public void SetRoadrunnerInitialPosition(double xPositionInches, double yPositionInches, double headingDegrees){
         startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
     }
-    public Pose2D GetRoadrunnerAbsolutePosition(Pose2D pos){
-        double AbsoluteX = drive.localizer.getPose().position.x + pos.getX(DistanceUnit.INCH);
-        double AbsoluteY = drive.localizer.getPose().position.y + pos.getY(DistanceUnit.INCH);
-        double AbsoluteAngle = Math.toDegrees(drive.localizer.getPose().heading.toDouble()) + pos.getHeading(AngleUnit.DEGREES);
-        return new Pose2D(DistanceUnit.INCH, AbsoluteX, AbsoluteY,AngleUnit.DEGREES, AbsoluteAngle);
-    }
-
 
     // *************************************************************************
     //      Pinpoint Utility Functions
@@ -800,7 +792,7 @@ public class Gericka_Hardware {
 
         if (getAprilTagVisible(currentTargetId)){
             double distance = getDistanceToAprilTag(currentTargetId);
-            if (GetAutoLaunchRampMode()) {
+            if (GetAutoHoodMode()) {
                 SetLaunchRampPosition(CalculateOptimumLaunchRampPosition(distance));
             }
             SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distance));
@@ -1012,10 +1004,12 @@ public class Gericka_Hardware {
     }
     public void SetShooterRPMFromRoadrunner(){
 
+        drive.updatePoseEstimate();
+
         CalculateDistanceToTarget();
 
         if (!GetUseOnlyWebcamForDistance() && GetAutoShooterMode()) {
-            if (GetAutoLaunchRampMode()) {
+            if (GetAutoHoodMode()) {
                 SetLaunchRampPosition(CalculateOptimumLaunchRampPosition(distanceToTarget));
             }
             SetShooterMotorToSpecificRPM(CalculateOptimumShooterRPM(distanceToTarget));
@@ -1113,6 +1107,7 @@ public class Gericka_Hardware {
         //}
         // else can't see the april tag, try using the roadrunner position and robot heading to calculate the turret angle
         if (useRoadrunnerForTurretAnglesEnabled) {
+            drive.updatePoseEstimate();
             // calculate the bearing from the front of the robot to the april tag
             bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, targetX, targetY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             // convert that bearing into a turret angle (turret zero position points the opposite direction of the robot)
@@ -1173,8 +1168,8 @@ public class Gericka_Hardware {
     public double GetLaunchRampPosition(){
         return launchRampServo.getPosition();
     }
-    public boolean GetAutoLaunchRampMode(){return autoLaunchRampMode;}
-    public void SetAutoLaunchRampMode(boolean value) {autoLaunchRampMode = value;}
+    public boolean GetAutoHoodMode(){return autoHoodMode;}
+    public void SetAutoHoodMode(boolean value) { autoHoodMode = value;}
     // *************************************************************************
     //      Lifter Arm Functions
     // *************************************************************************

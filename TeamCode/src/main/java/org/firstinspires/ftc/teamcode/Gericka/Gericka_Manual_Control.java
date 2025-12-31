@@ -67,7 +67,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         // theRobot.SetShooterPIDF_Enabled(false);
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
-        theRobot.SetAutoLaunchRampMode(true);
+        theRobot.SetAutoHoodMode(true);
 
         Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
         Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
@@ -117,6 +117,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
         while (opModeIsActive()) {
             theRobot.EndgameBuzzer();
+            theRobot.drive.updatePoseEstimate();
             /*
             small triangle
             velocity:1620.000 L, 1600.000 R
@@ -270,23 +271,22 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
                     theRobot.SetShooterMotorToSpecificRPM(3500);
-                } else {
+                }
+                else if (gamepad2_shareWasPressed || gamepad2.share){
+                    theRobot.SetAutoHoodMode(!theRobot.GetAutoHoodMode());
+                }
+                else {
                     theRobot.SetAutoShooterMode(!theRobot.GetAutoShooterMode());
                 }
             }
-            // ********   LAUNCH RAMP CONTROLS ***********************
+            // ********   Manual LAUNCH RAMP CONTROLS ***********************
             else if (gamepad2.left_stick_y > 0.1){
                 theRobot.SetLaunchRampPosition(theRobot.GetLaunchRampPosition() - 0.1);
-                theRobot.SetAutoLaunchRampMode(false);
+                theRobot.SetAutoHoodMode(false);
             }
             else if (gamepad2.left_stick_y < -0.1) {
                 theRobot.SetLaunchRampPosition(theRobot.GetLaunchRampPosition() + 0.1);
-                theRobot.SetAutoLaunchRampMode(false);
-            }
-            else if (gamepad2.dpadDownWasPressed()){
-                if (gamepad2_shareWasPressed || gamepad2.share){
-                    theRobot.SetAutoLaunchRampMode(!theRobot.GetAutoLaunchRampMode());
-                }
+                theRobot.SetAutoHoodMode(false);
             }
 
             // ********   LIFTER CONTROLS ***********************

@@ -29,8 +29,8 @@ public class Red_Far_Auto extends LinearOpMode {
     Action DriveToFirstMark;
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
-    int lifterUpSleepTime = 500;
-    int lifterDownSleepTime = 600;
+    int lifterUpSleepTime = 500; //300 works very well, can probably go lower to 200
+    int lifterDownSleepTime = 600; //400 works well, can probably go lower to 300 maybe 200
 
     public void runOpMode() {
         startPose = new Pose2d(60, 12, Math.toRadians(90));
@@ -45,6 +45,15 @@ public class Red_Far_Auto extends LinearOpMode {
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
 
+        // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
+        double turretTargetAngle = -91.0;
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetLaunchRampPosition(1.0);
+
+        sleep(3000); // allow turret to reach position
+        // turn off turret power so it doesn't twitch during init
+        theRobot.TurnOffTurret();
+
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
         theRobot.SetRoadrunnerInitialPosition(60, 12, 90);
@@ -53,8 +62,6 @@ public class Red_Far_Auto extends LinearOpMode {
 
         // set lifter half up (so can get 3 ball loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
-
-        //control.imuOffsetInDegrees = 270; // Math.toDegrees(startPose.heading.toDouble());
 
         // ***************************************************
         // ****  Define Trajectories    **********************
@@ -65,19 +72,23 @@ public class Red_Far_Auto extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48,12))
                 .build();
 
+// FIRST  = far-right strip (closest to GOAL side)
+// SECOND = center strip
+// THIRD  = far-left strip
+
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(11.5, 30))
-                .strafeToConstantHeading(new Vector2d(11.5, 57))
+                .strafeToConstantHeading(new Vector2d(11.5, 60))
                 .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, 57, Math.toRadians(90)))
+        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12))
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(34.75, 30))
-                .strafeToConstantHeading(new Vector2d(34.75, 57))
+                .strafeToConstantHeading(new Vector2d(34.75, 60))
                 .build();
 
         DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, 57, Math.toRadians(90)))
@@ -85,7 +96,7 @@ public class Red_Far_Auto extends LinearOpMode {
                 .build();
 
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(35, 12))
+                .strafeToConstantHeading(new Vector2d(20, 12))
                 .build();
 
         theRobot.SetAutoLifterMode(true);
@@ -110,13 +121,6 @@ public class Red_Far_Auto extends LinearOpMode {
         });
         SecondaryThread.start();
 
-        // turn turret to face the obelisk
-        double turretTargetAngle = -91.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
-        sleep(1000);
-        // turn off turret power so doesn't twitch
-        theRobot.TurnOffTurret();
-        theRobot.SetLaunchRampPosition(1.0);
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
@@ -127,23 +131,22 @@ public class Red_Far_Auto extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
-        // turn on intake to suck in any stuck balls
-        theRobot.SetIntakeMotor(true,true);
-
-        // set shooter speed to small triangle speed, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3200;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-
-        //TODO Read the obelisk apriltag, display result in telemetry (we don't really need it yet, but should start assessing our ability to get it)
-
         // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = -115.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
 
-        // drive to the start triangle
-        Actions.runBlocking(new SequentialAction(DriveToShootingPosition, setIntakeOff()));
-        shooterSpeedRPM = 3400;
+        // turn on intake to suck in any stuck balls
+        theRobot.SetIntakeMotor(true,true);
+
+        // set shooter speed to small triangle speed, can just leave at this speed the whole time
+        double shooterSpeedRPM = 3400;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        // drive to the start triangle
+        drive.updatePoseEstimate();
+        Actions.runBlocking(new SequentialAction(DriveToShootingPosition, setIntakeOff()));
+        drive.updatePoseEstimate();
+
         /* **** SHOOT BALL #1 **** */
         ShootBall(shooterSpeedRPM);
 
@@ -157,15 +160,16 @@ public class Red_Far_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
 
         // Drive to middle line, get balls, and return to launch zone
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to the middle line and turn the intake on
                         new ParallelAction(DriveToSecondMark, setIntakeOn()),
-                        new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
+                        //new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
                          // Return to launch zone and turn intake off
                         new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
                         ));
-                        // Shoot 3 balls
+        drive.updatePoseEstimate();
 
         /* **** SHOOT BALL #4 **** */
         ShootBall(shooterSpeedRPM);
@@ -178,17 +182,21 @@ public class Red_Far_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
         theRobot.SetIntakeMotor(true,true);
 
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to closest line and turn intake on and lower lifter
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
+                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown())
+                        //new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
 
                 ));
+        drive.updatePoseEstimate();
 
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
-        if (Gericka_Hardware.autoTimeLeft >= 8) {
+        if (Gericka_Hardware.autoTimeLeft >= 5) {
+            drive.updatePoseEstimate();
             Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
+            drive.updatePoseEstimate();
 
             /* **** SHOOT BALL #7 **** */
             ShootBall(shooterSpeedRPM);
@@ -203,9 +211,10 @@ public class Red_Far_Auto extends LinearOpMode {
             // Drive to Parking spot
             turretTargetAngle = 0;
             theRobot.SetTurretRotationAngle(turretTargetAngle);
+            drive.updatePoseEstimate();
             Actions.runBlocking(DriveOutofLaunchZone);
+            drive.updatePoseEstimate();
         }
-
 
         // store final exact position in blackboard, so can initialize absolute pinpoint with that position
         //control.pinpoint.update();
@@ -232,7 +241,6 @@ public class Red_Far_Auto extends LinearOpMode {
         while ((getRuntime() < 29) && (!isStopRequested() )){
             sleep(20);
         }
-
 
     }
 
@@ -288,26 +296,26 @@ public class Red_Far_Auto extends LinearOpMode {
             theRobot.SetIntakeMotor(true, true);
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+
+    public Action setIntakeOff() {
+        return new setIntakeOff();
+    }
+
+    public class setIntakeOff implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
             }
+            theRobot.SetIntakeMotor(false, false);
+            packet.put("lock purple pixel", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
-
-        public Action setIntakeOff() {
-            return new setIntakeOff();
-        }
-
-        public class setIntakeOff implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-                    initialized = true;
-                }
-                theRobot.SetIntakeMotor(false, false);
-                packet.put("lock purple pixel", 0);
-                return false;  // returning true means not done, and will be called again.  False means action is completely done
-            }
-        }
+    }
 
     public class SetLifterUp implements Action {
         private boolean initialized = false;
