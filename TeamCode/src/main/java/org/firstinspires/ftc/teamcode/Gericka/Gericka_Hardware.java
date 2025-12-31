@@ -109,8 +109,8 @@ public class Gericka_Hardware {
     public static double shooterF = 0.0;
     final float MAX_SHOOTER_RPM = 4500;
     final float MIN_SHOOTER_RPM = 0;
-    final float MAX_TURRET_ANGLE = 117;
-    final float MIN_TURRET_ANGLE = -179;
+    final double MAX_TURRET_ANGLE = 117;
+    final double MIN_TURRET_ANGLE = -179;
     final double YELLOW_JACKET_19_1_TICKS = 537.7; // 19.2:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_1_1_TICKS = 28.0; // 1:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_3_1_TICKS = 103.8; // 3.7:1 - ticks per motor shaft revolution
