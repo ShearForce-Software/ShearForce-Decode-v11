@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Gericka_Manual_Control extends LinearOpMode {
     Gericka_Hardware theRobot;
     //public int turretTrackingID = 24; // default to Red
-    final float TURRET_ROTATION_ANGLE_INCREMENT = 10.0f;
+    final float TURRET_ROTATION_ANGLE_INCREMENT = 5.0f;
     final double shooterSpeedRPMIncrement = 50;
     boolean resetTurretEnabled = true;
 
@@ -108,6 +108,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
         waitForStart();
         resetRuntime();
+        theRobot.setKickstandsUp();
 
 
         boolean gamepad1_optionsWasPressed = false;
@@ -249,8 +250,15 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
             // ********   SHOOTER MOTOR CONTROLS ***********************
             else if (gamepad2.dpadUpWasPressed()) {
+                if (gamepad2_optionsWasPressed || gamepad2.options)
+                {
+                    theRobot.SetTurretRotationAngle(0.0);
+                    theRobot.SetTurretAutoMode(false);
+                }
+                else {
                 theRobot.SetAutoShooterMode(false);
                 theRobot.SetShooterMotorToSpecificRPM(0.0);
+                }
             } else if (gamepad2.dpadLeftWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);

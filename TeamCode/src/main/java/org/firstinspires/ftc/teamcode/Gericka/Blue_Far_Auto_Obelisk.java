@@ -35,9 +35,9 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
     Action ReturnFromSecondMark;
     Action ReturnFromThirdMark;
 
-    Action ReturnFromThirdMarkSecond;
-    Action ReturnFromSecondMarkSecond;
-    Action ReturnFromFirstMarkSecond;
+    //Action ReturnFromThirdMarkSecond;
+    //Action ReturnFromSecondMarkSecond;
+    //Action ReturnFromFirstMarkSecond;
 
 
 
@@ -155,27 +155,22 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
-
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .build();
 
-        ReturnFromFirstMarkSecond = drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
+//
+        // ReturnFromSecondMarkSecond = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
                 // Return from THIRD (far-left)
-                .strafeToConstantHeading(new Vector2d(35, -12))
-                .build();
+        //        .strafeToConstantHeading(new Vector2d(20, -12))
+        //        .strafeToConstantHeading(new Vector2d(35, -12))
+        //        .build();
 
-        ReturnFromSecondMarkSecond = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+        //ReturnFromThirdMarkSecond = drive.actionBuilder(new Pose2d(-15, -55, Math.toRadians(-90)))
                 // Return from THIRD (far-left)
-                .strafeToConstantHeading(new Vector2d(20, -12))
-                .strafeToConstantHeading(new Vector2d(35, -12))
-                .build();
-
-        ReturnFromThirdMarkSecond = drive.actionBuilder(new Pose2d(-15, -55, Math.toRadians(-90)))
-                // Return from THIRD (far-left)
-                .strafeToConstantHeading(new Vector2d(-12, -32))
-                .strafeToConstantHeading(new Vector2d(35, -12))
-                .build();
+        //        .strafeToConstantHeading(new Vector2d(-12, -32))
+        //        .strafeToConstantHeading(new Vector2d(35, -12))
+        //        .build();
 
         theRobot.SetAutoLifterMode(true);
 
@@ -246,7 +241,7 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
         Action pickLineAction = DriveToSecondMark;
         Action returnFromPickedLineAction = ReturnFromSecondMark;
         Action repeatPickLineAction = DriveToFirstMark;
-        Action returnFromRepeatPickedLineAction = ReturnFromFirstMarkSecond;
+        Action returnFromRepeatPickedLineAction = ReturnFromFirstMark;
         Action driveOutOfLaunch;
 
         switch(line){
@@ -273,7 +268,10 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
                 break;
             default:
                 pickLineAction = DriveToFirstMark;
-                returnFromPickedLineAction=ReturnFromFirstMarkSecond;
+                returnFromPickedLineAction=ReturnFromFirstMark;
+                repeatPickLineAction = DriveToSecondMark;
+                returnFromRepeatPickedLineAction = ReturnFromSecondMark;
+                driveOutOfLaunch = DriveOutofLaunchZone;
                 break;
         }
 

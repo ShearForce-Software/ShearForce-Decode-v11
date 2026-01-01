@@ -85,8 +85,7 @@ public class Gericka_Hardware {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
-    final double INTAKE_POWER = 0.6;
-
+    final double INTAKE_POWER = 0.65;
     public final float LIFTER_UP_POSITION = 0.35f;
     public final float LIFTER_MID_POSITION = 0.25f;
     public final float LIFTER_DOWN_POSITION = 0.05f;
@@ -177,8 +176,7 @@ public class Gericka_Hardware {
         detectedObeliskId = -1; // here we will reset the latched value
         long startTime = System.currentTimeMillis();
 
-        while(opMode.opModeInInit()
-            && !opMode.isStopRequested() && detectedObeliskId == -1 && System.currentTimeMillis() - startTime < timeoutMs){
+        while(!opMode.isStopRequested() && detectedObeliskId == -1 && System.currentTimeMillis() - startTime < timeoutMs){
             updateObeliskFromCamera(); // uses the method here
             ShowTelemetry(); // ask if this logic is fine????
             opMode.sleep(20); // i don't want to spam our telemetry
@@ -326,8 +324,8 @@ public class Gericka_Hardware {
 
         rightKickstand = hardwareMap.get(Servo.class, "rightKickstand");
         leftKickstand = hardwareMap.get(Servo.class, "leftKickstand");
-        leftKickstand.setDirection(Servo.Direction.REVERSE);
-        rightKickstand.setDirection(Servo.Direction.FORWARD);
+        leftKickstand.setDirection(Servo.Direction.FORWARD);
+        rightKickstand.setDirection(Servo.Direction.REVERSE);
         // ********** Color Sensors ********************
         ColorSensorRight = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
         ColorSensorLeft = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
@@ -696,10 +694,22 @@ public class Gericka_Hardware {
     public void SetIndicatorLights() {
         // set light1 to red or blue based on alliance
         if (allianceColorString.equals("RED")) {
-            light1.setPosition(INDICATOR_RED);
+            if (autoTurretMode) {
+                light1.setPosition(INDICATOR_RED);
+            }
+            else {
+                light1.setPosition(INDICATOR_BLACK);
+            }
         }
         else if (allianceColorString.equals("BLUE")) {
-            light1.setPosition(INDICATOR_BLUE);
+
+            if (autoTurretMode) {
+                light1.setPosition(INDICATOR_BLUE);
+            }
+            else {
+                light1.setPosition(INDICATOR_BLACK);
+            }
+
         }
         else {
             light1.setPosition(INDICATOR_VIOLET);
@@ -1131,6 +1141,8 @@ public class Gericka_Hardware {
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretTargetAngle = 0.0;
         turretMotor.setTargetPosition(0);
+        SpecialSleep(50);
+        SetTurretRotationAngle(0.0);
     }
 
     public void resetPositionToZero() {
