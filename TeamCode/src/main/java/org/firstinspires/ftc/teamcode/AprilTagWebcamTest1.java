@@ -72,6 +72,7 @@ The Camera (Logitech) is limited by its field of view. When the angle was adjust
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
+@Disabled
 @TeleOp(name = "Concept: AprilTageWebcamTest1", group = "Concept")
 public class AprilTagWebcamTest1 extends LinearOpMode {
 

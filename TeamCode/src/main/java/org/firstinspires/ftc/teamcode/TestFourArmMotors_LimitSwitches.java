@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+@Disabled
 @TeleOp(name="Test FourArmMotors_LimitSwitches", group="Test")
 //@Disabled
 public class TestFourArmMotors_LimitSwitches extends LinearOpMode {

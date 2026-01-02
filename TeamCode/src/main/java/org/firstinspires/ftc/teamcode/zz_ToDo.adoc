@@ -4,13 +4,14 @@
 
 === Akshay
 
-- [ ] Test Red Far Obelisk for accuracy of shots
 - [ ] Test and update the 2 close autos, probably need to set ramp and speed to align with new shooter table
 
 === Gianna
 
 - [ ] Make manual turret controls work with gamepad2.right_stickX (so easier to manually fix turret)
   * Can leave existing controls in place too, make it an OR condition
+- [ ] Change RunAutoIntake() to use a special sleep instead of a regular sleep, test it
+- [ ] Add beambreak3 to lifter logic
 
 === Shrey
 
@@ -40,9 +41,11 @@
 === Tong
 
 - [ ] Get the turret limits working correctly
+- [ ] Experiment with uncommenting the "use april tag bearing" portion of adjustTurretToTargetAprilTag() to make it correct the bearing faster when in error state
 
 == Next Level Stuff
 
+- [ ] Create a common blackboard position storage routine in Hardware class, that the auto methods can call after every move, so if crashes on next move, the position is maybe correct for manual usage
 - [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
 - [ ] Develop lots of autonomous options and test them
 - [ ] Increase speed of robot in autonomous

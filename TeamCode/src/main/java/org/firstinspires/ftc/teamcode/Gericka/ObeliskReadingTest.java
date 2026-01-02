@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Gericka;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
+@Disabled
 @Autonomous(name = "Gericka Obelisk Reader", group = "Gericka")
 public class ObeliskReadingTest extends LinearOpMode {
 

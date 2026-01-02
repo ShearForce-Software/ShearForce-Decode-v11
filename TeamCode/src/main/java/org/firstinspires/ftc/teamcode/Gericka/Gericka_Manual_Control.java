@@ -25,16 +25,10 @@ public class Gericka_Manual_Control extends LinearOpMode {
         if (Objects.equals(allianceColor, "RED")) {
             theRobot.Init(this.hardwareMap, "RED");
             theRobot.SetAprilTagTargetId(24);
-            //turretTrackingID = 24;
-            theRobot.targetX = -72;
-            theRobot.targetY = 72;
             defaultHeadingDegrees = 90.0;
         } else {
             theRobot.Init(this.hardwareMap, "BLUE");
             theRobot.SetAprilTagTargetId(20);
-            //turretTrackingID = 20;
-            theRobot.targetX = -72;
-            theRobot.targetY = -72;
             defaultHeadingDegrees = -90.0;
         }
 
@@ -323,7 +317,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             theRobot.CalculateDistanceToTarget(); // always call this, even if not using it so that we can get the telemetry data
             if (theRobot.GetAutoShooterMode()) {
                 if (theRobot.GetUseOnlyWebcamForDistance()) {
-                    theRobot.SetShooterRPMFromWebCam(theRobot.currentAprilTargetId);
+                    theRobot.SetShooterRPMFromWebCam();
                 } else {
                     theRobot.SetShooterRPMFromRoadrunner();
                 }

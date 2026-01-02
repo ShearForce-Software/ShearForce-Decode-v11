@@ -11,9 +11,11 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
+@Disabled
 @Autonomous(name="Blue Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 public class Blue_Far_Auto extends LinearOpMode {
