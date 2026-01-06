@@ -201,6 +201,12 @@ public class Gericka_Hardware {
             return 23;
         }
 
+        if (getAprilTagVisible(23) && getAprilTagVisible(20)) {
+            detectedTagId = 23;
+            return 23;
+        }
+
+
         // cannot see anythign
         detectedTagId = -1;
         return -1;
@@ -1068,7 +1074,7 @@ public class Gericka_Hardware {
             }
             else if (beam1IsBroken)
             {
-                if (beam2IsBroken) {
+                if (beam2IsBroken && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
                     intakeMotor.setPower(0);
                 } else {
                     intakeMotor.setPower(INTAKE_POWER);
@@ -1207,11 +1213,11 @@ public class Gericka_Hardware {
     public void SetAutoLifterMode(boolean value) { autoLifterMode = value; }
     public void RunAutoLifter() {
         if (autoLifterMode) {
-            if (((lifterServo.getPosition() <= (LIFTER_DOWN_POSITION + 0.06)))) {
-                if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0))
+            if (lifterServo.getPosition() <= (LIFTER_DOWN_POSITION + 0.06f)) {
+                if ((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0)
                         && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.2)) {
                     lifterServo.setPosition(LIFTER_MID_POSITION);
-                } else if (((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0))
+                } else if ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0)
                         && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.2)) {
                     lifterServo.setPosition(LIFTER_MID_POSITION);
                 }
