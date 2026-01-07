@@ -212,6 +212,10 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
         //}
         telemetry.addData("Final Obelisk ID", obeliskId);
 
+        theRobot.SetShooterPIDF_Enabled(true);
+        Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
+        theRobot.SetShooterPIDFCoefficients();
+
         // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = -115.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);

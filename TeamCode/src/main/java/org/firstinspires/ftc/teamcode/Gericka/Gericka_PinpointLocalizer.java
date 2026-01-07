@@ -57,7 +57,7 @@ public final class Gericka_PinpointLocalizer implements Localizer {
 
         // reverse encoder directions if needed
         initialParDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
-        initialPerpDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD; //TODO double check this value, initial calibration had FORWARD here, but Gericka_Hardware shows it as REVERSED
+        initialPerpDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED; //TODO double check this value, initial calibration had FORWARD here, but Gericka_Hardware shows it as REVERSED
 
         driver.setEncoderDirections(initialParDirection, initialPerpDirection);
 

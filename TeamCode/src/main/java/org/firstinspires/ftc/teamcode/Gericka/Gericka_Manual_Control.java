@@ -59,7 +59,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetTurretAutoMode(true);   // auto adjusts the turret rotation angle to align with the target april tag
         theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
         theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
-        // theRobot.SetShooterPIDF_Enabled(false);
+        theRobot.SetShooterPIDF_Enabled(true);
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
         theRobot.SetAutoHoodMode(true);
 
@@ -127,6 +127,18 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
             NEW Values
             PIDF: 0p, 2i, 70d, 15f
+
+            small triangle
+            PIDF: 7.5p 0i, 0d, 13.25f
+
+            big triangle
+            PIDF: 7.5p 0i, 0d, 14f
+
+            fruityloops 40"
+            PIDF: 7.5p 0i, 0d, 14.25f
+
+            24inch
+            PIDF: 7.5p 0i, 0d, 13f
              */
 
 

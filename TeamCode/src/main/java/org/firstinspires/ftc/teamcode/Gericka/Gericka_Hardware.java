@@ -79,7 +79,7 @@ public class Gericka_Hardware {
     private Servo leftKickstand;
 
     //pidf rotator variables
-    public static double p = 0.004, i = 0, d = 0, f = 0.007; //0.0001 > p was .005
+    //public static double p = 0.004, i = 0, d = 0, f = 0.007; //0.0001 > p was .005
 
     //Webcam
     private AprilTagProcessor aprilTag;
@@ -101,11 +101,29 @@ public class Gericka_Hardware {
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
     private double shooterTargetRPM = 0.0;
+
+    /*
+    big triangle
+    PIDF: 7.5p 0i, 0d, 14f
+
+    fruityloops
+    PIDF: 7.5p 0i, 0d, 14.25f
+
+            24inch
+    PIDF: 7.5p 0i, 0d, 13f
+    */
+
     public static boolean shooterPIDF_Enabled = false;
-    public static double shooterP = 0.0;
+
+    public final double PIDF_F_SMALL_TRIANGLE = 13.25;
+    public final double PIDF_F_BIG_TRIANGLE = 14.0;
+    public final double PIDF_F_FROOTY_LOOPS = 14.25;
+    public final double PIDF_F_CLOSE = 13.0;
+
+    public static double shooterP = 7.5;
     public static double shooterI = 0.0;
     public static double shooterD = 0.0;
-    public static double shooterF = 0.0;
+    public static double shooterF = 14.25;
     final float MAX_SHOOTER_RPM = 4500;
     final float MIN_SHOOTER_RPM = 0;
     final double YELLOW_JACKET_19_1_TICKS = 537.7; // 19.2:1 - ticks per motor shaft revolution
@@ -510,7 +528,7 @@ public class Gericka_Hardware {
          */
         // need to verify X,Y directions, going forward should make X count up, going Left should make Y count up
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD
-                , GoBildaPinpointDriver.EncoderDirection.FORWARD);
+                , GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         /*
          * Before running the robot, recalibrate the IMU. This needs to happen when the robot is stationary
@@ -852,24 +870,40 @@ public class Gericka_Hardware {
     public double CalculateOptimumLaunchRampPosition(double distanceInInches) {
         double optimumLaunchPosition = 0;
 
-        if      (distanceInInches >= 126) { optimumLaunchPosition = 1.0; }
+        // calculate PIDF values
+        if (distanceInInches > 108) {
+            shooterF = PIDF_F_SMALL_TRIANGLE;
+        }
+        else if (distanceInInches > 66)
+        {
+            shooterF = PIDF_F_BIG_TRIANGLE;
+        }
+        else if (distanceInInches > 32)
+        {
+            shooterF = PIDF_F_FROOTY_LOOPS;
+        }
+        else {
+            shooterF = PIDF_F_CLOSE;
+        }
+
+        if      (distanceInInches >= 126) { optimumLaunchPosition = 1.0; }  // small triangle position
         else if (distanceInInches >= 120) { optimumLaunchPosition = 1.0; }
         else if (distanceInInches >= 114) { optimumLaunchPosition = 0.9; }
         else if (distanceInInches >= 108) { optimumLaunchPosition = 0.9; }
         else if (distanceInInches >= 102) { optimumLaunchPosition = 0.9; }
         else if (distanceInInches >= 96)  { optimumLaunchPosition = 0.7; }
         else if (distanceInInches >= 90)  { optimumLaunchPosition = 0.7; }
-        else if (distanceInInches >= 84)  { optimumLaunchPosition = 0.7; }
+        else if (distanceInInches >= 84)  { optimumLaunchPosition = 0.7; } // tip of big triangle
         else if (distanceInInches >= 78)  { optimumLaunchPosition = 0.6; }
         else if (distanceInInches >= 72)  { optimumLaunchPosition = 0.5; }
         else if (distanceInInches >= 66)  { optimumLaunchPosition = 0.4; }
         else if (distanceInInches >= 60)  { optimumLaunchPosition = 0.4; }
         else if (distanceInInches >= 54)  { optimumLaunchPosition = 0.4; }
         else if (distanceInInches >= 48)  { optimumLaunchPosition = 0.3; }
-        else if (distanceInInches >= 42)  { optimumLaunchPosition = 0.3; }
+        else if (distanceInInches >= 42)  { optimumLaunchPosition = 0.3; } // frooty loops spot
         else if (distanceInInches >= 36)  { optimumLaunchPosition = 0.3; }
         else if (distanceInInches >= 30)  { optimumLaunchPosition = 0.0; }
-        else if (distanceInInches >= 24)  { optimumLaunchPosition = 0.0; }
+        else if (distanceInInches >= 24)  { optimumLaunchPosition = 0.0; } // super close
         else if (distanceInInches >= 18)  { optimumLaunchPosition = 0.0; }
         else if (distanceInInches >= 12)  { optimumLaunchPosition = 0.0; }
         else {
