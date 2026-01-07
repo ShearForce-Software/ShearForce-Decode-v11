@@ -114,8 +114,8 @@ public class Gericka_Hardware {
     final double YELLOW_JACKET_13_1_TICKS = 384.5; // 13.7:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_5_1_TICKS = 145.1; // 5.2:1 - ticks per motor shaft revolution
     final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_5_1_TICKS; // 133/24 is the gear ratio
-    final double MAX_TURRET_ANGLE = 117.0;
-    final double MIN_TURRET_ANGLE = -179.0;
+    private final double MAX_TURRET_ANGLE = 117.0;
+    private final double MIN_TURRET_ANGLE = -165.0;
     final int MAX_TURRET_TICKS = (int)(MAX_TURRET_ANGLE * TURRET_TICKS_IN_DEGREES);
     final int MIN_TURRET_TICKS = (int)(MIN_TURRET_ANGLE * TURRET_TICKS_IN_DEGREES);
     final double DISTANCE_FROM_FRONT_TO_BACK_OF_TARGET = 18.25;
@@ -567,7 +567,7 @@ public class Gericka_Hardware {
         double aprilTagCalculatedCurrentY = 0;
 
         if (GetUpdateRoadrunnerFromWebcamEnabled()) {
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            List <AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 if (detection.metadata != null) {
                     // only use the two goals, the obelisk could be at a variable location
@@ -1124,8 +1124,9 @@ public class Gericka_Hardware {
         // normalize the angle to be -180 to +180
         while (degrees > 180) degrees -= 360;
         while (degrees < -180) degrees += 360;
-        turretTargetAngle = Math.min(degrees,MAX_TURRET_ANGLE);
-        turretTargetAngle = Math.max(degrees,MIN_TURRET_ANGLE);
+        turretTargetAngle = degrees;
+        turretTargetAngle = Math.min(turretTargetAngle,MAX_TURRET_ANGLE);
+        turretTargetAngle = Math.max(turretTargetAngle,MIN_TURRET_ANGLE);
         //int turretTargetTicks = Math.round((float)turretTargetAngle * (float)TURRET_TICKS_IN_DEGREES);
         int turretTargetTicks = (int)(turretTargetAngle * TURRET_TICKS_IN_DEGREES);
         turretTargetTicks = Math.min(turretTargetTicks,MAX_TURRET_TICKS);
