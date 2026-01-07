@@ -175,93 +175,6 @@ public class Gericka_Hardware {
 
 
 
-    public void updateObeliskFromCamera(){
-        if(detectedObeliskId == -1){
-            int id = readObeliskId();
-
-            if(id != -1){
-                detectedObeliskId = id;
-            }
-        }
-        else{
-            readObeliskId();
-        }
-    }
-
-    public int getDetectedObeliskId(){
-        return detectedObeliskId;
-    }
-
-    public int detectObeliskMotif(long timeoutMs){
-        detectedObeliskId = -1; // here we will reset the latched value
-        long startTime = System.currentTimeMillis();
-
-        while(!opMode.isStopRequested() && detectedObeliskId == -1 && System.currentTimeMillis() - startTime < timeoutMs){
-            updateObeliskFromCamera(); // uses the method here
-            ShowTelemetry(); // ask if this logic is fine????
-            opMode.sleep(20); // i don't want to spam our telemetry
-        }
-        return detectedObeliskId; // it will be -1 if we never saw one
-    }
-
-    private int readObeliskId() {
-
-        if (getObeliskTagVisible(21)) {
-            detectedTagId = 21;
-            return 21;
-        }
-        if (getObeliskTagVisible(22)) {
-            detectedTagId = 22;
-            return 22;
-        }
-        if (getObeliskTagVisible(23)) {
-            detectedTagId = 23;
-            return 23;
-        }
-
-        if (getAprilTagVisible(23) && getAprilTagVisible(20)) {
-            detectedTagId = 23;
-            return 23;
-        }
-
-
-        // cannot see anythign
-        detectedTagId = -1;
-        return -1;
-    }
-
-    public SampleLine getSampleLineForObeliskId(int obeliskId, String alliance) {
-        // TODO: adjust mapping once you confirm with coach
-
-        if ("BLUE".equals(alliance)) {
-            switch (obeliskId) {
-                case 21:
-                    return SampleLine.FIRST;
-                case 22:
-                    return SampleLine.SECOND;
-                case 23:
-                    return SampleLine.THIRD;
-                default:
-                    return SampleLine.SECOND; // safe default if no tag seen
-            }
-        } else {
-            // RED side (can tweak separately later)
-            switch (obeliskId) {
-                case 21:
-                    return SampleLine.FIRST;
-                case 22:
-                    return SampleLine.SECOND;
-                case 23:
-                    return SampleLine.THIRD;
-                default:
-                    return SampleLine.SECOND;
-            }
-        }
-    }
-
-
-
-
     DigitalChannel beamBreak1;
     DigitalChannel beamBreak2;
     DigitalChannel beamBreak3;
@@ -659,6 +572,61 @@ public class Gericka_Hardware {
             }
         }
     }
+    public void updateObeliskFromCamera(){
+        if(detectedObeliskId == -1){
+            int id = readObeliskId();
+
+            if(id != -1){
+                detectedObeliskId = id;
+            }
+        }
+        else{
+            readObeliskId();
+        }
+    }
+
+    public int getDetectedObeliskId(){
+        return detectedObeliskId;
+    }
+
+    public int detectObeliskMotif(long timeoutMs){
+        detectedObeliskId = -1; // here we will reset the latched value
+        long startTime = System.currentTimeMillis();
+
+        while(!opMode.isStopRequested() && detectedObeliskId == -1 && System.currentTimeMillis() - startTime < timeoutMs){
+            updateObeliskFromCamera(); // uses the method here
+            ShowTelemetry(); // ask if this logic is fine????
+            opMode.sleep(20); // i don't want to spam our telemetry
+        }
+        return detectedObeliskId; // it will be -1 if we never saw one
+    }
+
+    private int readObeliskId() {
+
+        if (getObeliskTagVisible(21)) {
+            detectedTagId = 21;
+            return 21;
+        }
+        if (getObeliskTagVisible(22)) {
+            detectedTagId = 22;
+            return 22;
+        }
+        if (getObeliskTagVisible(23)) {
+            detectedTagId = 23;
+            return 23;
+        }
+
+        if (getAprilTagVisible(23) && getAprilTagVisible(20)) {
+            detectedTagId = 23;
+            return 23;
+        }
+
+
+        // cannot see anythign
+        detectedTagId = -1;
+        return -1;
+    }
+
 
     double getBearingToAprilTag(int detectionID){
         List<AprilTagDetection> detections = aprilTag.getDetections();
@@ -870,22 +838,6 @@ public class Gericka_Hardware {
     public double CalculateOptimumLaunchRampPosition(double distanceInInches) {
         double optimumLaunchPosition = 0;
 
-        // calculate PIDF values
-        if (distanceInInches > 108) {
-            shooterF = PIDF_F_SMALL_TRIANGLE;
-        }
-        else if (distanceInInches > 66)
-        {
-            shooterF = PIDF_F_BIG_TRIANGLE;
-        }
-        else if (distanceInInches > 32)
-        {
-            shooterF = PIDF_F_FROOTY_LOOPS;
-        }
-        else {
-            shooterF = PIDF_F_CLOSE;
-        }
-
         if      (distanceInInches >= 126) { optimumLaunchPosition = 1.0; }  // small triangle position
         else if (distanceInInches >= 120) { optimumLaunchPosition = 1.0; }
         else if (distanceInInches >= 114) { optimumLaunchPosition = 0.9; }
@@ -1008,6 +960,23 @@ public class Gericka_Hardware {
         else {
             optimumShooterRPM = 2200;
         }
+
+        // calculate PIDF values
+        if (distanceInInches > 108) {
+            shooterF = PIDF_F_SMALL_TRIANGLE;  // 3400 to 3500 = 13.25
+        }
+        else if (distanceInInches > 66)
+        {
+            shooterF = PIDF_F_BIG_TRIANGLE; // 2900 to 3000 = 14.0
+        }
+        else if (distanceInInches > 32)
+        {
+            shooterF = PIDF_F_FROOTY_LOOPS; // 2300 to 2350 = 14.25
+        }
+        else {
+            shooterF = PIDF_F_CLOSE; // 2300 = 13.0
+        }
+
 
         /*double testDistance = 24;
         while (Math.min(distanceInInches,testDistance) != distanceInInches){
@@ -1142,7 +1111,7 @@ public class Gericka_Hardware {
             }
             else if (intakeMotor.getPower() != 0) {
                 // if ready to turn off, leave on a tiny bit to push the last ball away
-                opMode.sleep(250);
+                SpecialSleep(250);
                 intakeMotor.setPower(0);
             }
         }

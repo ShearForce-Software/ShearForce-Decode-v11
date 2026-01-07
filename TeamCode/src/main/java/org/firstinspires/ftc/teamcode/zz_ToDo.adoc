@@ -4,51 +4,51 @@
 
 === Akshay
 
-- [ ] Test and update the 2 close autos, probably need to set ramp and speed to align with new shooter table
+- [ ] AUTO: Test and update the 2 close autos, probably need to set ramp and speeds to align with new shooter table
+- [ ] AUTO: find how fast we run the auto routines by experimenting with velocity constraints
+- [ ] AUTO: create a new 12 ball shooter Far Auto opmode
+- [ ] AUTO: create a new 9-12 ball shooter Close Auto opmode
 
 === Gianna
 
-- [ ] Make manual turret controls work with gamepad2.right_stickX (so easier to manually fix turret)
+- [ ] TURRET: Make manual turret controls work with gamepad2.right_stickX (so easier to manually fix turret)
   * Can leave existing controls in place too, make it an OR condition
-- [ ] Change RunAutoIntake() to use a special sleep instead of a regular sleep, test it
-- [ ] Add beambreak3 to lifter logic
+- [ ] TURRET: Start creating logic for the limit switches - will use to do some resets...
+- [ ] Improve the indicator lights to indicate how many balls loaded in the robot
+  * CURRENT:
+    ** 1 = RED/BLUE alliance or OFF if in manual turret mode
+    ** 2 = GREEN if Lifter in MID position (indicating ball ready to shoot)
+    ** 3 = GREEN if shooter and turret ready, orange if only shooter ready, yellow if only turret ready, OFF if neither is ready
+  * SUGGESTED:
+    ** 1 = GREEN if breakbeam2 is broken AND in auto turret mode, ORANGE if breakbeam2 is broken and auto turret mode is off, else if breakbeam2 not broken and auto turret mode enabled then RED/BLUE alliance, else BLACK (no 3rd ball loaded and auto turret mode is off)
+    ** 2 = GREEN if lifter up AND distance sensors detecting something less than 3 inches? (need to test and look at distance sensors telemetry to see if possible to detect the second ball or if it is just going to be detecting the lifter itself)
+    ** 3 = GREEN if lifter up AND SHOOTER and TURRET READY, orange if up and only shooter ready, yellow if up and only turret ready, purple if up but neither ready, else lifter is down so Black/OFF
 
 === Shrey
 
+- [ ] TEST Shooting with PIDF enabled in manual control
+- [ ] AUTO: update all auto opmodes to use the correct PIDF values
 - [ ] AUTO: Add new theRobot.RunAutoIntake() method to Second thread in an auto routine
   * remove manual intake on/off commands in the auto opMode, then test if works effectively, if it does make all autos do it
   * be sure to put inside a check that run has been started (don't want auto intake running during init)
-- Tune built-in PIDF using dashboard to achieve faster recovery without overshoots
-  * Run Manual - put notes in comments of SetShooterPIDFCoefficients()
-    ** [x] RECORD velocity and power values for small triangle position
-    ** [ ] RECORD velocity and power values for AUTO Close position
-    ** [x] RECORD current PIDF values from telemetry
-  * Run Manual with DASHBOARD connected from small triangle position
-    ** [ ] In Dashboard, change **shooterPIDF_Enabled** to be true
-    ** [ ] Change **shooterF** to be 80% of velocity value for small triangle shot above
-    ** [ ] Increase **shooterP** slowly until motor velocity starts to oscillate around target velocity
-    ** [ ] Increase **shooterD** slowly to eliminate overshoot and minimize oscillations
-    ** [ ] If velocity staying under target velocity, slowly increase **shooterI** until gets to target without significantly overshooting
-    ** [ ] Tweak the 3 values until happy with shot recovery and spin up at small triangle location
-    ** [ ] RECORD the 4 values in comments in SetShooterPIDFCoefficients(), change the defaults to match
-  * [ ] Repeat the dashboard tuning process at the close up shooting position, determine if there is should be a second set of coefficients stored that could be swapped back and forth, or if the small triangle ones are sufficient for close up too
-  * [ ] if PIDF seems effective, turn on for auto and remove the spin up while loops and RETEST
-
 - [ ] AUTO: Experiment with lowering sleep time for lifterUp, should be able to do 250 milliseconds
-- [ ] AUTO: Test, test, test -- need all 3 balls to shoot consistently every time, and all balls to be ingested
 - [ ] AUTO: Experiment with lowering sleep time for lifterDown
 
 === Tong
 
-- [ ] Get the turret limits working correctly
-- [ ] Experiment with uncommenting the "use april tag bearing" portion of adjustTurretToTargetAprilTag() to make it correct the bearing faster when in error state
+- [ ] TURRET: Experiment with uncommenting the "use april tag bearing" portion of adjustTurretToTargetAprilTag() to make it correct the turret angle faster when in error state
+- [ ] TURRET: Find source of miss-pointing and fix
+- [ ] TURRET: Make smoother, maybe a PIDF solution?
 
-== Next Level Stuff
+== Next Stuff
 
-- [ ] Create a common blackboard position storage routine in Hardware class, that the auto methods can call after every move, so if crashes on next move, the position is maybe correct for manual usage
+- [ ] Create function that can report true/false IF robot is in a legal shooting tile
+- [ ] Create an auto shoot mode that can be turned on/off that will shoot if in a legal shooting tile and a ball is loaded
+- [ ] AUTO: create an auto that gets and shoots multiple lines in the correct pattern order
+- [ ] Turn indicator lights 2 and 3 RED if calculated turret position needed to point at the target is in the excluded zone for the turret AND in AUTO turret tracking mode
+- [ ] Create a common blackboard position storage routine in Hardware class, that the auto methods can call after every move, so if crashes on next move, the position is hopefully correct for manual usage
+- [ ] Have manual write position to blackboard periodically when in a stopped web-cam verified location?  (So can start and restart manual better)
 - [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
-- [ ] Develop lots of autonomous options and test them
-- [ ] Increase speed of robot in autonomous
 
 
 
