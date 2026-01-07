@@ -188,15 +188,15 @@ public class Gericka_Hardware {
 
     private int readObeliskId() {
 
-        if (getAprilTagVisible(21)) {
+        if (getObeliskTagVisible(21)) {
             detectedTagId = 21;
             return 21;
         }
-        if (getAprilTagVisible(22)) {
+        if (getObeliskTagVisible(22)) {
             detectedTagId = 22;
             return 22;
         }
-        if (getAprilTagVisible(23)) {
+        if (getObeliskTagVisible(23)) {
             detectedTagId = 23;
             return 23;
         }
@@ -651,17 +651,43 @@ public class Gericka_Hardware {
         }
         return bearing;
     }
+
+    double getBearingToObeliskTag(int detectionID){
+        for (AprilTagDetection detection : aprilTag.getDetections()) {
+            if (detection.id == detectionID) return detection.ftcPose.bearing;
+        }
+        return 0.0;
+    }
+
+    double getDistanceToObeliskTag(int detectionID){
+        for (AprilTagDetection detection : aprilTag.getDetections()) {
+            if (detection.id == detectionID) return detection.ftcPose.range;
+        }
+        return 0.0;
+    }
+
     boolean getAprilTagVisible(int detectionID){
         List<AprilTagDetection> detections = aprilTag.getDetections();
         boolean foundit = false;
         for (AprilTagDetection detection : detections){
             if (detection.metadata != null){
                 foundit = (detection.id == detectionID);
-                break;
+                break; // this will break after first item with metadata(DO NOT USE FOR OBELISK)
             }
         }
         return foundit;
     }
+
+    boolean getObeliskTagVisible(int detectionID){
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+        for(AprilTagDetection detection : detections){
+            if(detection.id == detectionID){
+                return true;
+            }
+        }
+        return false;
+    }
+
     double getDistanceToAprilTag(int detectionID){
         List<AprilTagDetection> detections = aprilTag.getDetections();
         boolean foundit = false;
