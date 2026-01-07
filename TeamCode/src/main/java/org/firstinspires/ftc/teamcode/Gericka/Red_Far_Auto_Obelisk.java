@@ -35,6 +35,13 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
     Action ReturnFromSecondMark;
     Action ReturnFromThirdMark;
 
+    Action DriveToSecondMarkFromLargeTriangle;
+    Action DriveThirdMarkToLargeTriangle;
+    Action DriveLargetriangleToSecondMark;
+
+    Action DriveSecondMarkToLargeTriangle;
+
+
     //Action ReturnFromThirdMarkSecond;
     //Action ReturnFromSecondMarkSecond;
     //Action ReturnFromFirstMarkSecond;
@@ -149,14 +156,18 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
-        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-15, 55, Math.toRadians(90)))
-
-                .strafeToConstantHeading(new Vector2d(-12, 32))
-                .strafeToConstantHeading(new Vector2d(48, 12))
+        DriveThirdMarkToLargeTriangle = drive.actionBuilder(new Pose2d(-15, 55, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(-23.7, 23.4))
                 .build();
 
+        DriveLargetriangleToSecondMark = drive.actionBuilder(new Pose2d(-23.7, 23.4, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(11.5, 30))
+                .strafeToConstantHeading(new Vector2d(11.5, 60))
+                .build();
 
-
+        DriveSecondMarkToLargeTriangle = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(-23.7, 23.4))
+                .build();
 
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12))
@@ -252,9 +263,9 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
                 break;
             case THIRD:
                 pickLineAction = DriveToThirdMark;
-                returnFromPickedLineAction = ReturnFromThirdMark;
-                repeatPickLineAction = DriveToFirstMark;
-                returnFromRepeatPickedLineAction = ReturnFromFirstMark;
+                returnFromPickedLineAction = DriveThirdMarkToLargeTriangle;
+                repeatPickLineAction = DriveLargetriangleToSecondMark;
+                returnFromRepeatPickedLineAction = DriveToSecondMarkFromLargeTriangle;
                 driveOutOfLaunch = DriveOutofLaunchZone;
                 break;
             default:
