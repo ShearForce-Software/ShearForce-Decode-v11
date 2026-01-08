@@ -33,6 +33,7 @@
   * be sure to put inside a check that run has been started (don't want auto intake running during init)
 - [ ] AUTO: Experiment with lowering sleep time for lifterUp, should be able to do 250 milliseconds
 - [ ] AUTO: Experiment with lowering sleep time for lifterDown
+- [ ] Create a shoot 3 balls function, that will shoot 3 balls as fast as reasonably possible off of single trigger pull.
 
 === Tong
 
