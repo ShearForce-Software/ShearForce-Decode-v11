@@ -189,6 +189,7 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
+                    theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
                 }
                 telemetry.update();
 
