@@ -37,7 +37,7 @@
 
 === Tong
 
-- [ ] TURRET: Experiment with uncommenting the "use april tag bearing" portion of adjustTurretToTargetAprilTag() to make it correct the turret angle faster when in error state
+- [x] TURRET: Experiment with uncommenting the "use april tag bearing" portion of adjustTurretToTargetAprilTag() to make it correct the turret angle faster when in error state
 - [ ] TURRET: Find source of miss-pointing and fix
 - [ ] TURRET: Make smoother, maybe a PIDF solution?
 
