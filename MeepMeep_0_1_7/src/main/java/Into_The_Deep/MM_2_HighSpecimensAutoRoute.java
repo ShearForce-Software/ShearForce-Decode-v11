@@ -48,11 +48,11 @@ public class MM_2_HighSpecimensAutoRoute {
         Pose2d StartPose = new Pose2d(12, -64, Math.toRadians(270));
 
         // Define some custom constraints to use when wanting to go faster than defaults
-        speedUpVelocityConstraint = new TranslationalVelConstraint(60.0);
-        speedUpAccelerationConstraint = new ProfileAccelConstraint(-40.0, 60.0);
-        slowDownVelocityConstraint = new TranslationalVelConstraint(30);
-        slowDownAccelerationConstraint = new ProfileAccelConstraint(-20, 50);
-        intakeVelocityConstraint = new TranslationalVelConstraint(15);
+        speedUpVelocityConstraint = new TranslationalVelConstraint(200);
+        speedUpAccelerationConstraint = new ProfileAccelConstraint(-200, 200);
+        slowDownVelocityConstraint = new TranslationalVelConstraint(200);
+        slowDownAccelerationConstraint = new ProfileAccelConstraint(-200, 200);
+        intakeVelocityConstraint = new TranslationalVelConstraint(200);
 
         //myBot.runAction(myBot.getDrive().actionBuilder(StartPose)
                            //  .splineToLinearHeading(new Pose2d(36,48,36.6), Math.toRadians(270))

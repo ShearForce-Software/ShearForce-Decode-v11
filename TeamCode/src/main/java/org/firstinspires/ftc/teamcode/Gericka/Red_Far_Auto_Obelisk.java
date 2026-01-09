@@ -3,12 +3,16 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -41,6 +45,19 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
 
     Action DriveSecondMarkToLargeTriangle;
 
+    Action DriveLargeTriangleToFirstMark;
+
+
+    Action DriveOutofLaunchZoneForFirstMark;
+    Action DriveOutofLaunchZoneForSecondMark;
+    Action DriveOutofLaunchZoneForThirdMark;
+
+
+    VelConstraint fastVel = new TranslationalVelConstraint(85);
+    AccelConstraint fastAccel = new ProfileAccelConstraint(-60, 60);
+
+    VelConstraint intakeVel = new TranslationalVelConstraint(45);
+    AccelConstraint intakeAccel = new ProfileAccelConstraint(-20, 25);
 
     //Action ReturnFromThirdMarkSecond;
     //Action ReturnFromSecondMarkSecond;
@@ -50,6 +67,8 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
 
     int lifterUpSleepTime = 500; //300 works very well, can probably go lower to 200
     int lifterDownSleepTime = 600; //400 works well, can probably go lower to 300 maybe 200
+    //Add constraints here
+
 
     public enum SampleLine{
         FIRST, //
@@ -71,6 +90,10 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
         }
         return SampleLine.IDK;
     }
+
+
+
+
 
     public void runOpMode() {
         startPose = new Pose2d(60, 12, Math.toRadians(90));
@@ -130,48 +153,53 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(34.75, 30))
-                .strafeToConstantHeading(new Vector2d(34.75, 60))
+                .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, 60), intakeVel, intakeAccel)
                 .build();
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(11.5, 30))
-                .strafeToConstantHeading(new Vector2d(11.5, 60))
+                .strafeToConstantHeading(new Vector2d(11.5, 30), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(11.5, 60), intakeVel, intakeAccel)
                 .build();
 
         DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(-15, 32))
-                .strafeToConstantHeading(new Vector2d(-15, 55))
+                .strafeToConstantHeading(new Vector2d(-15, 32), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-15, 55), intakeVel, intakeAccel)
                 .build();
 
         ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(48, 12))
+                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
                 .build();
 
 
         ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(20, 12))
-                .strafeToConstantHeading(new Vector2d(48, 12))
+                .strafeToConstantHeading(new Vector2d(20, 12), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
                 .build();
 
         DriveThirdMarkToLargeTriangle = drive.actionBuilder(new Pose2d(-15, 55, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-23.7, 23.4))
+                .strafeToConstantHeading(new Vector2d(-23.7, 23.4), fastVel, fastAccel)
                 .build();
 
         DriveLargetriangleToSecondMark = drive.actionBuilder(new Pose2d(-23.7, 23.4, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(11.5, 30))
-                .strafeToConstantHeading(new Vector2d(11.5, 60))
+                .strafeToConstantHeading(new Vector2d(11.5, 30), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(11.5, 60), intakeVel, intakeAccel)
                 .build();
+
+        DriveLargeTriangleToFirstMark = drive.actionBuilder(new Pose2d(-23.7, 23.4, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, 60), intakeVel, intakeAccel)
+                .build();
+
 
         DriveSecondMarkToLargeTriangle = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-23.7, 23.4))
+                .strafeToConstantHeading(new Vector2d(-23.7, 23.4), fastVel, fastAccel)
                 .build();
 
-        DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(20, 12))
-                .build();
+
+
 
 
         theRobot.SetAutoLifterMode(true);
@@ -224,7 +252,10 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
         theRobot.SetIntakeMotor(true,true);
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3400;
+
+        final double SMALL_TRIANGLE_RPM = 3400;
+        final double BIG_TRIANGLE_RPM = 3100;
+        double shooterSpeedRPM = (line== SampleLine.THIRD) ? BIG_TRIANGLE_RPM : SMALL_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // drive to the start triangle
@@ -244,11 +275,14 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
         /* **** SHOOT BALL #3 **** */
         ShootBall(shooterSpeedRPM);
 
-        Action pickLineAction = DriveToSecondMark;
-        Action returnFromPickedLineAction = ReturnFromSecondMark;
-        Action repeatPickLineAction = DriveToFirstMark;
-        Action returnFromRepeatPickedLineAction = ReturnFromFirstMark;
+        Action pickLineAction;
+        Action returnFromPickedLineAction;
+        Action repeatPickLineAction;
+        Action returnFromRepeatPickedLineAction;
         Action driveOutOfLaunch;
+        Action repeatThirdPickLineAction = new SleepAction(0);
+        Action returnFromThirdPickLineAction = new SleepAction(0);
+
 
         switch(line){
             case FIRST:
@@ -256,28 +290,39 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
                 returnFromPickedLineAction = ReturnFromFirstMark;
                 repeatPickLineAction = DriveToSecondMark;
                 returnFromRepeatPickedLineAction = ReturnFromSecondMark;
-                driveOutOfLaunch = DriveOutofLaunchZone;
+                repeatThirdPickLineAction = DriveToThirdMark;
+                returnFromThirdPickLineAction = DriveThirdMarkToLargeTriangle;
+
+
                 break;
             case SECOND:
                 pickLineAction = DriveToSecondMark;
                 returnFromPickedLineAction = ReturnFromSecondMark;
                 repeatPickLineAction = DriveToFirstMark;
                 returnFromRepeatPickedLineAction = ReturnFromFirstMark;
-                driveOutOfLaunch = DriveOutofLaunchZone;
+                repeatThirdPickLineAction = DriveToThirdMark;
+                returnFromThirdPickLineAction = DriveThirdMarkToLargeTriangle;
+
+
                 break;
             case THIRD:
                 pickLineAction = DriveToThirdMark;
                 returnFromPickedLineAction = DriveThirdMarkToLargeTriangle;
                 repeatPickLineAction = DriveLargetriangleToSecondMark;
-                returnFromRepeatPickedLineAction = DriveToSecondMarkFromLargeTriangle;
-                driveOutOfLaunch = DriveOutofLaunchZone;
+                returnFromRepeatPickedLineAction = DriveSecondMarkToLargeTriangle;
+                repeatThirdPickLineAction = DriveLargeTriangleToFirstMark;
+                returnFromThirdPickLineAction = ReturnFromFirstMark;
+
+
                 break;
             default:
                 pickLineAction = DriveToFirstMark;
                 returnFromPickedLineAction=ReturnFromFirstMark;
                 repeatPickLineAction = DriveToSecondMark;
                 returnFromRepeatPickedLineAction = ReturnFromSecondMark;
-                driveOutOfLaunch = DriveOutofLaunchZone;
+                repeatThirdPickLineAction = DriveToThirdMark;
+                returnFromThirdPickLineAction = DriveThirdMarkToLargeTriangle;
+
                 break;
         }
 
@@ -308,17 +353,13 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to closest line and turn intake on and lower lifter
-                        new ParallelAction(repeatPickLineAction, setIntakeOn(), new SetLifterDown())
+                        new ParallelAction(repeatPickLineAction, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
-
+                        new ParallelAction(returnFromRepeatPickedLineAction, setIntakeOff())
                 ));
         drive.updatePoseEstimate();
 
-        Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
-        if (Gericka_Hardware.autoTimeLeft >= 5) {
-            drive.updatePoseEstimate();
-            Actions.runBlocking(new ParallelAction(returnFromRepeatPickedLineAction, setIntakeOff()));
-            drive.updatePoseEstimate();
+
 
             /* **** SHOOT BALL #7 **** */
             ShootBall(shooterSpeedRPM);
@@ -331,12 +372,40 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
             ShootBall(shooterSpeedRPM);
             theRobot.SetIntakeMotor(true,true);
             // Drive to Parking spot
-            turretTargetAngle = 0;
-            theRobot.SetTurretRotationAngle(turretTargetAngle);
+
             drive.updatePoseEstimate();
-            Actions.runBlocking(DriveOutofLaunchZone);
-            drive.updatePoseEstimate();
-        }
+
+
+
+        drive.updatePoseEstimate();
+        Actions.runBlocking(
+                new SequentialAction(
+                        // Drive to closest line and turn intake on and lower lifter
+                        new ParallelAction(repeatThirdPickLineAction, setIntakeOn(), new SetLifterDown()),
+                        //new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
+                       new ParallelAction(returnFromThirdPickLineAction, setIntakeOff())
+                ));
+        drive.updatePoseEstimate();
+
+
+        /* **** SHOOT BALL #10 **** */
+        ShootBall(shooterSpeedRPM);
+        theRobot.SetIntakeMotor(true,true);
+
+        /* **** SHOOT BALL #11 **** */
+        ShootBall(shooterSpeedRPM);
+
+        /* **** SHOOT BALL #12 **** */
+        ShootBall(shooterSpeedRPM);
+        theRobot.SetIntakeMotor(true,true);
+        // Drive to Parking spot
+        turretTargetAngle = 0;
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        drive.updatePoseEstimate();
+
+
+
+
 
         // store final exact position in blackboard, so can initialize absolute pinpoint with that position
         //control.pinpoint.update();

@@ -9,10 +9,11 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 // auto select manual opMode next
 @Autonomous(name="Blue Far Auto obelisk", preselectTeleOp ="Gericka 1 Manual Control")
 
@@ -38,6 +39,8 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
     //Action ReturnFromThirdMarkSecond;
     //Action ReturnFromSecondMarkSecond;
     //Action ReturnFromFirstMarkSecond;
+
+    VelConstraint FAST = new TranslationalVelConstraint(75);
 
 
 
@@ -114,7 +117,7 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
         // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
 
         DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(48, -12))
+                .strafeToConstantHeading(new Vector2d(48, -12), FAST)
                 .build();
 
 // FIRST  = far-right strip (closest to GOAL side)
@@ -123,8 +126,8 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 // FIRST (far-right) path (from Blue_ID21 script)
-                .strafeToConstantHeading(new Vector2d(34.75, -30))
-                .strafeToConstantHeading(new Vector2d(34.75, -60))
+                .strafeToConstantHeading(new Vector2d(34.75, -30), FAST)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), FAST)
                 .build();
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
@@ -218,8 +221,11 @@ public class Blue_Far_Auto_Obelisk extends LinearOpMode {
         theRobot.SetIntakeMotor(true,true);
 
         // set shooter speed to small triangle speed, can just leave at this speed the whole time
-        double shooterSpeedRPM = 3400;
+       final double SMALL_TRIANGLE_RPM = 3400;
+       final double BIG_TRIANGLE_RPM = 3100;
+       double shooterSpeedRPM = (line==SampleLine.THIRD) ? BIG_TRIANGLE_RPM : SMALL_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
 
         // drive to the start triangle
         drive.updatePoseEstimate();
