@@ -11,7 +11,7 @@
 
 === Gianna
 
-- [ ] TURRET: Make manual turret controls work with gamepad2.right_stickX (so easier to manually fix turret)
+- [x] TURRET: Make manual turret controls work with gamepad2.right_stickX (so easier to manually fix turret)
   * Can leave existing controls in place too, make it an OR condition
 - [ ] TURRET: Start creating logic for the limit switches - will use to do some resets...
 - [ ] Improve the indicator lights to indicate how many balls loaded in the robot

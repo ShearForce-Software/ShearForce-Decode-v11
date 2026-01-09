@@ -244,6 +244,12 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetIntakeMotor(true, false);
                     theRobot.SetAutoIntakeMode(false);
                 }
+            } else if (gamepad2.right_stick_x > 0.1) {
+                theRobot.SetTurretRotationAngle(theRobot.getTurretTargetAngle() + TURRET_ROTATION_ANGLE_INCREMENT);
+                theRobot.SetTurretAutoMode(false);
+            } else if (gamepad2.right_stick_x < -0.1) {
+                theRobot.SetTurretRotationAngle(theRobot.getTurretTargetAngle() - TURRET_ROTATION_ANGLE_INCREMENT);
+                theRobot.SetTurretAutoMode(false);
             } else if (gamepad2.crossWasPressed() && !gamepad2_optionsWasPressed) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
                     // toggling turret goal auto centering/tracking on/off

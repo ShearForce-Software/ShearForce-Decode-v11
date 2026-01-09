@@ -718,49 +718,50 @@ public class Gericka_Hardware {
     // *********************************************************
 
     public void SetIndicatorLights() {
-        // set light1 to red or blue based on alliance
+
+        if ((autoTurretMode) && (!beamBreak2.getState())) {
+            light1.setPosition(INDICATOR_GREEN);
+        }else if ((!autoTurretMode) && (!beamBreak2.getState())) {
+            light1.setPosition(INDICATOR_ORANGE);
+        } else {
+            light1.setPosition(INDICATOR_BLACK);
+        }
+        // set light2 to red or blue based on alliance
         if (allianceColorString.equals("RED")) {
             if (autoTurretMode) {
-                light1.setPosition(INDICATOR_RED);
+                light2.setPosition(INDICATOR_RED);
             }
-            else {
-                light1.setPosition(INDICATOR_BLACK);
-            }
-        }
-        else if (allianceColorString.equals("BLUE")) {
-
+        } else if (allianceColorString.equals("BLUE")) {
             if (autoTurretMode) {
-                light1.setPosition(INDICATOR_BLUE);
+                light2.setPosition(INDICATOR_BLUE);
             }
-            else {
-                light1.setPosition(INDICATOR_BLACK);
-            }
-
-        }
-        else {
+        } else {
             light1.setPosition(INDICATOR_VIOLET);
         }
 
         // set light2 based on if ball in firing position
-        if (lifterServo.getPosition() == LIFTER_MID_POSITION){
+        /*if (lifterServo.getPosition() == LIFTER_MID_POSITION){
             light2.setPosition(INDICATOR_GREEN);
         }
         else{
             light2.setPosition(0);
-        }
+        }*/
 
         // set light3 based on if shooter motor within tolerances and if turret is aligned
         double currentMotorRPM = CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS);
         boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 10) && (currentMotorRPM <= shooterTargetRPM + 200));
         boolean turretReady = ((turretMotor.getCurrentPosition() > (turretMotor.getTargetPosition() - 5)) && (turretMotor.getCurrentPosition() < (turretMotor.getTargetPosition() + 5)));  // 5 ticks is a little bit more than 2 degrees
-        if (shooterReady && turretReady) {
+        if (shooterReady && turretReady && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
             light3.setPosition(INDICATOR_GREEN);
         }
-        else if (shooterReady) {
+        else if (shooterReady && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
             light3.setPosition(INDICATOR_ORANGE);
         }
-        else if (turretReady) {
+        else if (turretReady && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
             light3.setPosition(INDICATOR_YELLOW);
+        }
+        else if (lifterServo.getPosition() >= LIFTER_MID_POSITION){
+            light3.setPosition(INDICATOR_VIOLET);
         }
         else {
             light3.setPosition(INDICATOR_BLACK);
