@@ -1129,6 +1129,18 @@ public class Gericka_Hardware {
                 SpecialSleep(250);
                 intakeMotor.setPower(0);
             }
+           /* boolean intakeOn = false;
+            if (beam1IsBroken){
+                intakeOn = true;
+            }
+            if (beam2IsBroken){
+                intakeOn = false;
+            }
+            if (intakeOn){
+                intakeMotor.setPower(INTAKE_POWER);
+            } else {
+                intakeMotor.setPower(0);
+            }*/
         }
     }
 
@@ -1258,9 +1270,11 @@ public class Gericka_Hardware {
     public void SetAutoLifterMode(boolean value) { autoLifterMode = value; }
     public void RunAutoLifter() {
         if (autoLifterMode) {
+            boolean beam3IsBroken = !beamBreak3.getState();
+
             if (lifterServo.getPosition() <= (LIFTER_DOWN_POSITION + 0.06f)) {
-                if ((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0)
-                        && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.2)) {
+                if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0)
+                        && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.2)) ||beam3IsBroken) {
                     lifterServo.setPosition(LIFTER_MID_POSITION);
                 } else if ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0)
                         && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.2)) {
