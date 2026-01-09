@@ -252,11 +252,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetTurretAutoMode(false);
             } else if (gamepad2.crossWasPressed() && !gamepad2_optionsWasPressed) {
                 if (gamepad2_shareWasPressed || gamepad2.share) {
-                    // toggling turret goal auto centering/tracking on/off
-                    theRobot.SetTurretAutoMode(!theRobot.GetTurretAutoMode());
-                } else {
                     // toggling auto intake on/off
                     theRobot.SetAutoIntakeMode(!theRobot.GetAutoIntakeMode());
+                } else {
+                    // toggling turret goal auto centering/tracking on/off
+                    theRobot.SetTurretAutoMode(!theRobot.GetTurretAutoMode());
                 }
             }
 
@@ -274,23 +274,26 @@ public class Gericka_Manual_Control extends LinearOpMode {
             } else if (gamepad2.dpadLeftWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
-                    theRobot.SetShooterMotorToSpecificRPM(2100);
-                } else {
+                    theRobot.SetShooterMotorToSpecificRPM(2300);
+                } else if (gamepad2_shareWasPressed || gamepad2.share){
                     theRobot.SetAutoShooterMode(false);
                     theRobot.SetShooterMotorToSpecificRPM(theRobot.GetShooterTargetRPM() - shooterSpeedRPMIncrement);
                 }
             } else if (gamepad2.dpadRightWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
-                    theRobot.SetShooterMotorToSpecificRPM(2950);
-                } else {
+                    theRobot.SetShooterMotorToSpecificRPM(2900);
+                }
+                else if (gamepad2_shareWasPressed || gamepad2.share) {
                     theRobot.SetAutoShooterMode(false);
                     theRobot.SetShooterMotorToSpecificRPM(theRobot.GetShooterTargetRPM() + shooterSpeedRPMIncrement);
+                } else {
+                    theRobot.SetAutoHoodMode(!theRobot.GetAutoHoodMode());
                 }
             } else if (gamepad2.dpadDownWasPressed()) {
                 if (gamepad2_optionsWasPressed || gamepad2.options) {
                     theRobot.SetAutoShooterMode(false);
-                    theRobot.SetShooterMotorToSpecificRPM(3500);
+                    theRobot.SetShooterMotorToSpecificRPM(3550);
                 }
                 else if (gamepad2_shareWasPressed || gamepad2.share){
                     theRobot.SetAutoHoodMode(!theRobot.GetAutoHoodMode());
@@ -315,14 +318,12 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetLifterUp();
             } else if (gamepad2.rightBumperWasReleased()) {
                 theRobot.SetLifterDown();
-            } else if (gamepad1.rightBumperWasPressed()) {
+            //} else if (gamepad1.rightBumperWasPressed()) {
                 //Set lifter position to up
-                theRobot.SetLifterUp();
-            } else if (gamepad1.rightBumperWasReleased()) {
-                theRobot.SetLifterDown();
+            //    theRobot.SetLifterUp();
+            //} else if (gamepad1.rightBumperWasReleased()) {
+            //    theRobot.SetLifterDown();
             } else if (gamepad2.leftBumperWasPressed()) {
-                //Set lifter position to down
-                //theRobot.SetLifterDown();
                 theRobot.ShootThreeBalls();
             } else if (gamepad2.left_trigger > 0.2) {
                 //Set lifter position to middle

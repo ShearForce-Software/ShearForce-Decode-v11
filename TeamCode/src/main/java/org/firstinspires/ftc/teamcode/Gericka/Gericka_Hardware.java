@@ -388,7 +388,20 @@ public class Gericka_Hardware {
     public void SetShooterPIDF_Enabled(boolean value) { shooterPIDF_Enabled = value; }
 
     public void EndgameBuzzer(){
-        if(opMode.getRuntime() < 84.5 && opMode.getRuntime() > 84.0){
+        boolean invalidHeading = false;
+        double turretBearing = calculateBearingToAprilTag();
+        // check if it is possible for the turret to point at the target
+        if ((turretBearing > MAX_TURRET_ANGLE) || (turretBearing < MIN_TURRET_ANGLE))
+        {
+            invalidHeading = true;
+        }
+
+        if (invalidHeading) {
+            if (!opMode.gamepad1.isRumbling()) { // Check for possible overlap of rumbles.
+                opMode.gamepad1.rumbleBlips(3);
+            }
+        }
+        else if(opMode.getRuntime() < 84.5 && opMode.getRuntime() > 84.0){
             opMode.gamepad1.rumble(1000);
             opMode.gamepad2.rumble(1000);
         }
@@ -719,48 +732,88 @@ public class Gericka_Hardware {
 
     public void SetIndicatorLights() {
 
-        if ((autoTurretMode) && (!beamBreak2.getState())) {
-            light1.setPosition(INDICATOR_GREEN);
-        }else if ((!autoTurretMode) && (!beamBreak2.getState())) {
-            light1.setPosition(INDICATOR_ORANGE);
+        boolean invalidHeading = false;
+        double turretBearing = calculateBearingToAprilTag();
+        // check if it is possible for the turret to point at the target
+        if ((turretBearing > MAX_TURRET_ANGLE) || (turretBearing < MIN_TURRET_ANGLE))
+        {
+            invalidHeading = true;
+        }
+        // *************************************************
+        // **** INDICATOR LIGHT #1              ************
+        // *************************************************
+        if (invalidHeading)
+        {
+            // RED = INVALID Heading, the turret can't see the target, rotate robot
+            light1.setPosition(INDICATOR_RED);
+        }
+        // else if the beambreak2 is broken (ball3 present)
+        else if (!beamBreak2.getState()) {
+            if (autoLifterMode) {
+                // GREEN = 3 balls loaded and autolifter mode TRUE
+                light1.setPosition(INDICATOR_GREEN);
+            }
+            else {
+                // ORANGE = 3 balls loaded and autolifter mode False
+                light1.setPosition(INDICATOR_ORANGE);
+            }
         } else {
+            // BLACK/OFF = NEED MORE BALLS
             light1.setPosition(INDICATOR_BLACK);
         }
+
+        // *************************************************
+        // **** INDICATOR LIGHT #2              ************
+        // *************************************************
         // set light2 to red or blue based on alliance
-        if (allianceColorString.equals("RED")) {
-            if (autoTurretMode) {
+        if (autoTurretMode && autoShooterMode) {
+            if (allianceColorString.equals("RED")) {
                 light2.setPosition(INDICATOR_RED);
-            }
-        } else if (allianceColorString.equals("BLUE")) {
-            if (autoTurretMode) {
+            } else if (allianceColorString.equals("BLUE")) {
                 light2.setPosition(INDICATOR_BLUE);
             }
+            else {
+                // this is an error condition that should never be reached, robot is probably powered off
+                light2.setPosition(INDICATOR_BLACK);
+            }
+        }
+        else if (autoTurretMode) {
+            // ORANGE = AUTO SHOOTER is OFF
+            light2.setPosition(INDICATOR_ORANGE);
+        }
+        else if (autoShooterMode) {
+            // YELLOW = AUTO TURRET is OFF
+            light2.setPosition(INDICATOR_YELLOW);
         } else {
-            light1.setPosition(INDICATOR_VIOLET);
+            // PURPLE = AUTO TURRET and AUTO SHOOTER are OFF
+            light2.setPosition(INDICATOR_VIOLET);
         }
 
-        // set light2 based on if ball in firing position
-        /*if (lifterServo.getPosition() == LIFTER_MID_POSITION){
-            light2.setPosition(INDICATOR_GREEN);
-        }
-        else{
-            light2.setPosition(0);
-        }*/
-
+        // *************************************************
+        // **** INDICATOR LIGHT #3              ************
+        // *************************************************
         // set light3 based on if shooter motor within tolerances and if turret is aligned
         double currentMotorRPM = CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS);
         boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 10) && (currentMotorRPM <= shooterTargetRPM + 200));
         boolean turretReady = ((turretMotor.getCurrentPosition() > (turretMotor.getTargetPosition() - 5)) && (turretMotor.getCurrentPosition() < (turretMotor.getTargetPosition() + 5)));  // 5 ticks is a little bit more than 2 degrees
-        if (shooterReady && turretReady && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
+        boolean ball1Loaded = (lifterServo.getPosition() >= LIFTER_MID_POSITION);
+
+        if (invalidHeading)
+        {
+            // RED = INVALID Heading, the turret can't see the target, rotate robot
+            light3.setPosition(INDICATOR_RED);
+        }
+        else if (shooterReady && turretReady && ball1Loaded) {
+            // GREEN = at least 1 ball loaded and everything ready to shoot
             light3.setPosition(INDICATOR_GREEN);
         }
-        else if (shooterReady && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
-            light3.setPosition(INDICATOR_ORANGE);
-        }
-        else if (turretReady && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
+        else if (shooterReady && ball1Loaded) {
             light3.setPosition(INDICATOR_YELLOW);
         }
-        else if (lifterServo.getPosition() >= LIFTER_MID_POSITION){
+        else if (turretReady && ball1Loaded) {
+            light3.setPosition(INDICATOR_ORANGE);
+        }
+        else if (ball1Loaded){
             light3.setPosition(INDICATOR_VIOLET);
         }
         else {
@@ -1071,19 +1124,26 @@ public class Gericka_Hardware {
     }
 
 
+    public static int LIFTER_UP_SLEEP_TIME_MILLISECONDS = 300;
+    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 400;
     public void ShootThreeBalls(){
+        // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(300);
+        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
         SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(400);
+        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
+
+        // shoot ball 2
         SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(300);
+        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
         SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(400);
+        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
+
+        // shoot ball 3
         SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(300);
+        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
         SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(400);
+        //SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
     }
 
     // *************************************************************************
@@ -1194,15 +1254,22 @@ public class Gericka_Hardware {
         else if (useRoadrunnerForTurretAnglesEnabled) {
             drive.updatePoseEstimate();
             // calculate the bearing from the front of the robot to the april tag
-            bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, aprilTagTargetX, aprilTagTargetY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
-            // convert that bearing into a turret angle (turret zero position points the opposite direction of the robot)
-            bearingToAprilTag += 180; 
-            // normalize the bearing to be -180 to +180
-            while (bearingToAprilTag > 180) bearingToAprilTag -= 360;
-            while (bearingToAprilTag < -180) bearingToAprilTag += 360;
+            bearingToAprilTag = calculateBearingToAprilTag();
             // Command the turret to turn to that angle
             SetTurretRotationAngle(bearingToAprilTag);
         }
+    }
+
+    private double calculateBearingToAprilTag() {
+        // calculate the bearing from the front of the robot to the april tag
+        double bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, aprilTagTargetX, aprilTagTargetY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+        // convert that bearing into a turret angle (turret zero position points the opposite direction of the robot)
+        bearingToAprilTag += 180;
+        // normalize the bearing to be -180 to +180
+        while (bearingToAprilTag > 180) bearingToAprilTag -= 360;
+        while (bearingToAprilTag < -180) bearingToAprilTag += 360;
+
+        return bearingToAprilTag;
     }
     public static double calculateBearingToPointInDegrees(double robotXInInches, double robotYInInches, double targetXInInches, double targetYInInches, double robotHeadingDegrees) {
         double deltaX = targetXInInches - robotXInInches;
