@@ -1158,12 +1158,12 @@ public class Gericka_Hardware {
         while (currentTurretAngle > 180) currentTurretAngle -= 360;
         while (currentTurretAngle < -180) currentTurretAngle += 360;
         // if can see the april tag, just use the bearing to that
-        //if (getAprilTagVisible(currentAprilTargetId)){
-           // bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
-           // SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
-        //}
+        if (getAprilTagVisible(currentAprilTargetId)){
+            bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
+            SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
+        }
         // else can't see the april tag, try using the roadrunner position and robot heading to calculate the turret angle
-        if (useRoadrunnerForTurretAnglesEnabled) {
+        else if (useRoadrunnerForTurretAnglesEnabled) {
             drive.updatePoseEstimate();
             // calculate the bearing from the front of the robot to the april tag
             bearingToAprilTag = calculateBearingToPointInDegrees(drive.localizer.getPose().position.x , drive.localizer.getPose().position.y, aprilTagTargetX, aprilTagTargetY, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
