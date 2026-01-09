@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Disabled
+//@Disabled
 @Autonomous(name="Red Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 public class Red_Far_Auto extends LinearOpMode {
@@ -23,16 +23,51 @@ public class Red_Far_Auto extends LinearOpMode {
     Gericka_MecanumDrive drive;
     Pose2d startPose;
 
+    boolean shoot3enabled = true;
+
     // Trajectories
 
-    Action DriveToSecondMark;
+
     Action DriveToShootingPosition;
     Action DriveSecondMarkToSmallTriangle;
     Action DriveToFirstMark;
+    Action DriveToSecondMark;
+    Action DriveToThirdMark;
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
+    Action ReturnFromFirstMark;
+    Action ReturnFromSecondMark;
+    Action ReturnFromThirdMark;
+
+    //Action ReturnFromThirdMarkSecond;
+    //Action ReturnFromSecondMarkSecond;
+    //Action ReturnFromFirstMarkSecond;
+
+
+
     int lifterUpSleepTime = 500; //300 works very well, can probably go lower to 200
     int lifterDownSleepTime = 600; //400 works well, can probably go lower to 300 maybe 200
+
+    public enum SampleLine{
+        FIRST, //
+        SECOND,
+        THIRD,
+        IDK;
+    }
+
+
+
+    public SampleLine getSampleLineForObeliskId(int id, String alliance) {
+        switch (id) {
+            case 21:
+                return SampleLine.FIRST; // GPP
+            case 22:
+                return SampleLine.SECOND; // PGP
+            case 23:
+                return SampleLine.THIRD; // PPG
+        }
+        return SampleLine.IDK;
+    }
 
     public void runOpMode() {
         startPose = new Pose2d(60, 12, Math.toRadians(90));
@@ -47,6 +82,9 @@ public class Red_Far_Auto extends LinearOpMode {
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
 
+        Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
+        theRobot.SetShooterPIDF_Enabled(true);
+
         // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
         double turretTargetAngle = -91.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
@@ -55,6 +93,17 @@ public class Red_Far_Auto extends LinearOpMode {
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
         theRobot.TurnOffTurret();
+
+        // Now scan for the obelisk motif for up to 3 seconds
+        int obeliskId = theRobot.detectObeliskMotif(3000);
+       // telemetry.addData("Final Obelisk ID", obeliskId);
+
+        SampleLine line = getSampleLineForObeliskId(obeliskId, "RED");
+
+       // telemetry.addData("Final Obeelisk ID", obeliskId);
+        //telemetry.addData("Final Obelisk ID", obeliskId);
+        //telemetry.addData("Sample Line", line);
+        //telemetry.update();
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
@@ -69,37 +118,57 @@ public class Red_Far_Auto extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
-        // *** Route aligns with Decode_MeepMeep_Blue_ID22_Small_Triangle ***
+
+
         DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(48,12))
+                .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
 // FIRST  = far-right strip (closest to GOAL side)
 // SECOND = center strip
 // THIRD  = far-left strip
 
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(11.5, 30))
-                .strafeToConstantHeading(new Vector2d(11.5, 60))
-                .build();
-
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(20, 12))
-                .strafeToConstantHeading(new Vector2d(48, 12))
-                .build();
-
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+
                 .strafeToConstantHeading(new Vector2d(34.75, 30))
                 .strafeToConstantHeading(new Vector2d(34.75, 60))
                 .build();
 
-        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, 57, Math.toRadians(90)))
+        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+
+                .strafeToConstantHeading(new Vector2d(11.5, 30))
+                .strafeToConstantHeading(new Vector2d(11.5, 60))
+                .build();
+
+        DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+
+                .strafeToConstantHeading(new Vector2d(-15, 32))
+                .strafeToConstantHeading(new Vector2d(-15, 55))
+                .build();
+
+        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
+
+
+        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(20, 12))
+                .strafeToConstantHeading(new Vector2d(48, 12))
+                .build();
+
+        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-15, 55, Math.toRadians(90)))
+
+                .strafeToConstantHeading(new Vector2d(-12, 32))
+                .strafeToConstantHeading(new Vector2d(48, 12))
+                .build();
+
+
+
 
         DriveOutofLaunchZone = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12))
                 .build();
+
 
         theRobot.SetAutoLifterMode(true);
 
@@ -115,6 +184,7 @@ public class Red_Far_Auto extends LinearOpMode {
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
+                    theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
                 }
                 telemetry.update();
 
@@ -133,6 +203,12 @@ public class Red_Far_Auto extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
+        //if(obeliskId==-1){
+            obeliskId = theRobot.detectObeliskMotif(1500);
+            line = getSampleLineForObeliskId(obeliskId, "RED");
+        //}
+       // telemetry.addData("Final Obelisk ID", obeliskId);
+
         // Turn Turret towards target, can leave turret there the whole time
         turretTargetAngle = -115.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
@@ -149,46 +225,94 @@ public class Red_Far_Auto extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition, setIntakeOff()));
         drive.updatePoseEstimate();
 
-        /* **** SHOOT BALL #1 **** */
-        ShootBall(shooterSpeedRPM);
+        if (shoot3enabled){
+            sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+            theRobot.ShootThreeBalls();
+        }
+        else {
+            /* **** SHOOT BALL #1 **** */
+            ShootBall(shooterSpeedRPM);
 
-        // can stop the intake after the first shot to save power
-        //control.SetIntakeMotor(false,true);
+            // can stop the intake after the first shot to save power
+            //control.SetIntakeMotor(false,true);
 
-        /* **** SHOOT BALL #2 **** */
-        ShootBall(shooterSpeedRPM);
+            /* **** SHOOT BALL #2 **** */
+            ShootBall(shooterSpeedRPM);
 
-        /* **** SHOOT BALL #3 **** */
-        ShootBall(shooterSpeedRPM);
+            /* **** SHOOT BALL #3 **** */
+            ShootBall(shooterSpeedRPM);
+        }
+
+        Action pickLineAction = DriveToSecondMark;
+        Action returnFromPickedLineAction = ReturnFromSecondMark;
+        Action repeatPickLineAction = DriveToFirstMark;
+        Action returnFromRepeatPickedLineAction = ReturnFromFirstMark;
+        Action driveOutOfLaunch;
+
+        switch(line){
+            case FIRST:
+                pickLineAction = DriveToFirstMark;
+                returnFromPickedLineAction = ReturnFromFirstMark;
+                repeatPickLineAction = DriveToSecondMark;
+                returnFromRepeatPickedLineAction = ReturnFromSecondMark;
+                driveOutOfLaunch = DriveOutofLaunchZone;
+                break;
+            case SECOND:
+                pickLineAction = DriveToSecondMark;
+                returnFromPickedLineAction = ReturnFromSecondMark;
+                repeatPickLineAction = DriveToFirstMark;
+                returnFromRepeatPickedLineAction = ReturnFromFirstMark;
+                driveOutOfLaunch = DriveOutofLaunchZone;
+                break;
+            case THIRD:
+                pickLineAction = DriveToThirdMark;
+                returnFromPickedLineAction = ReturnFromThirdMark;
+                repeatPickLineAction = DriveToFirstMark;
+                returnFromRepeatPickedLineAction = ReturnFromFirstMark;
+                driveOutOfLaunch = DriveOutofLaunchZone;
+                break;
+            default:
+                pickLineAction = DriveToFirstMark;
+                returnFromPickedLineAction=ReturnFromFirstMark;
+                repeatPickLineAction = DriveToSecondMark;
+                returnFromRepeatPickedLineAction = ReturnFromSecondMark;
+                driveOutOfLaunch = DriveOutofLaunchZone;
+                break;
+        }
 
         // Drive to middle line, get balls, and return to launch zone
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to the middle line and turn the intake on
-                        new ParallelAction(DriveToSecondMark, setIntakeOn()),
+                        new ParallelAction(pickLineAction, setIntakeOn()),
                         //new SleepAction(1.0), // tiny sleep to finish ingesting balls, not sure how much is really needed
-                         // Return to launch zone and turn intake off
-                        new ParallelAction(DriveSecondMarkToSmallTriangle, setIntakeOff())
-                        ));
+                        // Return to launch zone and turn intake off
+                        new ParallelAction(returnFromPickedLineAction, setIntakeOff())
+                ));
         drive.updatePoseEstimate();
 
-        /* **** SHOOT BALL #4 **** */
-        ShootBall(shooterSpeedRPM);
-        theRobot.SetIntakeMotor(true,true);
+        if (shoot3enabled){
+            theRobot.ShootThreeBalls();
+        }
+        else {
+            /* **** SHOOT BALL #4 **** */
+            ShootBall(shooterSpeedRPM);
+            theRobot.SetIntakeMotor(true, true);
 
-        /* **** SHOOT BALL #5 **** */
-        ShootBall(shooterSpeedRPM);
+            /* **** SHOOT BALL #5 **** */
+            ShootBall(shooterSpeedRPM);
 
-        /* **** SHOOT BALL #6 **** */
-        ShootBall(shooterSpeedRPM);
-        theRobot.SetIntakeMotor(true,true);
+            /* **** SHOOT BALL #6 **** */
+            ShootBall(shooterSpeedRPM);
+            theRobot.SetIntakeMotor(true, true);
+        }
 
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
                         // Drive to closest line and turn intake on and lower lifter
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown())
+                        new ParallelAction(repeatPickLineAction, setIntakeOn(), new SetLifterDown())
                         //new SleepAction(1.0) // tiny sleep to finish ingesting balls, not sure how much is really needed
 
                 ));
@@ -197,19 +321,24 @@ public class Red_Far_Auto extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         if (Gericka_Hardware.autoTimeLeft >= 5) {
             drive.updatePoseEstimate();
-            Actions.runBlocking(new ParallelAction(DriveFirstMarkToSmallTriangle, setIntakeOff()));
+            Actions.runBlocking(new ParallelAction(returnFromRepeatPickedLineAction, setIntakeOff()));
             drive.updatePoseEstimate();
 
-            /* **** SHOOT BALL #7 **** */
-            ShootBall(shooterSpeedRPM);
-            theRobot.SetIntakeMotor(true,true);
+            if (shoot3enabled){
+                theRobot.ShootThreeBalls();
+            }
+            else {
+                /* **** SHOOT BALL #7 **** */
+                ShootBall(shooterSpeedRPM);
+                theRobot.SetIntakeMotor(true, true);
 
-            /* **** SHOOT BALL #8 **** */
-            ShootBall(shooterSpeedRPM);
+                /* **** SHOOT BALL #8 **** */
+                ShootBall(shooterSpeedRPM);
 
-            /* **** SHOOT BALL #9 **** */
-            ShootBall(shooterSpeedRPM);
-            theRobot.SetIntakeMotor(true,true);
+                /* **** SHOOT BALL #9 **** */
+                ShootBall(shooterSpeedRPM);
+                theRobot.SetIntakeMotor(true, true);
+            }
             // Drive to Parking spot
             turretTargetAngle = 0;
             theRobot.SetTurretRotationAngle(turretTargetAngle);
