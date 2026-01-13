@@ -68,7 +68,6 @@ import java.util.List;
  */
 @TeleOp(name = "Sensor: Limelight3A", group = "Sensor")
 @Disabled
-
 public class LimeLightTesting extends LinearOpMode {
 
     private Limelight3A limelight;

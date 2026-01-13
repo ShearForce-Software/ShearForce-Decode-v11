@@ -70,10 +70,8 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
 
 
 
-    int lifterUpSleepTime = 500; //300 works very well, can probably go lower to 200
-    int lifterDownSleepTime = 600; //400 works well, can probably go lower to 300 maybe 200
-    //Add constraints here
-
+    int lifterUpSleepTime = 300;
+    int lifterDownSleepTime = 400;
 
     public enum SampleLine{
         FIRST, //
@@ -124,14 +122,9 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
 
         // Now scan for the obelisk motif for up to 3 seconds
         int obeliskId = theRobot.detectObeliskMotif(3000);
-       // telemetry.addData("Final Obelisk ID", obeliskId);
 
         SampleLine line = getSampleLineForObeliskId(obeliskId, "RED");
 
-       // telemetry.addData("Final Obeelisk ID", obeliskId);
-        //telemetry.addData("Final Obelisk ID", obeliskId);
-        //telemetry.addData("Sample Line", line);
-        //telemetry.update();
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
@@ -215,8 +208,6 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
                 theRobot.ShowTelemetry();
-                //control.ShowPinpointTelemetry();
-
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {

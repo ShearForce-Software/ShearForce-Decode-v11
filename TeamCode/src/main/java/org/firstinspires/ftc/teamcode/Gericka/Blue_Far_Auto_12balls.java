@@ -67,7 +67,9 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         sleep(500);
         theRobot.SetRoadrunnerInitialPosition(63, -12, -90);
 
-        // set lifter half up (so can get 3 balls loaded in robot)
+        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+
+        // set lifter half up (so can get 3 ball loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
         // ***************************************************

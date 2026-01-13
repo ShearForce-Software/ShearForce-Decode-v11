@@ -45,8 +45,8 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
     VelConstraint intakeVel = new TranslationalVelConstraint(60);
     AccelConstraint intakeAccel = new ProfileAccelConstraint(-30, 40);
 
-    int lifterUpSleepTime = 300;
-    int lifterDownSleepTime = 400;
+    public static int lifterUpSleepTime = 300;
+    public static int lifterDownSleepTime = 400;
 
     @Override
     public void runOpMode() {
@@ -64,6 +64,8 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
         theRobot.SetRoadrunnerInitialPosition(60, 12, 90);
+
+        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
@@ -152,7 +154,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetShooterPIDFCoefficients();
 
         // TODO: Set turret angle for SMALL TRIANGLE shots (edit this)
-        double turretTargetAngleSmallTriangle = -115;
+        double turretTargetAngleSmallTriangle = -115.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
 
         // turn on intake to suck in any stuck balls

@@ -4,14 +4,17 @@
 
 === Akshay
 
-- [ ] AUTO: find how fast we run the auto routines by experimenting with velocity constraints
+- [ ] **AUTO: find how fast we can run the auto routines by experimenting with velocity constraints, maybe try to utilize the dashboard feature to eliminate waiting to rebuild and reload time?**
+- [ ] **AUTO: Make auto far routines consistently get balls in again (at least 9)**
 - [ ] AUTO: create a new 12 ball shooter Far Auto opmode
 - [ ] AUTO: create a new 9-12 ball shooter Close Auto opmode
+- [ ] Start deciding what we should share about our programming and control capabilities with judges
 
 === Gianna
 
 - [ ] AUTO: Test and update the 2 close autos, probably need to set ramp and speeds to align with new shooter table
 - [ ] TURRET: Start creating logic for the limit switches - will use to do some resets...
+- [ ] Start deciding what we should share about our programming and control capabilities with judges
 
 === Shrey
 
@@ -21,12 +24,14 @@
   * be sure to put inside a check that run has been started (don't want auto intake running during init)
 - [ ] AUTO: Experiment with lowering sleep time for lifterUp, should be able to do 250 milliseconds
 - [ ] AUTO: Experiment with lowering sleep time for lifterDown
+- [ ] Start deciding what we should share about our programming and control capabilities with judges
 
 === Tong
 
-- [ ] SHOOTER: experiment with Shoot3 function to make faster, use dashboard to change sleep times to test faster
+- [ ] **SHOOTER: experiment with Shoot3 function to make faster, use dashboard to change sleep times to test faster**
 - [ ] TURRET: SLAMMING - how can we eliminate?  Maybe try a lower power setting?  Maybe only a lower power setting when change is more than 90 degrees?
 - [ ] TURRET: Can we make it track smoother? Maybe a PIDF solution?
+- [ ] Start deciding what we should share about our programming and control capabilities with judges
 
 == Next Stuff
 

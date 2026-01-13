@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.Geronimo;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "Geronimo 1 Manual Control")
-//@Disabled
+@Disabled
 public class Geronimo_Manual_Control extends LinearOpMode {
     Geronimo theRobot;
     boolean rotatorPowerApplied = false;

@@ -23,7 +23,7 @@ public class Red_Far_Auto extends LinearOpMode {
     Gericka_MecanumDrive drive;
     Pose2d startPose;
 
-    boolean shoot3enabled = true;
+    public static boolean shoot3enabled = true;
 
     // Trajectories
 
@@ -45,8 +45,8 @@ public class Red_Far_Auto extends LinearOpMode {
 
 
 
-    int lifterUpSleepTime = 500; //300 works very well, can probably go lower to 200
-    int lifterDownSleepTime = 600; //400 works well, can probably go lower to 300 maybe 200
+    public static int lifterUpSleepTime = 300;
+    public static int lifterDownSleepTime = 400;
 
     public enum SampleLine{
         FIRST, //

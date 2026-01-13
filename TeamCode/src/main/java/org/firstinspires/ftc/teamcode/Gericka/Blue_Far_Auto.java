@@ -31,8 +31,9 @@ public class Blue_Far_Auto extends LinearOpMode {
     Action DriveToFirstMark;
     Action DriveFirstMarkToSmallTriangle;
     Action DriveOutofLaunchZone;
-    int lifterUpSleepTime = 500; //300 works very well, can probably go lower to 200
-    int lifterDownSleepTime = 600; //400 works well, can probably go lower to 300 maybe 200
+
+    int lifterUpSleepTime = 300;
+    int lifterDownSleepTime = 400;
 
     public void runOpMode() {
         startPose = new Pose2d(60, -12, Math.toRadians(-90));

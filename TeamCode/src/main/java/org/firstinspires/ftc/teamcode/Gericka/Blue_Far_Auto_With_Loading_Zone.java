@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 // auto select manual opMode next
 @Disabled
 @Autonomous(name="Blue Far Auto With Loading Zone", preselectTeleOp ="Gericka 1 Manual Control")
-
 public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
