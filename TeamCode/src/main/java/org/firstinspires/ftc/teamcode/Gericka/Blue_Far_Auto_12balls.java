@@ -51,8 +51,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        // NOTE: Blue side uses negative Y and heading -90.
-        // You asked to use 63 instead of 60 for the Blue start X.
+
         startPose = new Pose2d(63, -12, Math.toRadians(-90));
 
         /* Initialize the Robot */
@@ -109,7 +108,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-15, -60), Math.toRadians(-90), intakeVel, intakeAccel)
                 .build();
 
-        // Use this as the "big triangle" shooting location (adjust if needed)
+
         // Mirrored from RED big triangle point (-12.4, 12.7)
         DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, -60, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(-12.4, -12.7), fastVel, fastAccel)
@@ -150,7 +149,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
-        // PIDF (same style as your red 12-balls)
+
         theRobot.SetShooterPIDF_Enabled(false);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
         theRobot.SetShooterPIDFCoefficients();
@@ -240,19 +239,13 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
         theRobot.SetIntakeMotor(true, true);
 
-        // -------------------------
-        // Drive to Gate-Lock position (end-of-auto move)
-        // -------------------------
-        // (Optional) center turret before driving
+
         theRobot.SetTurretRotationAngle(0.0);
 
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToGateLock, setIntakeOff()));
         drive.updatePoseEstimate();
 
-        // -------------------------
-        // Cleanup
-        // -------------------------
 
         // turn off shooter wheel
         theRobot.SetShooterMotorToSpecificRPM(0.0);
@@ -273,7 +266,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
     }
 
     private void ShootBall(double shooterSpeedRPM) {
-        // Keep your simple lifter-based shot cycle (no advanced RPM waiting)
+
         theRobot.SetLifterUp();
         sleep(lifterUpSleepTime);
 

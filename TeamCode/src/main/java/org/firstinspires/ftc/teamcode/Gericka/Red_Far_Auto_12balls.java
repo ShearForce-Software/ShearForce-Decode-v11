@@ -35,8 +35,8 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
     Action ReturnFromSecondMark;
 
     Action DriveToThirdMark;
-    Action DriveThirdMarkToBigTriangle; // go to big triangle shooting spot after 3rd strip
-    Action DriveToGateLock; // end-of-auto move (matches MeepMeep: (0,46))
+    Action DriveThirdMarkToBigTriangle;
+    Action DriveToGateLock;
 
     // Constraints
     VelConstraint fastVel = new TranslationalVelConstraint(85);
@@ -60,7 +60,6 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
 
-        // NOTE: No obelisk / casing logic in this auto
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
@@ -92,7 +91,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
                 .build();
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                // Smooth into the strip (fast -> intake)
+
                 .splineToConstantHeading(new Vector2d(11.5, 30), Math.toRadians(90), fastVel, fastAccel)
                 .splineToConstantHeading(new Vector2d(11.5, 63), Math.toRadians(90), intakeVel, intakeAccel)
                 .build();
@@ -102,17 +101,17 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
                 .build();
 
         DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                // Smooth into the strip (fast -> intake)
-                .splineToConstantHeading(new Vector2d(-15, 31), Math.toRadians(90), fastVel, fastAccel)
+
+                .splineToConstantHeading(new Vector2d(-15, 32), Math.toRadians(90), fastVel, fastAccel)
                 .splineToConstantHeading(new Vector2d(-15, 60), Math.toRadians(90), intakeVel, intakeAccel)
                 .build();
 
-        // Use this as the "big triangle" shooting location (adjust if needed)
+
         DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, 60, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(-11.5, 11.5), fastVel, fastAccel)
                 .build();
 
-        // End-of-auto move (matches MeepMeep)
+
         DriveToGateLock = drive.actionBuilder(new Pose2d(-11.5, 11.5, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 46), fastVel, fastAccel)
                 .build();
@@ -147,7 +146,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
-        // PIDF (same style as your obelisk auto)
+
         theRobot.SetShooterPIDF_Enabled(false);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
         theRobot.SetShooterPIDFCoefficients();
@@ -214,7 +213,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
 
-        // TODO: When going for THIRD STRIP / BIG TRIANGLE, lower shooter speed + change turret angle (edit both)
+
         final double BIG_TRIANGLE_RPM = 2700; // TODO: change this value
         double turretTargetAngleBigTriangle = -142.0; // TODO: change this value
 
@@ -238,11 +237,8 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
         theRobot.SetIntakeMotor(true, true);
 
-        // -------------------------
-        // End-of-auto move (gate-lock / park)
-        // -------------------------
-        // (Optional) center turret before driving
-        //theRobot.SetTurretRotationAngle(0.0);
+
+        theRobot.SetTurretRotationAngle(0.0);
 
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToGateLock, setIntakeOff()));
@@ -271,7 +267,6 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
     }
 
     private void ShootBall(double shooterSpeedRPM) {
-        // Keep your simple lifter-based shot cycle (no advanced RPM waiting)
         theRobot.SetLifterUp();
         sleep(lifterUpSleepTime);
 
