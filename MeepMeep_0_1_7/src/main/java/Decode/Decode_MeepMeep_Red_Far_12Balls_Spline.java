@@ -54,7 +54,8 @@ public class Decode_MeepMeep_Red_Far_12Balls_Spline {
                         .splineToConstantHeading(new Vector2d(34.75, 63), Math.toRadians(90), intakeVel, intakeAccel)
 
                         // ReturnFromFirstMark
-                        .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
+                        .strafeToConstantHeading(new Vector2d(45, 23), fastVel, fastAccel)
+                        .strafeToConstantHeading(new Vector2d(48, 12), intakeVel, intakeAccel)
 
                         // Shoot #4-#6 (sim)
                         .waitSeconds(2)
@@ -65,18 +66,23 @@ public class Decode_MeepMeep_Red_Far_12Balls_Spline {
                         .splineToConstantHeading(new Vector2d(11.5, 63), Math.toRadians(90), intakeVel, intakeAccel)
 
                         // ReturnFromSecondMark
-                        .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
+                        .strafeToConstantHeading(new Vector2d(45, 23), fastVel, fastAccel)
+                        .strafeToConstantHeading(new Vector2d(48, 12), intakeVel, intakeAccel)
 
                         // Shoot #7-#9 (sim)
                         .waitSeconds(2)
 
                         // ===== THIRD STRIP =====
                         // Smooth into the strip (fast -> intake)
-                        .splineToConstantHeading(new Vector2d(-15, 31), Math.toRadians(90), fastVel, fastAccel)
+                        .splineToConstantHeading(new Vector2d(-15, 27), Math.toRadians(90), fastVel, intakeAccel)
+                        .splineToConstantHeading(new Vector2d(-15, 31), Math.toRadians(90), fastVel, intakeAccel)
+                        .splineToConstantHeading(new Vector2d(-15, 33), Math.toRadians(90), intakeVel, intakeAccel)
                         .splineToConstantHeading(new Vector2d(-15, 60), Math.toRadians(90), intakeVel, intakeAccel)
 
                         // DriveThirdMarkToBigTriangle
-                        .strafeToConstantHeading(new Vector2d(-11.5, 11.5), fastVel, fastAccel)
+
+
+                        .strafeToConstantHeading(new Vector2d(-11.5, 13), fastVel, fastAccel)
 
                         // Shoot #10-#12 (sim)
                         .waitSeconds(2)
