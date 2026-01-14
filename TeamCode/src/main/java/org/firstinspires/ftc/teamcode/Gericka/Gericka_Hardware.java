@@ -1224,7 +1224,16 @@ public class Gericka_Hardware {
         turretTargetTicks = Math.max(turretTargetTicks,MIN_TURRET_TICKS);
         turretMotor.setTargetPosition(turretTargetTicks);
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double differenceInAngles = turretTargetAngle - getCurrentTurretAngle();
+        if (Math.abs(differenceInAngles) > 90){
+            turretMotor.setPower(0.5);
+        }
+        else if (turretTargetAngle == MAX_TURRET_ANGLE || turretTargetAngle == MIN_TURRET_ANGLE){
+            turretMotor.setPower(0.5);
+        }
+        else{
         turretMotor.setPower(1.0);
+        }
     }
     double getTurretTargetAngle(){
         return turretTargetAngle;
