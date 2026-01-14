@@ -249,6 +249,9 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         // -------------------------
         // Cleanup
         // -------------------------
+        //lower lifter
+        theRobot.SetLifterDown();
+        theRobot.SetAutoLifterMode(false);
 
         // turn off shooter wheel
         theRobot.SetShooterMotorToSpecificRPM(0.0);

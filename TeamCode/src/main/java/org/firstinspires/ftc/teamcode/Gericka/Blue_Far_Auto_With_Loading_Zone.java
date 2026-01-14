@@ -279,6 +279,10 @@ public class Blue_Far_Auto_With_Loading_Zone extends LinearOpMode {
         blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
         blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
 
+        //lower lifter
+        theRobot.SetLifterDown();
+        theRobot.SetAutoLifterMode(false);
+        
         // turn off shooter wheel
         shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);

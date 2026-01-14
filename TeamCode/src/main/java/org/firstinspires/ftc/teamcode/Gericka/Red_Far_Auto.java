@@ -130,33 +130,33 @@ public class Red_Far_Auto extends LinearOpMode {
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(34.75, 30))
-                .strafeToConstantHeading(new Vector2d(34.75, 60))
+                .strafeToConstantHeading(new Vector2d(32.25, 30))
+                .strafeToConstantHeading(new Vector2d(32.25, 60))
                 .build();
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(11.5, 30))
-                .strafeToConstantHeading(new Vector2d(11.5, 60))
+                .strafeToConstantHeading(new Vector2d(9, 30))
+                .strafeToConstantHeading(new Vector2d(9, 60))
                 .build();
 
         DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(-15, 32))
-                .strafeToConstantHeading(new Vector2d(-15, 55))
+                .strafeToConstantHeading(new Vector2d(-17.5, 32))
+                .strafeToConstantHeading(new Vector2d(-17.5, 55))
                 .build();
 
-        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
+        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(32.25, 60, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
 
-        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
+        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(9, 60, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12))
                 .strafeToConstantHeading(new Vector2d(48, 12))
                 .build();
 
-        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-15, 55, Math.toRadians(90)))
+        ReturnFromThirdMark = drive.actionBuilder(new Pose2d(-17.5, 55, Math.toRadians(90)))
 
                 .strafeToConstantHeading(new Vector2d(-12, 32))
                 .strafeToConstantHeading(new Vector2d(48, 12))
@@ -353,6 +353,10 @@ public class Red_Far_Auto extends LinearOpMode {
         blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
         blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
         blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+
+        //lower lifter
+        theRobot.SetLifterDown();
+        theRobot.SetAutoLifterMode(false);
 
         // turn off shooter wheel
         shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.

@@ -164,6 +164,10 @@ public class Blue_Close_Auto extends LinearOpMode {
         ShootBall(shooterSpeedRPM);
         ShootBall(shooterSpeedRPM);
 
+        //lower lifter
+        theRobot.SetLifterDown();
+        theRobot.SetAutoLifterMode(false);
+
         // return turret to zero position
         turretTargetAngle = 0.0;
         theRobot.SetTurretRotationAngle(turretTargetAngle);

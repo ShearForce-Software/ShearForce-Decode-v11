@@ -81,21 +81,21 @@ public class Blue_Far_Auto extends LinearOpMode {
 // THIRD  = far-left strip
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(11.5, -30))
-                .strafeToConstantHeading(new Vector2d(11.5, -60))
+                .strafeToConstantHeading(new Vector2d(9, -30))
+                .strafeToConstantHeading(new Vector2d(9, -60))
                 .build();
 
-        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+        DriveSecondMarkToSmallTriangle = drive.actionBuilder(new Pose2d(9, -60, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(20, -12))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(34.75, -30))
-                .strafeToConstantHeading(new Vector2d(34.75, -60))
+                .strafeToConstantHeading(new Vector2d(32.25, -30))
+                .strafeToConstantHeading(new Vector2d(32.25, -60))
                 .build();
 
-        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
+        DriveFirstMarkToSmallTriangle = drive.actionBuilder(new Pose2d(32.25, -60, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(48, -12))
                 .build();
 
@@ -227,6 +227,10 @@ public class Blue_Far_Auto extends LinearOpMode {
         blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
         blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
         blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+
+        //lower lifter
+        theRobot.SetLifterDown();
+        theRobot.SetAutoLifterMode(false);
 
         // turn off shooter wheel
         shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.

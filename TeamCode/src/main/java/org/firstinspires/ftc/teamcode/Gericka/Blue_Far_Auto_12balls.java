@@ -248,6 +248,9 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(DriveToGateLock, setIntakeOff()));
         drive.updatePoseEstimate();
 
+        //lower lifter
+        theRobot.SetLifterDown();
+        theRobot.SetAutoLifterMode(false);
 
         // turn off shooter wheel
         theRobot.SetShooterMotorToSpecificRPM(0.0);

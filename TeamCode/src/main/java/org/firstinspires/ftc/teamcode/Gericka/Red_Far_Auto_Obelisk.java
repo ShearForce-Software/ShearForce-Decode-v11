@@ -151,33 +151,33 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
 
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(34.75, 63), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(32.25, 30), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(32.25, 63), intakeVel, intakeAccel)
                 .build();
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(11.5, 30), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(11.5, 63), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(9, 30), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(9, 63), intakeVel, intakeAccel)
                 .build();
 
         DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
 
-                .strafeToConstantHeading(new Vector2d(-15, 32), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(-15, 60), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(-17.5, 32), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-17.5, 60), intakeVel, intakeAccel)
                 .build();
 
-        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, 63, Math.toRadians(90)))
+        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(32.25, 63, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
                 .build();
 
 
-        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, 63, Math.toRadians(90)))
+        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(9, 63, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(20, 12), fastVel, fastAccel)
                 .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
                 .build();
 
-        DriveThirdMarkToLargeTriangle = drive.actionBuilder(new Pose2d(-15, 60, Math.toRadians(90)))
+        DriveThirdMarkToLargeTriangle = drive.actionBuilder(new Pose2d(-17.5, 60, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(-12.4, 12.7), fastVel, fastAccel)
                 .build();
 
@@ -455,6 +455,10 @@ public class Red_Far_Auto_Obelisk extends LinearOpMode {
         // turn off shooter wheel
         shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        //lower lifter
+        theRobot.SetLifterDown();
+        theRobot.SetAutoLifterMode(false);
 
         // return turret to zero position
         turretTargetAngle = 0.0;
