@@ -87,10 +87,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     // Run the Auto Lift to Midway position (if enabled)
                     theRobot.RunAutoLifter();
 
-                    if (theRobot.GetAutoIntakeMode()) {
-                        theRobot.RunAutoIntake();  // this method may sleep for a little while, so needs to be in a separate thread from main
-                    }
-
+                    theRobot.RunAutoIntake();  // this method may sleep for a little while, so needs to be in a separate thread from main
                 }
 
                 theRobot.ShowTelemetry();
@@ -187,8 +184,12 @@ public class Gericka_Manual_Control extends LinearOpMode {
             // ********  KICKSTAND CONTROLS ***********************
             if (gamepad1.circleWasPressed()){
                 theRobot.setKickstandsUp();
+                theRobot.SetAutoLifterMode(true);
             } else if (gamepad1.crossWasPressed()){
                 theRobot.setKickstandsDown();
+                // put the lifter down too
+                theRobot.SetAutoLifterMode(false);
+                theRobot.SetLifterDown();
             }
             /* *************************************************
              *************************************************

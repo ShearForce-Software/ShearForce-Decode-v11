@@ -47,8 +47,8 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
     VelConstraint intakeVel = new TranslationalVelConstraint(60);
     AccelConstraint intakeAccel = new ProfileAccelConstraint(-30, 40);
 
-    public static int lifterUpSleepTime = 300;
-    public static int lifterDownSleepTime = 400;
+    int lifterUpSleepTime = 300;
+    int lifterDownSleepTime = 400;
 
     @Override
     public void runOpMode() {
@@ -72,15 +72,6 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
         theRobot.TurnOffTurret();
-
-        // Now scan for the obelisk motif for up to 3 seconds
-        int obeliskId = theRobot.detectObeliskMotif(3000);
-
-
-
-
-       // Red_Far_Auto_Obelisk.SampleLine line = getSampleLineForObeliskId(obeliskId, "RED");
-
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
@@ -126,10 +117,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
                 .build();
 
         DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-
-                //.splineToConstantHeading(new Vector2d(-15, 27), Math.toRadians(90), fastVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(-15, 31), fastVel, fastAccel)
-                //.splineToConstantHeading(new Vector2d(-15, 33), Math.toRadians(90), intakeVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(-15, 60), intakeVel, intakeAccel)
                 .build();
 
@@ -144,6 +132,8 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
                 .build();
 
         theRobot.SetAutoLifterMode(true);
+        theRobot.SetShooterPIDF_Enabled(true);
+        Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
@@ -173,15 +163,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
-        obeliskId = theRobot.detectObeliskMotif(1500);
-        //line = getSampleLineForObeliskId(obeliskId, "RED");
 
-
-        theRobot.SetShooterPIDF_Enabled(true);
-        Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
-        theRobot.SetShooterPIDFCoefficients();
-
-        // TODO: Set turret angle for SMALL TRIANGLE shots (edit this)
         double turretTargetAngleSmallTriangle = -115.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
 
@@ -189,13 +171,14 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        final double SMALL_TRIANGLE_RPM = 3400;
-        double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
+        double shooterSpeedRPM = 3400;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // Drive to the shooting position
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
 
         if (shoot3enabled){
             sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
@@ -215,13 +198,8 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
             ShootBall(shooterSpeedRPM);
         }
 
-
         drive.updatePoseEstimate();
-        sleep(1000);
-
-
-
-
+        //sleep(1000);
 
         // -------------------------
         // FIRST STRIP -> BACK -> SHOOT
@@ -230,13 +208,16 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new ParallelAction(ReturnFromFirstMark)
+                        new SleepAction(0.250),
+                        new ParallelAction(ReturnFromFirstMark, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
 
         if (shoot3enabled){
-            sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+            //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
         }
         else {
@@ -260,13 +241,16 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new ParallelAction(ReturnFromSecondMark)
+                        new SleepAction(0.250),
+                        new ParallelAction(ReturnFromSecondMark, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
 
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
         if (shoot3enabled){
-            sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+            //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
         }
         else {
@@ -299,13 +283,16 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToThirdMark, setIntakeOn(), new SetLifterDown()),
-                        new ParallelAction(DriveThirdMarkToBigTriangle)
+                        new SleepAction(0.250),
+                        new ParallelAction(DriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
 
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
         if (shoot3enabled){
-            sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+            //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
         }
         else {
@@ -326,11 +313,15 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
 
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToGateLock, setIntakeOff()));
-        drive.updatePoseEstimate();
 
         // -------------------------
         // Cleanup
         // -------------------------
+        drive.updatePoseEstimate();
+        blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+        blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+        blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+
         //lower lifter
         theRobot.SetLifterDown();
         theRobot.SetAutoLifterMode(false);

@@ -309,8 +309,10 @@ public class Gericka_Hardware {
         //ShowPinpointTelemetry();
 
         ShowRoadrunnerPosition();
-        opMode.telemetry.addData("Obelisk Id", detectedObeliskId);
-        opMode.telemetry.addData("April Tag Target ID", GetAprilTagTargetId());
+        opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
+
+        //opMode.telemetry.addData("Obelisk Id", detectedObeliskId);
+        //opMode.telemetry.addData("April Tag Target ID", GetAprilTagTargetId());
         opMode.telemetry.addData("Distance To Target (in.):", distanceToTarget);
         //opMode.telemetry.addData("Obelisk Pattern", obeliskPattern);
 
@@ -1173,35 +1175,29 @@ public class Gericka_Hardware {
             boolean beam1IsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
             boolean beam2IsBroken = !beamBreak2.getState();
 
+            // if currently shooting a ball (then have room for another one to come in)
             if (lifterServo.getPosition() == LIFTER_UP_POSITION) {
                 // briefly turn on the intake when the lifter is up, to unstick anything in the intake
                 intakeMotor.setPower(INTAKE_POWER);
             }
+            // else if there is another ball ready to come in if allowed
             else if (beam1IsBroken)
             {
-                if (beam2IsBroken && (lifterServo.getPosition() >= LIFTER_MID_POSITION)) {
+                // if there is a ball in spot #3, and the lifter is half up (meaning ball #2 should be at the bottom of the ramp, so it isn't ball #2 breaking the beam)
+                if (beam2IsBroken && (lifterServo.getPosition() >= (LIFTER_MID_POSITION - 0.03)) && (lifterServo.getPosition() <= (LIFTER_MID_POSITION + 0.03))) {
+                    // if ready to turn off, leave on a tiny bit to push the last ball away
+                    SpecialSleep(250);
                     intakeMotor.setPower(0);
                 } else {
                     intakeMotor.setPower(INTAKE_POWER);
                 }
             }
+            // else there is NOT a ball ready to come in, but the intake is currently on
             else if (intakeMotor.getPower() != 0) {
                 // if ready to turn off, leave on a tiny bit to push the last ball away
                 SpecialSleep(250);
                 intakeMotor.setPower(0);
             }
-           /* boolean intakeOn = false;
-            if (beam1IsBroken){
-                intakeOn = true;
-            }
-            if (beam2IsBroken){
-                intakeOn = false;
-            }
-            if (intakeOn){
-                intakeMotor.setPower(INTAKE_POWER);
-            } else {
-                intakeMotor.setPower(0);
-            }*/
         }
     }
 
@@ -1351,7 +1347,7 @@ public class Gericka_Hardware {
 
             if (lifterServo.getPosition() <= (LIFTER_DOWN_POSITION + 0.06f)) {
                 if (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 0)
-                        && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.2)) ||beam3IsBroken) {
+                        && (ColorSensorRight.getDistance(DistanceUnit.INCH) < 1.2)) || beam3IsBroken) {
                     lifterServo.setPosition(LIFTER_MID_POSITION);
                 } else if ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 0)
                         && (ColorSensorLeft.getDistance(DistanceUnit.INCH) < 1.2)) {
@@ -1360,6 +1356,7 @@ public class Gericka_Hardware {
             }
         }
     }
+
     public void SetLifterUp(){
         SetLifterPosition(LIFTER_UP_POSITION);
         //opMode.sleep(10);
