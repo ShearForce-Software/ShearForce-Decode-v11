@@ -794,7 +794,7 @@ public class Gericka_Hardware {
         // *************************************************
         // set light3 based on if shooter motor within tolerances and if turret is aligned
         double currentMotorRPM = CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS);
-        boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 10) && (currentMotorRPM <= shooterTargetRPM + 200));
+        boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 50) && (currentMotorRPM <= shooterTargetRPM + 200));
         boolean turretReady = ((turretMotor.getCurrentPosition() > (turretMotor.getTargetPosition() - 5)) && (turretMotor.getCurrentPosition() < (turretMotor.getTargetPosition() + 5)));  // 5 ticks is a little bit more than 2 degrees
         boolean ball1Loaded = (lifterServo.getPosition() >= LIFTER_MID_POSITION);
 
