@@ -19,11 +19,11 @@
 === Shrey
 
 - [ ] AUTO: Test auto opmodes to use the correct PIDF values
-- [ ] AUTO: Add new theRobot.RunAutoIntake() method to Second thread in an auto routine
+- [x] AUTO: Add new theRobot.RunAutoIntake() method to Second thread in an auto routine
   * remove manual intake on/off commands in the auto opMode, then test if works effectively, if it does make all autos do it
   * be sure to put inside a check that run has been started (don't want auto intake running during init)
-- [ ] AUTO: Experiment with lowering sleep time for lifterUp, should be able to do 250 milliseconds
-- [ ] AUTO: Experiment with lowering sleep time for lifterDown
+- [x] AUTO: Experiment with lowering sleep time for lifterUp, should be able to do 250 milliseconds
+- [x] AUTO: Experiment with lowering sleep time for lifterDown
 - [ ] Start deciding what we should share about our programming and control capabilities with judges
 
 === Tong
