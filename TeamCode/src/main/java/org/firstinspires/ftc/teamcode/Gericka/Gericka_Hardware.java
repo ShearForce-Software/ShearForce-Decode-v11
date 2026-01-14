@@ -87,7 +87,7 @@ public class Gericka_Hardware {
 
     final double INTAKE_POWER = 0.65;
     public final float LIFTER_UP_POSITION = 0.35f;
-    public final float LIFTER_MID_POSITION = 0.25f;
+    public final float LIFTER_MID_POSITION = 0.27f;
     public final float LIFTER_DOWN_POSITION = 0.05f;
 
     private boolean useOnlyWebcamForDistance = false;
@@ -120,7 +120,7 @@ public class Gericka_Hardware {
     public final double PIDF_F_FROOTY_LOOPS = 14.25;
     public final double PIDF_F_CLOSE = 13.0;
 
-    public static double shooterP = 7.5;
+    public static double shooterP = 25.0;
     public static double shooterI = 0.0;
     public static double shooterD = 0.0;
     public static double shooterF = 14.25;
@@ -1124,8 +1124,8 @@ public class Gericka_Hardware {
     }
 
 
-    public static int LIFTER_UP_SLEEP_TIME_MILLISECONDS = 300;
-    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 400;
+    public static int LIFTER_UP_SLEEP_TIME_MILLISECONDS = 175;
+    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 350;
     public void ShootThreeBalls(){
         // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);
