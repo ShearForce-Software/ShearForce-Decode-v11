@@ -1127,7 +1127,7 @@ public class Gericka_Hardware {
 
 
     public static int LIFTER_UP_SLEEP_TIME_MILLISECONDS = 175;
-    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 350;
+    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 400;
     public void ShootThreeBalls(){
         // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);

@@ -180,7 +180,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
 
         if (shoot3enabled){
             sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
@@ -216,7 +216,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         );
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
 
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
@@ -250,7 +250,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
@@ -292,7 +292,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
@@ -335,7 +335,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetTurretRotationAngle(0.0);
 
         // turn off intake
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
 
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
