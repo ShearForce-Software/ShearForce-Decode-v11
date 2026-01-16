@@ -128,7 +128,8 @@ public class Blue_Close_Auto extends LinearOpMode {
     //control.SetTurretRotationAngle(turretTargetAngle);
 
     // Shooter RPM for big triangle shots (tune as needed)
-    double shooterSpeedRPM = 2700;
+    double shooterSpeedRPM = 2500;
+    theRobot.SetLaunchRampPosition(0.4);
     theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
 
