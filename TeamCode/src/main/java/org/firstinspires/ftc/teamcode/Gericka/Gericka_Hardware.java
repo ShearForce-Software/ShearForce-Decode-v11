@@ -132,7 +132,7 @@ public class Gericka_Hardware {
     final double YELLOW_JACKET_13_1_TICKS = 384.5; // 13.7:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_5_1_TICKS = 145.1; // 5.2:1 - ticks per motor shaft revolution
     final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_5_1_TICKS; // 133/24 is the gear ratio
-    private final double MAX_TURRET_ANGLE = 120.0;
+    private final double MAX_TURRET_ANGLE = 145.0;
     private final double MIN_TURRET_ANGLE = -165.0;
     final int MAX_TURRET_TICKS = (int)(MAX_TURRET_ANGLE * TURRET_TICKS_IN_DEGREES);
     final int MIN_TURRET_TICKS = (int)(MIN_TURRET_ANGLE * TURRET_TICKS_IN_DEGREES);
@@ -1127,7 +1127,7 @@ public class Gericka_Hardware {
 
 
     public static int LIFTER_UP_SLEEP_TIME_MILLISECONDS = 175;
-    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 400;
+    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 350;
     public void ShootThreeBalls(){
         // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);
