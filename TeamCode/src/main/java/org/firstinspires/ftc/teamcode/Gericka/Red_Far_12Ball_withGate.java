@@ -38,6 +38,14 @@ public class Red_Far_12Ball_withGate extends LinearOpMode {
     Action DriveThirdMarkToBigTriangle;
     Action DriveToGateLock;
 
+    Action SecondMarkToLock;
+
+    Action LockToBigTriangle;
+
+    Action DriveBigTriangleToThirdMark;
+
+    Action DriveBigTriangleToFirstMark;
+
     public static boolean shoot3enabled = true;
 
     // Constraints
@@ -132,6 +140,21 @@ public class Red_Far_12Ball_withGate extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
                 .build();
 
+        SecondMarkToLock = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))   // FIX
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .build();
+
+        LockToBigTriangle = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))   // FIX
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .build();
+
+        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))   // FIX
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .build();
+
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
@@ -210,9 +233,19 @@ public class Red_Far_12Ball_withGate extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250),
-                        new ParallelAction(ReturnFromFirstMark, setIntakeOff())
+                        new ParallelAction(SecondMarkToLock, setIntakeOff()),
+                        new ParallelAction(LockToBigTriangle)
                 )
         );
+
+        final double BIG_TRIANGLE_RPM = 2800; // TODO: change this value
+        double turretTargetAngleBigTriangle = -142.0; // TODO: change this value
+        theRobot.SetLaunchRampPosition(0.6);
+
+        shooterSpeedRPM = BIG_TRIANGLE_RPM;
+        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
+
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
@@ -241,9 +274,9 @@ public class Red_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250),
-                        new ParallelAction(ReturnFromSecondMark, setIntakeOff())
+                        new ParallelAction(DriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -272,23 +305,33 @@ public class Red_Far_12Ball_withGate extends LinearOpMode {
         // -------------------------
 
 
-        final double BIG_TRIANGLE_RPM = 2800; // TODO: change this value
-        double turretTargetAngleBigTriangle = -142.0; // TODO: change this value
+        //final double BIG_TRIANGLE_RPM = 2800; // TODO: change this value
+        //double turretTargetAngleBigTriangle = -142.0; // TODO: change this value
+        //theRobot.SetLaunchRampPosition(0.6);
+
+        //shooterSpeedRPM = BIG_TRIANGLE_RPM;
+        //theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
+
+        drive.updatePoseEstimate();
+        Actions.runBlocking(
+                new SequentialAction(
+                        new ParallelAction(DriveBigTriangleToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        new SleepAction(0.250),
+                        new ParallelAction(ReturnFromFirstMark, setIntakeOff())
+                )
+        );
+        drive.updatePoseEstimate();
+
+
+        //final double BIG_TRIANGLE_RPM = 2800; // TODO: change this value
+        //double turretTargetAngleBigTriangle = -142.0; // TODO: change this value
         theRobot.SetLaunchRampPosition(0.6);
 
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
         theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
 
-        drive.updatePoseEstimate();
-        Actions.runBlocking(
-                new SequentialAction(
-                        new ParallelAction(DriveToThirdMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
-                        new ParallelAction(DriveThirdMarkToBigTriangle, setIntakeOff())
-                )
-        );
-        drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
