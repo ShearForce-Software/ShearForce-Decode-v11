@@ -19,14 +19,20 @@ public class Decode_MeepMeep_Red_Close_Auto_From_Big_Triangle {
                 myBot.getDrive().actionBuilder(
                                 new Pose2d(-60,38,Math.toRadians(90)))
                         .waitSeconds(2)
-                        .strafeToConstantHeading(new Vector2d(-11.4, 10))
+                        .strafeToConstantHeading(new Vector2d(-11.4, 29))
                         .waitSeconds(2)
 
                         .strafeToConstantHeading(new Vector2d(-11.4, 55))
                         .waitSeconds(2)
                         .strafeToConstantHeading(new Vector2d(-11.4, 10))
                         .waitSeconds(2)
-                        .strafeToConstantHeading(new Vector2d(-54, 16))
+                        .strafeToConstantHeading(new Vector2d(11, 29))
+                        .waitSeconds(2)
+                        .strafeToConstantHeading(new Vector2d(11.4, 60))
+                        .waitSeconds(2)
+                        .strafeToConstantHeading(new Vector2d(11.5, 29) )
+                        .waitSeconds(2)
+                        .strafeToConstantHeading(new Vector2d(-11.4, 10))
 
                         .waitSeconds(2)
 
