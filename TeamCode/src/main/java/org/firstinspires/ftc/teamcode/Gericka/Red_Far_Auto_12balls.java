@@ -181,7 +181,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         if (shoot3enabled){
-            sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+            sleep(1000);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
         }
         else {

@@ -45,11 +45,11 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
     VelConstraint fastVel = new TranslationalVelConstraint(85);
     AccelConstraint fastAccel = new ProfileAccelConstraint(-60, 60);
 
-    VelConstraint intakeVel = new TranslationalVelConstraint(60);
+    VelConstraint intakeVel = new TranslationalVelConstraint(50);
     AccelConstraint intakeAccel = new ProfileAccelConstraint(-30, 40);
 
-    int lifterUpSleepTime = 300;
-    int lifterDownSleepTime = 400;
+    int lifterUpSleepTime = 400;
+    int lifterDownSleepTime = 450;
 
     @Override
     public void runOpMode() {
@@ -69,7 +69,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
-        double turretTargetAngle = 115;
+        double turretTargetAngle = 123;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
         theRobot.SetLaunchRampPosition(1.0);
 
@@ -101,7 +101,8 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 // Smooth into the strip (fast -> intake). Tangent set to -Y so it flows into the downfield run.
                 .splineToConstantHeading(new Vector2d(34.75, -30), Math.toRadians(-90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(34.75, -60), Math.toRadians(-90), intakeVel, intakeAccel)
+                //.splineToConstantHeading(new Vector2d(34.75, -60), Math.toRadians(-90), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), intakeVel, intakeAccel)
                 .build();
 
         ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
@@ -111,7 +112,8 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
         DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), intakeVel, intakeAccel)
+                //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(11.5, -60), intakeVel, intakeAccel)
                 .build();
 
         ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
@@ -173,7 +175,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = 3400;
+        double shooterSpeedRPM = 3450;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // Drive to the shooting position
@@ -181,7 +183,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
-
+        theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
             sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
@@ -202,6 +204,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
         drive.updatePoseEstimate();
         //sleep(1000);
+        shooterSpeedRPM = 3500;
 
         // -------------------------
         // FIRST STRIP -> BACK -> SHOOT
@@ -218,6 +221,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
 
+        theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
@@ -251,6 +255,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
+        theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
@@ -293,6 +298,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
+        //theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
             theRobot.ShootThreeBalls();
