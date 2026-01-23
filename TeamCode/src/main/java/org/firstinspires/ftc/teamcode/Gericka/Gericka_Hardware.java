@@ -1148,30 +1148,32 @@ public class Gericka_Hardware {
         //SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
     }
 
+    public static int LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS = 275; //175
+    public static int LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS = 400;
     public void ShootAutoThreeBalls(){
         // shoot ball 1
         SetIntakeMotor(false, true);
         SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
+        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
         SetIntakeMotor(true, true);
         SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
+        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
 
         // shoot ball 2
         SetIntakeMotor(false, true);
         SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
+        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
         //SetIntakeMotor(true, true);
         SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
+        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
 
         // shoot ball 3
         //SetIntakeMotor(false, true);
         SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
+        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
         //SetIntakeMotor(true, true);
         SetLifterPosition(LIFTER_DOWN_POSITION);
-        //SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
+        //SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
     }
 
     // *************************************************************************
