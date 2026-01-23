@@ -1127,35 +1127,25 @@ public class Gericka_Hardware {
 
 
     public static int LIFTER_UP_SLEEP_TIME_MILLISECONDS = 300; //175
-    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 450; //350
+    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 450;
+    public void ShootThreeBalls(){
+        // shoot ball 1
+        SetLifterPosition(LIFTER_UP_POSITION);
+        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
 
-    private boolean shootThreeBallsCommanded = false;
+        // shoot ball 2
+        SetLifterPosition(LIFTER_UP_POSITION);
+        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
 
-    public void ShootThreeBalls() {
-        shootThreeBallsCommanded = true;
-    }
-    public void Run_ShootThreeBalls() {
-        if (shootThreeBallsCommanded) {
-            // shoot ball 1
-            SetLifterPosition(LIFTER_UP_POSITION);
-            opMode.sleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-            SetLifterPosition(LIFTER_DOWN_POSITION);
-            opMode.sleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-            // shoot ball 2
-            SetLifterPosition(LIFTER_UP_POSITION);
-            opMode.sleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-            SetLifterPosition(LIFTER_DOWN_POSITION);
-            opMode.sleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-            // shoot ball 3
-            SetLifterPosition(LIFTER_UP_POSITION);
-            opMode.sleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-            SetLifterPosition(LIFTER_DOWN_POSITION);
-            opMode.sleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-            shootThreeBallsCommanded = false;
-        }
+        // shoot ball 3
+        SetLifterPosition(LIFTER_UP_POSITION);
+        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+        //SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
     }
 
     // *************************************************************************
@@ -1196,7 +1186,7 @@ public class Gericka_Hardware {
                 // if there is a ball in spot #3, and the lifter is half up (meaning ball #2 should be at the bottom of the ramp, so it isn't ball #2 breaking the beam)
                 if (beam2IsBroken && (lifterServo.getPosition() >= (LIFTER_MID_POSITION - 0.03)) && (lifterServo.getPosition() <= (LIFTER_MID_POSITION + 0.03))) {
                     // if ready to turn off, leave on a tiny bit to push the last ball away
-                    opMode.sleep(500);
+                    SpecialSleep(250);
                     intakeMotor.setPower(0);
                 } else {
                     intakeMotor.setPower(INTAKE_POWER);
@@ -1205,7 +1195,7 @@ public class Gericka_Hardware {
             // else there is NOT a ball ready to come in, but the intake is currently on
             else if (intakeMotor.getPower() != 0) {
                 // if ready to turn off, leave on a tiny bit to push the last ball away
-                opMode.sleep(500);
+                SpecialSleep(250);
                 intakeMotor.setPower(0);
             }
         }
@@ -1216,7 +1206,8 @@ public class Gericka_Hardware {
     //      Rotating Turret Functions
     // *************************************************************************
 
-    public void SetTurretRotationAngle(double degrees){
+    public void
+    SetTurretRotationAngle(double degrees){
         // normalize the angle to be -180 to +180
         while (degrees > 180) degrees -= 360;
         while (degrees < -180) degrees += 360;

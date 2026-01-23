@@ -83,6 +83,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
                 if (isStarted()) {
                     theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
+
+                    // Run the Auto Lift to Midway position (if enabled)
+                    theRobot.RunAutoLifter();
+
+                    theRobot.RunAutoIntake();  // this method may sleep for a little while, so needs to be in a separate thread from main
                 }
 
                 theRobot.ShowTelemetry();
@@ -91,34 +96,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
         });
         SecondaryThread.start();
-
-        // ***************************************************
-        // ****  Special Thread to run the auto lifter *******
-        // ***************************************************
-        Thread lifterThread = new Thread(() -> {
-            while (!isStopRequested() && getRuntime() < 30) {
-                if (isStarted()) {
-                    theRobot.RunAutoLifter();
-                    theRobot.Run_ShootThreeBalls();
-                }
-                sleep(20);
-            }
-        });
-        lifterThread.start();
-
-        // ***************************************************
-        // ****  Special Thread to run the auto intake ********
-        // ***************************************************
-        Thread intakeThread = new Thread(() -> {
-            while (!isStopRequested() && getRuntime() < 30) {
-                if (isStarted()) {
-                    theRobot.RunAutoIntake();
-                }
-                sleep(20);
-            }
-        });
-        intakeThread.start();
-
 
         waitForStart();
         resetRuntime();
