@@ -69,7 +69,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
-        double turretTargetAngle = 123;
+        double turretTargetAngle = 117;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
         theRobot.SetLaunchRampPosition(1.0);
 
@@ -168,7 +168,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
 
-        double turretTargetAngleSmallTriangle = 115;
+        double turretTargetAngleSmallTriangle = 117;
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
 
         // turn on intake to suck in any stuck balls
@@ -182,11 +182,11 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
-            sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            sleep(1000);  // first time shooting give a tiny extra wait to allow shooter to spin up
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */
@@ -219,12 +219,12 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         );
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
 
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */
@@ -254,11 +254,11 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */
@@ -301,7 +301,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         //theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */
