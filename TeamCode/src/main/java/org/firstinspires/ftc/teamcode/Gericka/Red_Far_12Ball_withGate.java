@@ -19,7 +19,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
 @Autonomous(name = "RED Far Auto 12 GATE balls", preselectTeleOp = "Gericka 1 Manual Control")
-public class Red_Far_12Ball_withGate extends LinearOpMode {
+public class
+
+Red_Far_12Ball_withGate extends LinearOpMode {
 
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
@@ -316,7 +318,7 @@ public class Red_Far_12Ball_withGate extends LinearOpMode {
         // -------------------------
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
-        theRobot.SetLaunchRampPosition(0);
+        theRobot.SetLaunchRampPosition(1);
         theRobot.SetShooterMotorToSpecificRPM(3400);
         theRobot.SetTurretRotationAngle(-115);
 
