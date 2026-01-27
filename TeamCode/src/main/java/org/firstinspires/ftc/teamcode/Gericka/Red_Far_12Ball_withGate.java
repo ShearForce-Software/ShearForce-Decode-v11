@@ -133,7 +133,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
                 .build();
 
         DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(11.5, 13, Math.toRadians(90)))   // FIX
-                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(-15, 31), Math.toRadians(90), fastVel, fastAccel)
                 .strafeToConstantHeading(new Vector2d(-15, 60), intakeVel, intakeAccel)
                 .build();
 
