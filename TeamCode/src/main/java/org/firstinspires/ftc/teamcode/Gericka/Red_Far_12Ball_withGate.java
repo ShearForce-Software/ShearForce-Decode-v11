@@ -29,36 +29,15 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
     // Trajectories
     Action DriveToShootingPosition;
-
-    Action DriveToFirstMark;
-    Action ReturnFromFirstMark;
-
     Action DriveToSecondMark;
-    Action ReturnFromSecondMark;
-
-    Action DriveToThirdMark;
     Action DriveThirdMarkToBigTriangle;
-    Action DriveToGateLock;
-
     Action SecondMarkToLock;
-
     Action LockToBigTriangle;
-
     Action DriveBigTriangleToThirdMark;
-
     Action DriveBigTriangleToFirstMark;
-
-    Action DriveBigTriangletoLock;
-
-    Action SecondMarkToBigTriangle;
-
     Action DriveFirstMarkToLock;
-
     Action DriveFirstMarkToShootingPosition;
-
     Action DriveShootingPositionToGateLock;
-
-    public static boolean shoot3enabled = true;
 
     // Constraints
     VelConstraint fastVel = new TranslationalVelConstraint(90);
@@ -69,6 +48,9 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
     VelConstraint loopVel = new TranslationalVelConstraint(40);
     AccelConstraint loopAccel = new ProfileAccelConstraint(-25, 25);
+
+    VelConstraint specialVel = new TranslationalVelConstraint(40);
+    AccelConstraint specialAccel = new ProfileAccelConstraint(-15, 15);
 
     int lifterUpSleepTime = 300;
     int lifterDownSleepTime = 400;
@@ -129,7 +111,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 50, Math.toRadians(90)))   // FIX
                 .splineToConstantHeading(new Vector2d(0, 20),  Math.toRadians(270), intakeVel, intakeAccel)  // up-left
-                .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),fastVel, fastAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),specialVel, specialAccel)  // up-left
                 .build();
 
         DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))   // FIX
@@ -158,18 +140,6 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
                 .build();
-
-
-
-
-
-
-        /*ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(45, 23), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(48, 12), intakeVel, intakeAccel)
-                .build();
-        */
-
 
 
         theRobot.SetAutoLifterMode(true);
@@ -215,32 +185,19 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         double shooterSpeedRPM = 3500;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
+        // -------------------------
+        // START -> SHOOT FROM SMALL TRIANGLE
+        // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
 
-        if (shoot3enabled){
-            sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootAutoThreeBalls();
-        }
-        else {
-            /* **** SHOOT BALL #1 **** */
-            ShootBall(shooterSpeedRPM);
-
-            // can stop the intake after the first shot to save power
-            //control.SetIntakeMotor(false,true);
-
-            /* **** SHOOT BALL #2 **** */
-            ShootBall(shooterSpeedRPM);
-
-            /* **** SHOOT BALL #3 **** */
-            ShootBall(shooterSpeedRPM);
-        }
-
+        // SHOOT-3
+        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
-        //sleep(1000);
 
         final double BIG_TRIANGLE_RPM = 2800; // TODO: change this value
         double turretTargetAngleBigTriangle = -136.0; // TODO: change this value
@@ -252,7 +209,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
 
         // -------------------------
-        // FIRST STRIP -> BACK -> SHOOT
+        // SECOND STRIP -> OPEN-GATE -> BIG TRIANGLE -> SHOOT
         // -------------------------
         drive.updatePoseEstimate();
         Actions.runBlocking(
@@ -269,26 +226,11 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
 
-        if (shoot3enabled){
-            //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootAutoThreeBalls();
-        }
-        else {
-            /* **** SHOOT BALL #1 **** */
-            ShootBall(shooterSpeedRPM);
-
-            // can stop the intake after the first shot to save power
-            //control.SetIntakeMotor(false,true);
-
-            /* **** SHOOT BALL #2 **** */
-            ShootBall(shooterSpeedRPM);
-
-            /* **** SHOOT BALL #3 **** */
-            ShootBall(shooterSpeedRPM);
-        }
+        // SHOOT-3
+        theRobot.ShootAutoThreeBalls();
 
         // -------------------------
-        // SECOND STRIP -> BACK -> SHOOT
+        // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
         drive.updatePoseEstimate();
         Actions.runBlocking(
@@ -302,39 +244,15 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
-        if (shoot3enabled){
-            //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootAutoThreeBalls();
-        }
-        else {
-            /* **** SHOOT BALL #1 **** */
-            ShootBall(shooterSpeedRPM);
+        // SHOOT-3
+        theRobot.ShootAutoThreeBalls();
 
-            // can stop the intake after the first shot to save power
-            //control.SetIntakeMotor(false,true);
-
-            /* **** SHOOT BALL #2 **** */
-            ShootBall(shooterSpeedRPM);
-
-            /* **** SHOOT BALL #3 **** */
-            ShootBall(shooterSpeedRPM);
-        }
         // -------------------------
-        // THIRD STRIP -> BIG TRIANGLE -> SHOOT
+        // FIRST STRIP -> SMALL TRIANGLE -> SHOOT
         // -------------------------
         theRobot.SetLaunchRampPosition(1);
         theRobot.SetShooterMotorToSpecificRPM(3500);
         theRobot.SetTurretRotationAngle(-115);
-
-
-
-        //final double BIG_TRIANGLE_RPM = 2800; // TODO: change this value
-        //double turretTargetAngleBigTriangle = -142.0; // TODO: change this value
-        //theRobot.SetLaunchRampPosition(0.6);
-
-        //shooterSpeedRPM = BIG_TRIANGLE_RPM;
-        //theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        //theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
 
         drive.updatePoseEstimate();
         Actions.runBlocking(
@@ -346,32 +264,16 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-
-
-
-
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
-        if (shoot3enabled){
-            //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootAutoThreeBalls();
-        }
-        else {
-            /* **** SHOOT BALL #1 **** */
-            ShootBall(shooterSpeedRPM);
-
-            // can stop the intake after the first shot to save power
-            //control.SetIntakeMotor(false,true);
-
-            /* **** SHOOT BALL #2 **** */
-            ShootBall(shooterSpeedRPM);
-
-            /* **** SHOOT BALL #3 **** */
-            ShootBall(shooterSpeedRPM);
-        }
+        // SHOOT-3
+        theRobot.ShootAutoThreeBalls();
 
         theRobot.SetTurretRotationAngle(0.0);
 
+        // -------------------------
+        // SMALL TRIANGLE -> PARK NEXT TO GATE
+        // -------------------------
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveShootingPositionToGateLock, setIntakeOff()));
 
@@ -403,14 +305,6 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         while ((getRuntime() < 29) && (!isStopRequested())) {
             sleep(20);
         }
-    }
-
-    private void ShootBall(double shooterSpeedRPM) {
-        theRobot.SetLifterUp();
-        sleep(lifterUpSleepTime);
-
-        theRobot.SetLifterDown();
-        sleep(lifterDownSleepTime);
     }
 
     public Action setIntakeOn() {
