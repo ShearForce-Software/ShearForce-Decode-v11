@@ -26,8 +26,8 @@ public class Blue_Close_Auto_12balls extends LinearOpMode {
     Action DriveClosestLineBackToLaunchPark;
 
     Action DriveClosestLineBackToMid;
-    int lifterUpSleepTime = 500;
-    int lifterDownSleepTime = 600;
+    int lifterUpSleepTime = 300;
+    int lifterDownSleepTime = 400;
 
     public void runOpMode(){
     //We will start at big triangle start
