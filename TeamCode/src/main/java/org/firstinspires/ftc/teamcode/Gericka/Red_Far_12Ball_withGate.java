@@ -61,8 +61,8 @@ Red_Far_12Ball_withGate extends LinearOpMode {
     public static boolean shoot3enabled = true;
 
     // Constraints
-    VelConstraint fastVel = new TranslationalVelConstraint(85);
-    AccelConstraint fastAccel = new ProfileAccelConstraint(-60, 60);
+    VelConstraint fastVel = new TranslationalVelConstraint(90);
+    AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
 
     VelConstraint intakeVel = new TranslationalVelConstraint(60);
     AccelConstraint intakeAccel = new ProfileAccelConstraint(-30, 40);
@@ -132,16 +132,16 @@ Red_Far_12Ball_withGate extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-11.5, 13),  Math.toRadians(90),fastVel, fastAccel)  // up-left
                 .build();
 
-        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(11.5, 13, Math.toRadians(90)))   // FIX
-                .splineToConstantHeading(new Vector2d(-15, 31), Math.toRadians(90), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(-15, 60), intakeVel, intakeAccel)
+        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, 13, Math.toRadians(90)))   // FIX
+                .splineToConstantHeading(new Vector2d(-15, 31), Math.toRadians(90), loopVel, loopAccel)
+                .strafeToConstantHeading(new Vector2d(-15, 60), loopVel, loopAccel)
                 .build();
 
         DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, 13), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 21), fastVel, fastAccel)
                 .build();
 
-        DriveBigTriangleToFirstMark =  drive.actionBuilder(new Pose2d(-11.5, 13, Math.toRadians(90)))
+        DriveBigTriangleToFirstMark =  drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(34.75, 60), intakeVel, intakeAccel)
@@ -153,6 +153,10 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         DriveFirstMarkToLock =  drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .build();
+
+        DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(0, 50), fastVel, fastAccel)
                 .build();
 
 
@@ -208,7 +212,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = 3400;
+        double shooterSpeedRPM = 3500;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // Drive to the shooting position
@@ -219,7 +223,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         if (shoot3enabled){
             sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */
@@ -239,7 +243,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         //sleep(1000);
 
         final double BIG_TRIANGLE_RPM = 2800; // TODO: change this value
-        double turretTargetAngleBigTriangle = -142.0; // TODO: change this value
+        double turretTargetAngleBigTriangle = -138.0; // TODO: change this value
         theRobot.SetLaunchRampPosition(0.6);
 
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
@@ -254,7 +258,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.5),
+                        new SleepAction(0.250),
                         new ParallelAction(SecondMarkToLock, setIntakeOff()),
                         new ParallelAction(LockToBigTriangle)
                 )
@@ -267,7 +271,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */
@@ -300,7 +304,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */
@@ -319,7 +323,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
         theRobot.SetLaunchRampPosition(1);
-        theRobot.SetShooterMotorToSpecificRPM(3400);
+        theRobot.SetShooterMotorToSpecificRPM(3500);
         theRobot.SetTurretRotationAngle(-115);
 
 
@@ -350,7 +354,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         if (shoot3enabled){
             //sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-            theRobot.ShootThreeBalls();
+            theRobot.ShootAutoThreeBalls();
         }
         else {
             /* **** SHOOT BALL #1 **** */

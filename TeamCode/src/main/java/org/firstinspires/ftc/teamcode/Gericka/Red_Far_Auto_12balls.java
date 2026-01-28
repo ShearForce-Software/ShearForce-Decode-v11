@@ -123,11 +123,11 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
 
 
         DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, 13), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 16), fastVel, fastAccel)
                 .build();
 
 
-        DriveToGateLock = drive.actionBuilder(new Pose2d(-11.5, 13, Math.toRadians(90)))
+        DriveToGateLock = drive.actionBuilder(new Pose2d(-11.5, 16, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
                 .build();
 
@@ -171,7 +171,7 @@ public class Red_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = 3400;
+        double shooterSpeedRPM = 3500;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // Drive to the shooting position
