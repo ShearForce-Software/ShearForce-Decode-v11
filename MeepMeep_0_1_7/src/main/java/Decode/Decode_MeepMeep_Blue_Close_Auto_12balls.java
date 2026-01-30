@@ -29,7 +29,7 @@ public class Decode_MeepMeep_Blue_Close_Auto_12balls {
                 .waitSeconds(2)
                 .strafeToConstantHeading(new Vector2d(34.75, -30))
                 .strafeToConstantHeading(new Vector2d(34.75,-60))
-                .strafeToConstantHeading(new Vector2d(-11.4,-10))
+                .strafeToConstantHeading(new Vector2d(48,-12))
                 .waitSeconds(2)
                 .strafeToConstantHeading(new Vector2d(0, -40))
                 .waitSeconds(2)
