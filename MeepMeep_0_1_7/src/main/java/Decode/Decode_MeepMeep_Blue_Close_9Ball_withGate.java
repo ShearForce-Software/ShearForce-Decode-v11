@@ -75,8 +75,8 @@ public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
                 .build();
 
         DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
-                .splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
-                .strafeToConstantHeading(new Vector2d(-15, -60), slowVel, slowAccel)
+               // .splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, -60), slowVel, slowAccel)
                 .build();
 
         ThirdMarkToLock = drive.actionBuilder(new Pose2d(-15, -60, Math.toRadians(-90)))
@@ -93,7 +93,7 @@ public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
                 .build();
 
         DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,-21,Math.toRadians(-90)))
-                .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(11.5, -20), Math.toRadians(-90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
                 .strafeToConstantHeading(new Vector2d(11.5, -60),slowVel, slowAccel)
                 .build();

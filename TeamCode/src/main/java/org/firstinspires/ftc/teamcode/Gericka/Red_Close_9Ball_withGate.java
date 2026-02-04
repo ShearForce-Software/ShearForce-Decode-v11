@@ -18,10 +18,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Autonomous(name = "BLUE Close Auto 9 GATE balls", preselectTeleOp = "Gericka 1 Manual Control")
+@Autonomous(name = "RED Close Auto 9 GATE balls", preselectTeleOp = "Gericka 1 Manual Control")
 public class
 
-Blue_Close_9Ball_withGate extends LinearOpMode {
+Red_Close_9Ball_withGate extends LinearOpMode {
 
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
@@ -54,9 +54,9 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        startPose = new Pose2d(-60,-39,Math.toRadians(-90));
+        startPose = new Pose2d(-60,39,Math.toRadians(90));
         /* Initialize the Robot */
-        theRobot.Init(hardwareMap, "BLUE");
+        theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
@@ -66,7 +66,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // initialize the turret angle and launch ramp
-        final double turretTargetAngleBigTriangle = 136.0;
+        final double turretTargetAngleBigTriangle = -142.0;
         final double BIG_TRIANGLE_RPM = 2800.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
         theRobot.SetLaunchRampPosition(0.6);
@@ -78,55 +78,55 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(60, -12, -90);
+        theRobot.SetRoadrunnerInitialPosition(60, 12, 90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
-        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
+        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
         // ***************************************************
         // ****  Define Trajectories    **********************
         // ***************************************************
 
         DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
-                .strafeToConstantHeading(new Vector2d(-11.5, -21))
+                .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
 
-        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
+        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
-                .strafeToConstantHeading(new Vector2d(-11.5, -60), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 60), slowVel, slowAccel)
                 .build();
 
-        ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, -60, Math.toRadians(-90)))
+        ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
-                .strafeToConstantHeading(new Vector2d(0, -45),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(0, -58),  Math.toRadians(-90), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(0, 45),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(0, 58),  Math.toRadians(90), slowVel, slowAccel)
                 //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
                 .build();
 
-        LockToBigTriangle = drive.actionBuilder(new Pose2d(0, -58, Math.toRadians(-90)))
+        LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 58, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(0, -40),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),slowVel, superSlowAccel)
+                .strafeToConstantHeading(new Vector2d(0, 40),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),slowVel, superSlowAccel)
                 .build();
 
-        DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,-21,Math.toRadians(-90)))
-                .splineToConstantHeading(new Vector2d(12.5, -20), Math.toRadians(-90), fastVel, fastAccel)
+        DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,21,Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(12.5, 20), Math.toRadians(90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(12.5, -60),slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(12.5, 60),slowVel, slowAccel)
                 .build();
 
-        DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(12.5,-60,Math.toRadians(-90)))
+        DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(12.5,60,Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(11.5, -30),fastVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(11.5, 30),fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),fastVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),fastVel, slowAccel)
                 .build();
 
-        DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(0, -30), normalVel, normalAccel)
+        DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(0, 30), normalVel, normalAccel)
                 .build();
 
         // ***************************************************
