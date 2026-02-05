@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Autonomous(name = "RED Far Auto 12 balls", preselectTeleOp = "Gericka 1 Manual Control")
-public class Red_Far_Auto_12balls extends LinearOpMode {
+@Autonomous(name = "RED Far 12 balls", preselectTeleOp = "Gericka 1 Manual Control")
+public class Red_Far_12Balls extends LinearOpMode {
 
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;

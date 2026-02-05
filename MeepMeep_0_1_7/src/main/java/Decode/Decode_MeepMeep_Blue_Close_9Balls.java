@@ -16,7 +16,7 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.DriveShim;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
+public class Decode_MeepMeep_Blue_Close_9Balls {
 
     public static void main(String[] args) {
 
@@ -62,16 +62,7 @@ public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
                 .strafeToConstantHeading(new Vector2d(-11.5, -60), slowVel, slowAccel)
                 .build();
 
-        Action ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, -60, Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
-                .strafeToConstantHeading(new Vector2d(0, -45),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(0, -58),  Math.toRadians(-90), slowVel, slowAccel)
-                //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
-                .build();
-
-        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, -58, Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(0, -40),slowVel, slowAccel)
+        Action ThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, -60, Math.toRadians(-90)))
                 .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),slowVel, superSlowAccel)
                 .build();
 
@@ -111,13 +102,10 @@ public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
                         DriveBigTriangleToThirdMark,
 				        new SleepAction(0.4),
         // -------------------------
-        // THIRD STRIP -> GATE -> BIG TRIANGLE SHOOT
+        // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
-						
-                        ThirdMarkToLock,
-						//wait for Frooty Loops
-						new SleepAction(5.0),
-                        LockToBigTriangle,
+
+                ThirdMarkToBigTriangle,
 				        // SHOOT-3
 				        new SleepAction(shooterSleepTime),
         // -------------------------

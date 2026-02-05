@@ -16,12 +16,12 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.DriveShim;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class Decode_MeepMeep_Red_Far_9Balls {
+public class Decode_MeepMeep_Blue_Far_9Balls {
 
 
     public static void main(String[] args) {
-        final double startPoseHeadingDegrees = 90;
-        Pose2d startPose = new Pose2d(60, 12, Math.toRadians(startPoseHeadingDegrees));
+        final double startPoseHeadingDegrees = -90;
+        Pose2d startPose = new Pose2d(60, -12, Math.toRadians(startPoseHeadingDegrees));
 
         MeepMeep meepMeep = new MeepMeep(700);
 
@@ -58,30 +58,30 @@ public class Decode_MeepMeep_Red_Far_9Balls {
         // ***************************************************
         DriveShim drive = myBot.getDrive();
         Action DriveToShootingPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(startPoseHeadingDegrees)))
-                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
                 .build();
 
-        Action DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
+        Action DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(34.75, -30), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(34.75, 60), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), normalVel, normalAccel)
                 .build();
 
-        Action DriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
+        Action DriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(48, -12), fastVel, normalAccel)
                 .build();
 
-        Action DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(11.5, 30), Math.toRadians(90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, 60), Math.toRadians(90), normalVel, normalAccel)
+        Action DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
                 .build();
 
-        Action DriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
+        Action DriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(48, -12), fastVel, normalAccel)
                 .build();
 
-        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(0, -30), fastVel, fastAccel)
                 .build();
 
 
@@ -93,29 +93,29 @@ public class Decode_MeepMeep_Red_Far_9Balls {
         // -------------------------
         // Drive to the shooting position
         myBot.runAction(new SequentialAction(DriveToShootingPosition,
-                        new SleepAction(0.5),
-				        // SHOOT-3
-				        new SleepAction(2.175),
-        // -------------------------
-        // -> FIRST STRIP -> SMALL TRIANGLE -> SHOOT
-        // -------------------------
+                new SleepAction(0.5),
+                // SHOOT-3
+                new SleepAction(2.175),
+                // -------------------------
+                // -> FIRST STRIP -> SMALL TRIANGLE -> SHOOT
+                // -------------------------
                 DriveToFirstMark,
-				        new SleepAction(0.250),
+                new SleepAction(0.250),
                 DriveFirstMarkToShootingPosition,
-				        // SHOOT-3
-				        new SleepAction(2.175),
-        // -------------------------
-        // SMALL TRIANGLE -> SECOND STRIP -> SMALL TRIANGLE -> SHOOT
-        // -------------------------
+                // SHOOT-3
+                new SleepAction(2.175),
+                // -------------------------
+                // SMALL TRIANGLE -> SECOND STRIP -> SMALL TRIANGLE -> SHOOT
+                // -------------------------
                 DriveToSecondMark,
-                        new SleepAction(0.250),
+                new SleepAction(0.250),
                 DriveSecondMarkToShootingPosition,
-				        // SHOOT-3
-				        new SleepAction(2.175),
-        // -------------------------
-        // Park at Gate
-        // -------------------------
-                        DriveShootingPositionToGateLock
+                // SHOOT-3
+                new SleepAction(2.175),
+                // -------------------------
+                // Park at Gate
+                // -------------------------
+                DriveShootingPositionToGateLock
         ));
 
 

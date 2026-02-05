@@ -16,13 +16,13 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.DriveShim;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
+public class Decode_MeepMeep_Red_Close_9Balls {
 
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(700);
         double shooterSleepTime = 2.175;
-        Pose2d startPose = new Pose2d(-60,-39,Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-60,39,Math.toRadians(90));
 
         // MeepMeep "global" bot constraints (roughly aligned to your auto constraints)
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -54,42 +54,33 @@ public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
         DriveShim drive = myBot.getDrive();
 
         Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
-                .strafeToConstantHeading(new Vector2d(-11.5, -21))
+                .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
 
-        Action DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
+        Action DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
-                .strafeToConstantHeading(new Vector2d(-11.5, -60), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 60), slowVel, slowAccel)
                 .build();
 
-        Action ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, -60, Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
-                .strafeToConstantHeading(new Vector2d(0, -45),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(0, -58),  Math.toRadians(-90), slowVel, slowAccel)
-                //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
+        Action ThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),slowVel, superSlowAccel)
                 .build();
 
-        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, -58, Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(0, -40),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),slowVel, superSlowAccel)
-                .build();
-
-        Action DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,-21,Math.toRadians(-90)))
-                .splineToConstantHeading(new Vector2d(12.5, -20), Math.toRadians(-90), fastVel, fastAccel)
+        Action DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,21,Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(14.5, 20), Math.toRadians(90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(12.5, -60),slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(14.5, 61),slowVel, slowAccel)
                 .build();
 
-        Action DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(12.5,-60,Math.toRadians(-90)))
+        Action DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(14.5,61,Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(11.5, -30),fastVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(11.5, 30),fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),fastVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),fastVel, slowAccel)
                 .build();
 
-        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(0, -30), normalVel, normalAccel)
+        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(0, 30), normalVel, normalAccel)
                 .build();
 
         // ***************************************************
@@ -111,13 +102,10 @@ public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
                         DriveBigTriangleToThirdMark,
 				        new SleepAction(0.4),
         // -------------------------
-        // THIRD STRIP -> GATE -> BIG TRIANGLE SHOOT
+        // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
-						
-                        ThirdMarkToLock,
-						//wait for Frooty Loops
-						new SleepAction(5.0),
-                        LockToBigTriangle,
+
+                ThirdMarkToBigTriangle,
 				        // SHOOT-3
 				        new SleepAction(shooterSleepTime),
         // -------------------------

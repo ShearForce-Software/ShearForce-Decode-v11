@@ -10,12 +10,14 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Close Auto 9 Ball", preselectTeleOp ="Gericka 1 Manual Control")
+@Disabled
+@Autonomous(name="Blue Close Auto 12balls", preselectTeleOp ="Gericka 1 Manual Control")
 
 
-public class Red_Close_Auto_9ball extends LinearOpMode {
+public class Blue_Close_12Balls extends LinearOpMode {
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
     Pose2d startPose;
@@ -26,115 +28,112 @@ public class Red_Close_Auto_9ball extends LinearOpMode {
     Action DriveClosestLineBackToLaunchPark;
 
     Action DriveClosestLineBackToMid;
-    int lifterUpSleepTime = 500;
-    int lifterDownSleepTime = 600;
+    int lifterUpSleepTime = 300;
+    int lifterDownSleepTime = 400;
 
     public void runOpMode(){
-        //We will start at big trianlge start
-        startPose = new Pose2d(-60,39,Math.toRadians(90));
-        /* Initialize the Robot */
-        theRobot.Init(hardwareMap, "RED");
+    //We will start at big triangle start
+    startPose = new Pose2d(-60,-39,Math.toRadians(-90));
+    /* Initialize the Robot */
+    theRobot.Init(hardwareMap, "BLUE");
 
-        // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
-        theRobot.InitRoadRunner(drive);
+    // initialize roadrunner
+    drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+    theRobot.InitRoadRunner(drive);
 
-        // initialize the webcam
-        theRobot.WebcamInit(this.hardwareMap);
+    // initialize the webcam
+    theRobot.WebcamInit(this.hardwareMap);
 
-        sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
-        // finish initializing the pinpoint
-        theRobot.SetInitalPinpointPosition(-60, 39, 90);
+    sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
+    // finish initializing the pinpoint
+    theRobot.SetInitalPinpointPosition(-60, -39, -90);
 
-        blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
+    blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
-        // set lifter half up (so can get 3 ball loaded in robot)
-        theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
-
-
-        DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, 39, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.4, 10))
-                .build();
-
-        // Mid (-10, -10, 270) -> closest line (-10, -40)
-        DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, 10, Math.toRadians(90)))
-
-                .strafeToConstantHeading(new Vector2d(-11.4, 55))
-                .build();
+    // set lifter half up (so can get 3 ball loaded in robot)
+    theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
 
+    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(-90)))
+            .strafeToConstantHeading(new Vector2d(-11.4, -10))
+            .build();
 
-        DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, 55, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.4, 10))
-                .build();
+    // Mid (-10, -10, -90) -> closest line (-10, -40)
+    DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(-90)))
+            .strafeToConstantHeading(new Vector2d(-11.4, -55))
+            .build();
 
-        // Closest line (-10, -40, 270) -> launch park (-54, -16)
-        DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, 10, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-54, 16))
-                .build();
+    DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, -55, Math.toRadians(-90)))
+            .strafeToConstantHeading(new Vector2d(-11.4, -10))
+            .build();
+
+    // Closest line (-10, -40, -90) -> launch park (-54, -16)
+    DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, -10, Math.toRadians(-90)))
+            .strafeToConstantHeading(new Vector2d(-54, -16))
+            .build();
 
         theRobot.SetAutoLifterMode(true);
 
-        // ***************************************************
-        // ****  Secondary Thread to run all the time ********
-        // ***************************************************
-        Thread secondaryThread = new Thread(() -> {
-            while (!isStopRequested() && getRuntime() < 30) {
+    // ***************************************************
+    // ****  Secondary Thread to run all the time ********
+    // ***************************************************
+    Thread secondaryThread = new Thread(() -> {
+        while (!isStopRequested() && getRuntime() < 30) {
                 theRobot.ShowTelemetry();
                 //control.ShowPinpointTelemetry();
-                theRobot.SetIndicatorLights();
+
+            theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                 }
-                telemetry.update();
-                sleep(20);
-            }
-        });
-        secondaryThread.start();
+            telemetry.update();
+            sleep(20);
+        }
+    });
+    secondaryThread.start();
 
-        // Turret initial rough angle toward speaker (tune as needed)
-        double turretTargetAngle = -142;
+    // Turret initial rough angle toward speaker (tune as needed)
+    double turretTargetAngle = 142
 
-                ;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+            ;
+    theRobot.SetTurretRotationAngle(turretTargetAngle);
 
-        // turn off turret power so doesn't twitch
-        //theRobot.turretMotor.setPower(0);
+    // turn off turret power so doesn't twitch
+    //theRobot.turretMotor.setPower(0);
 
-        // *************************************
-        //      Wait for start
-        // *************************************
+    // *************************************
+    //      Wait for start
+    // *************************************
         waitForStart();
 
-        // ********* STARTED ********************************
-        resetRuntime();
-        Gericka_Hardware.autoTimeLeft = 0.0;
+    // ********* STARTED ********************************
+    resetRuntime();
+    Gericka_Hardware.autoTimeLeft = 0.0;
 
 
-        theRobot.SetIntakeMotor(true,true);
-        // spin up shooter wheel to max
-        //theRobot.SetShooterSpeed(1.0);
-        theRobot.SetShooterMotorToSpecificRPM(2700);
+    theRobot.SetIntakeMotor(true,true);
+    // spin up shooter wheel to max
+    //theRobot.SetShooterSpeed(1.0);
+    theRobot.SetShooterMotorToSpecificRPM(2700);
 
-        Actions.runBlocking(new SleepAction((1)));
-        Actions.runBlocking(DriveStartToMidPosition);
+    Actions.runBlocking(new SleepAction((1)));
+    Actions.runBlocking(DriveStartToMidPosition);
 
     theRobot.SetIntakeMotor(false,true);
 
-        // Turn turret more directly to target for auto shooting (tune on field)
-        //turretTargetAngle = 45;    // CHANGE LLATER
-        //control.SetTurretRotationAngle(turretTargetAngle);
+    // Turn turret more directly to target for auto shooting (tune on field)
+    //turretTargetAngle = 45;    // CHANGE LATER
+    //control.SetTurretRotationAngle(turretTargetAngle);
 
-        // Shooter RPM for big triangle shots (tune as needed)
-        double shooterSpeedRPM = 2700;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+    // Shooter RPM for big triangle shots (tune as needed)
+    double shooterSpeedRPM = 2700;
+    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
 
         /* **** SHOOT BALL #1 **** */
         ShootBall(shooterSpeedRPM);
         theRobot.SetIntakeMotor(true,true);
-
         /* **** SHOOT BALL #2 **** */
         ShootBall(shooterSpeedRPM);
 
@@ -146,17 +145,17 @@ public class Red_Close_Auto_9ball extends LinearOpMode {
 
 
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        // Mid -> closest line
-                        DriveMidToClosestLine,
-                        // tiny sleep to finish ingesting rings
-                        // Closest line -> launch park
+    Actions.runBlocking(
+            new SequentialAction(
+                    // Mid -> closest line
+                    DriveMidToClosestLine,
+                              // tiny sleep to finish ingesting rings
+                    // Closest line -> launch park
 
-                        DriveClosestLineBackToMid
+                    DriveClosestLineBackToMid
 
-                )
-        );
+                    )
+    );
         theRobot.SetIntakeMotor(false,true);
 
         ShootBall(shooterSpeedRPM);
@@ -195,14 +194,15 @@ public class Red_Close_Auto_9ball extends LinearOpMode {
         blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
 
 
-        Gericka_Hardware.autoTimeLeft = 30-getRuntime();
-        telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
-        telemetry.update();
+       Gericka_Hardware.autoTimeLeft = 30-getRuntime();
+       telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
+       telemetry.update();
 
         while ((getRuntime() < 29) && (!isStopRequested() )){
             sleep(20);
         }
-    }
+
+}
 
     private void ShootBall(double shooterSpeedRPM) {
         // sleep some time to allow shooter wheel to spin back up if needed
@@ -236,26 +236,26 @@ public class Red_Close_Auto_9ball extends LinearOpMode {
             theRobot.SetIntakeMotor(true, true);
             packet.put("lock purple pixel", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
-        }
-    }
-
-    public Action setIntakeOff() {
-        return new setIntakeOff();
-    }
-
-    public class setIntakeOff implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                initialized = true;
             }
-            theRobot.SetIntakeMotor(false, false);
-            packet.put("lock purple pixel", 0);
-            return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
-    }
+
+        public Action setIntakeOff() {
+            return new setIntakeOff();
+        }
+
+        public class setIntakeOff implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    initialized = true;
+                }
+                theRobot.SetIntakeMotor(false, false);
+                packet.put("lock purple pixel", 0);
+                return false;  // returning true means not done, and will be called again.  False means action is completely done
+            }
+        }
 
     public class SetLifterUp implements Action {
         private boolean initialized = false;

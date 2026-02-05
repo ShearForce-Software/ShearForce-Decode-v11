@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-//@Disabled
+@Disabled
 @Autonomous(name="Red Far Auto", preselectTeleOp ="Gericka 1 Manual Control")
 
 public class Red_Far_Auto extends LinearOpMode {

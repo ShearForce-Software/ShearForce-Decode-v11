@@ -18,43 +18,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Autonomous(name = "RED Close Auto 9 GATE balls", preselectTeleOp = "Gericka 1 Manual Control")
+@Autonomous(name = "RED Close 9 BALL GATE", preselectTeleOp = "Gericka 1 Manual Control")
 public class
 
 Red_Close_9Ball_withGate extends LinearOpMode {
 
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
-    Pose2d startPose;
-
-    // Trajectories
-    Action LockToBigTriangle;
-    Action DriveBigTriangleToThirdMark;
-    Action DriveShootingPositionToGateLock;
-    Action DriveCloseStartPositiontoBigTriangle;
-    Action ThirdMarkToLock;
-    Action DriveBigTriangletoSecondMark;
-    Action DriveSecondMarktoBigTriangle;
-
-    // Constraints
-    VelConstraint fastVel = new TranslationalVelConstraint(90);
-    AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
-
-    VelConstraint normalVel = new TranslationalVelConstraint(60);
-    AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
-
-    VelConstraint slowVel = new TranslationalVelConstraint(40);
-    AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
-
-    VelConstraint superSlowVel = new TranslationalVelConstraint(40);
-    AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
-
-    int lifterUpSleepTime = 300;
-    int lifterDownSleepTime = 400;
 
     @Override
     public void runOpMode() {
-        startPose = new Pose2d(-60,39,Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-60,39,Math.toRadians(90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
 
@@ -86,46 +60,59 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
+        // Constraints
+        VelConstraint fastVel = new TranslationalVelConstraint(90);
+        AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
+
+        VelConstraint normalVel = new TranslationalVelConstraint(60);
+        AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
+
+        VelConstraint slowVel = new TranslationalVelConstraint(40);
+        AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
+
+        VelConstraint superSlowVel = new TranslationalVelConstraint(40);
+        AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
+
         // ***************************************************
         // ****  Define Trajectories    **********************
         // ***************************************************
 
-        DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
+        Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
 
-        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
+        Action DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
                 .strafeToConstantHeading(new Vector2d(-11.5, 60), slowVel, slowAccel)
                 .build();
 
-        ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
+        Action ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
                 .strafeToConstantHeading(new Vector2d(-2, 45),slowVel, slowAccel)
                 .splineToConstantHeading(new Vector2d(0, 58),  Math.toRadians(90), slowVel, slowAccel)
                 //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
                 .build();
 
-        LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 58, Math.toRadians(90)))
+        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 58, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
                 .strafeToConstantHeading(new Vector2d(0, 40),slowVel, slowAccel)
                 .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),slowVel, superSlowAccel)
                 .build();
 
-        DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,21,Math.toRadians(90)))
+        Action DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,21,Math.toRadians(90)))
                 .splineToConstantHeading(new Vector2d(14.5, 20), Math.toRadians(90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
                 .strafeToConstantHeading(new Vector2d(14.5, 61),slowVel, slowAccel)
                 .build();
 
-        DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(14.5,61,Math.toRadians(90)))
+        Action DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(14.5,61,Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(11.5, 30),fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
                 .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),fastVel, slowAccel)
                 .build();
 
-        DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
+        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 30), normalVel, normalAccel)
                 .build();
 

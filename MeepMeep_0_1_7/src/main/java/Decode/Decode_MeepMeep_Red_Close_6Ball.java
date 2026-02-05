@@ -13,7 +13,7 @@ import com.noahbres.meepmeep.roadrunner.DriveShim;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 
-public class Decode_MeepMeep_Red_Close_Auto_9Ball {
+public class Decode_MeepMeep_Red_Close_6Ball {
 
     // Trajectories
     static Action DriveStartToMidPosition;
