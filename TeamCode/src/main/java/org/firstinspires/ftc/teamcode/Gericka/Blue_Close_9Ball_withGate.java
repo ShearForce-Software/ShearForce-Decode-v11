@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Autonomous(name = "BLUE Close Auto 9 GATE balls", preselectTeleOp = "Gericka 1 Manual Control")
+@Autonomous(name = "BLUE Close 9 BALL WITH GATE", preselectTeleOp = "Gericka 1 Manual Control")
 public class
 
 Blue_Close_9Ball_withGate extends LinearOpMode {
@@ -162,7 +162,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
-        sleep(500);  //TODO assess how much time is really needed here
+        sleep(500);
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         theRobot.ShootAutoThreeBalls();
@@ -175,7 +175,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.4), // sleep time to finish intaking the balls
+                        new SleepAction(0.250), // sleep time to finish intaking the balls
                         new ParallelAction(ThirdMarkToLock, setIntakeOff())
                 )
         );

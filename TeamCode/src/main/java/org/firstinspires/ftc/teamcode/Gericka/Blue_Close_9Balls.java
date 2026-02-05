@@ -166,7 +166,7 @@ Blue_Close_9Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.4), // sleep time to finish intaking the balls
+                        new SleepAction(0.250), // sleep time to finish intaking the balls
                         new ParallelAction(ThirdMarkToBigTriangle, setIntakeOff())
                 )
         );

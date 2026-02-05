@@ -131,26 +131,24 @@ public class Red_Close_6Ball extends LinearOpMode {
         theRobot.SetLaunchRampPosition(0.4);
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
-
-        /* **** SHOOT BALL #1 **** */
-        ShootBall(shooterSpeedRPM);
-        theRobot.SetIntakeMotor(true,true);
-
-        /* **** SHOOT BALL #2 **** */
-        ShootBall(shooterSpeedRPM);
-
-        /* **** SHOOT BALL #3 **** */
-        ShootBall(shooterSpeedRPM);
+        // SHOOT-3
+        // first time shooting give a tiny extra wait to allow shooter to finish spinning up
+        sleep(500);
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
+        theRobot.ShootAutoThreeBalls();
+        drive.updatePoseEstimate();
 
         //Should we turn intake on while we go to the closest line
         theRobot.SetIntakeMotor(true,true);
-
 
 
         Actions.runBlocking(
                 new SequentialAction(
                         // Mid -> closest line
                         DriveMidToClosestLine,
+                        new SleepAction(0.250), // sleep time to finish intaking the balls
+
                         // tiny sleep to finish ingesting rings
                         // Closest line -> launch park
 
@@ -158,12 +156,12 @@ public class Red_Close_6Ball extends LinearOpMode {
 
                 )
         );
-        theRobot.SetIntakeMotor(false,true);
 
-        ShootBall(shooterSpeedRPM);
-        theRobot.SetIntakeMotor(true,true);
-        ShootBall(shooterSpeedRPM);
-        ShootBall(shooterSpeedRPM);
+        // SHOOT-3
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
+        theRobot.ShootAutoThreeBalls();
+        drive.updatePoseEstimate();
 
         //lower lifter
         theRobot.SetLifterDown();
@@ -203,23 +201,6 @@ public class Red_Close_6Ball extends LinearOpMode {
         while ((getRuntime() < 29) && (!isStopRequested() )){
             sleep(20);
         }
-    }
-
-    private void ShootBall(double shooterSpeedRPM) {
-        // sleep some time to allow shooter wheel to spin back up if needed
-        while (theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) < (shooterSpeedRPM - 10) ||
-                theRobot.CalculateMotorRPM(theRobot.shooterMotorLeft.getVelocity(), theRobot.YELLOW_JACKET_1_1_TICKS) > (shooterSpeedRPM + 10)) {
-            sleep(20);
-        }
-
-        /* **** SHOOT a BALL  **** */
-        theRobot.SetLifterUp();
-        sleep(lifterUpSleepTime);
-
-        // Reset to get another ball
-        theRobot.SetLifterDown();
-        sleep(lifterDownSleepTime);
-
     }
 
     public Action setIntakeOn() {

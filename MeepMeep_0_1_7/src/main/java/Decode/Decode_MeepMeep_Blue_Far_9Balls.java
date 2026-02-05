@@ -112,9 +112,9 @@ public class Decode_MeepMeep_Blue_Far_9Balls {
                 DriveSecondMarkToShootingPosition,
                 // SHOOT-3
                 new SleepAction(2.175),
-                // -------------------------
-                // Park at Gate
-                // -------------------------
+        // -------------------------
+        // SMALL TRIANGLE -> PARK NEXT TO GATE
+        // -------------------------
                 DriveShootingPositionToGateLock
         ));
 
