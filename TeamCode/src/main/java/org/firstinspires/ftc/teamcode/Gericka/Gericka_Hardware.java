@@ -497,6 +497,7 @@ public class Gericka_Hardware {
             Pose2D currentPosition = GetPinpointAbsolutePosition(startPose);
             opMode.telemetry.addData("pinpoint Absolute Position(inches): ", "x: %.1f, y: %.1f", currentPosition.getX(DistanceUnit.INCH), currentPosition.getY(DistanceUnit.INCH));
             opMode.telemetry.addData("pinpoint Absolute Heading(deg): ", currentPosition.getHeading(AngleUnit.DEGREES));
+
         }
 
     }
@@ -1127,7 +1128,7 @@ public class Gericka_Hardware {
 
 
     public static int LIFTER_UP_SLEEP_TIME_MILLISECONDS = 275; //175
-    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 325;
+    public static int LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 400;
     public void ShootThreeBalls(){
         // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);
@@ -1140,6 +1141,7 @@ public class Gericka_Hardware {
         SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
         SetLifterPosition(LIFTER_DOWN_POSITION);
         SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
+        //SpecialSleep(120);
 
         // shoot ball 3
         SetLifterPosition(LIFTER_UP_POSITION);
@@ -1149,7 +1151,7 @@ public class Gericka_Hardware {
     }
 
     public static int LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS = 275; //175
-    public static int LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS = 450;
+    public static int LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS = 470;
     public void ShootAutoThreeBalls(){
         // shoot ball 1
         SetIntakeMotor(false, true);

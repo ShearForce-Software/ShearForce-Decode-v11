@@ -110,34 +110,34 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
                 .build();
 
         LockToBigTriangle = drive.actionBuilder(new Pose2d(0, -50, Math.toRadians(-90)))   // FIX
-                .splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)  // up-left
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(-90),specialVel, specialAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(0, -25),  Math.toRadians(-270), intakeVel, intakeAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(-11.5, -25),  Math.toRadians(-90),specialVel, specialAccel)  // up-left
                 .build();
 
-        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))   // FIX
+        DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, -25, Math.toRadians(-90)))   // FIX
                 .splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), loopVel, loopAccel)
                 .strafeToConstantHeading(new Vector2d(-15, -60), loopVel, loopAccel)
                 .build();
 
         DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, -21), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, -25), fastVel, fastAccel)
                 .build();
 
-        DriveBigTriangleToFirstMark =  drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
+        DriveBigTriangleToFirstMark =  drive.actionBuilder(new Pose2d(-11.5, -25, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(34.75, -30), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(34.75, -60), intakeVel, intakeAccel)
                 .build();
 
         DriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(48, -12), fastVel, intakeAccel)
                 .build();
 
         DriveFirstMarkToLock =  drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(0, -40), fastVel, fastAccel)
                 .build();
 
-        DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+        DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, -15, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(0, -30), fastVel, fastAccel)
                 .build();
 

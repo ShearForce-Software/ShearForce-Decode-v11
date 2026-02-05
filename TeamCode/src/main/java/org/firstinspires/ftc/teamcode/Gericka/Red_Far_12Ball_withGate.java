@@ -106,7 +106,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
                 // U-loop to bump/open the gate near the top wall, then come back down to the lock
                 // (tweak these waypoints to match your exact gate location)
                 .splineToConstantHeading(new Vector2d(5, 40),  Math.toRadians(180), loopVel, loopAccel)  // up-left
-                .splineToConstantHeading(new Vector2d(0, 50),  Math.toRadians(90), loopVel, loopAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(0, 52),  Math.toRadians(90), loopVel, loopAccel)  // up-left
                 .build();
 
         LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 50, Math.toRadians(90)))   // FIX
@@ -120,10 +120,10 @@ Red_Far_12Ball_withGate extends LinearOpMode {
                 .build();
 
         DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, 21), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 25), fastVel, fastAccel)
                 .build();
 
-        DriveBigTriangleToFirstMark =  drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
+        DriveBigTriangleToFirstMark =  drive.actionBuilder(new Pose2d(-11.5, 25, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(34.75, 60), intakeVel, intakeAccel)
@@ -217,6 +217,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.4),
                         new ParallelAction(SecondMarkToLock, setIntakeOff()),
+                        new SleepAction(0.1),
                         new ParallelAction(LockToBigTriangle)
                 )
         );

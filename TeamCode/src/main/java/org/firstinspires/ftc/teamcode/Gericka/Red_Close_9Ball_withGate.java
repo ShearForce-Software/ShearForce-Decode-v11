@@ -66,7 +66,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // initialize the turret angle and launch ramp
-        final double turretTargetAngleBigTriangle = -142.0;
+        final double turretTargetAngleBigTriangle = -136.0;
         final double BIG_TRIANGLE_RPM = 2800.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
         theRobot.SetLaunchRampPosition(0.6);
@@ -101,7 +101,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
         ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
-                .strafeToConstantHeading(new Vector2d(0, 45),slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-2, 45),slowVel, slowAccel)
                 .splineToConstantHeading(new Vector2d(0, 58),  Math.toRadians(90), slowVel, slowAccel)
                 //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
                 .build();
@@ -113,12 +113,12 @@ Red_Close_9Ball_withGate extends LinearOpMode {
                 .build();
 
         DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,21,Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(12.5, 20), Math.toRadians(90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(14.5, 20), Math.toRadians(90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(12.5, 60),slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(14.5, 61),slowVel, slowAccel)
                 .build();
 
-        DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(12.5,60,Math.toRadians(90)))
+        DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(14.5,61,Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(11.5, 30),fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
