@@ -120,7 +120,7 @@ public class Gericka_Hardware {
     public final double PIDF_F_FROOTY_LOOPS = 14.25;
     public final double PIDF_F_CLOSE = 13.0;
 
-    public static double shooterP = 25.0;
+    public static double shooterP = 75.0; //change from 25.0
     public static double shooterI = 0.0;
     public static double shooterD = 0.0;
     public static double shooterF = 14.25;
