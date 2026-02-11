@@ -139,7 +139,8 @@ public class Blue_Close_6Ball extends LinearOpMode {
         sleep(500);
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
-        theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
         drive.updatePoseEstimate();
 
 
@@ -162,7 +163,8 @@ public class Blue_Close_6Ball extends LinearOpMode {
         // SHOOT-3
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
-        theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
         drive.updatePoseEstimate();
 
         //lower lifter

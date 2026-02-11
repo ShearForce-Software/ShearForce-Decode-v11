@@ -160,8 +160,8 @@ Blue_Far_9Balls extends LinearOpMode {
 
         // SHOOT-3
         sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-        theRobot.ShootAutoThreeBalls();
-
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
 
                 // -------------------------
                 // -> FIRST STRIP -> SMALL TRIANGLE -> SHOOT
@@ -178,7 +178,8 @@ Blue_Far_9Balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
 
                 // -------------------------
                 // SMALL TRIANGLE -> SECOND STRIP -> SMALL TRIANGLE -> SHOOT
@@ -196,7 +197,8 @@ Blue_Far_9Balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
 
         // Command Turret to start storing itself at 0
         theRobot.SetTurretRotationAngle(0.0);

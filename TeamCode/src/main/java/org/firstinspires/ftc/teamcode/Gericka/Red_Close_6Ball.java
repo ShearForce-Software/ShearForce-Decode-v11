@@ -50,16 +50,17 @@ public class Red_Close_6Ball extends LinearOpMode {
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
+
         // set lifter half up (so can get 3 ball loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
 
         DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, 39, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.4, 10))
+                .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
 
         // Mid (-10, -10, 270) -> closest line (-10, -40)
-        DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.4, 10, Math.toRadians(90)))
+        DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
 
                 .strafeToConstantHeading(new Vector2d(-11.4, 55))
                 .build();
@@ -67,11 +68,11 @@ public class Red_Close_6Ball extends LinearOpMode {
 
 
         DriveClosestLineBackToMid = drive.actionBuilder(new Pose2d(-11.4, 55, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.4, 10))
+                .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
 
         // Closest line (-10, -40, 270) -> launch park (-54, -16)
-        DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.4, 10, Math.toRadians(90)))
+        DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(-54, 16))
                 .build();
 
@@ -96,10 +97,12 @@ public class Red_Close_6Ball extends LinearOpMode {
         secondaryThread.start();
 
         // Turret initial rough angle toward speaker (tune as needed)
-        double turretTargetAngle = -142;
+        double turretTargetAngle = -136;
 
                 ;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetLaunchRampPosition(0.6);
+
 
         // turn off turret power so doesn't twitch
         //theRobot.turretMotor.setPower(0);
@@ -117,7 +120,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         theRobot.SetIntakeMotor(true,true);
         // spin up shooter wheel to max
         //theRobot.SetShooterSpeed(1.0);
-        theRobot.SetShooterMotorToSpecificRPM(2700);
+        theRobot.SetShooterMotorToSpecificRPM(2800);
 
         Actions.runBlocking(new SleepAction((1)));
         Actions.runBlocking(DriveStartToMidPosition);
@@ -129,8 +132,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         //control.SetTurretRotationAngle(turretTargetAngle);
 
         // Shooter RPM for big triangle shots (tune as needed)
-        double shooterSpeedRPM = 2500;
-        theRobot.SetLaunchRampPosition(0.4);
+        double shooterSpeedRPM = 2800;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // SHOOT-3

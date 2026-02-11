@@ -128,10 +128,10 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
 
         DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, -13), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, -21), fastVel, fastAccel)
                 .build();
 
-        DriveToGateLock = drive.actionBuilder(new Pose2d(-11.5, -13, Math.toRadians(-90)))
+        DriveToGateLock = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(0, -40), fastVel, fastAccel)
                 .build();
 
@@ -234,7 +234,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
         final double BIG_TRIANGLE_RPM = 2800;
-        double turretTargetAngleBigTriangle = 142.0;
+        double turretTargetAngleBigTriangle = 136.0;
         theRobot.SetLaunchRampPosition(0.6);
 
         shooterSpeedRPM = BIG_TRIANGLE_RPM;

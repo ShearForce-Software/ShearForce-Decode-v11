@@ -64,12 +64,12 @@ public class Decode_MeepMeep_Blue_Close_9Ball_withGate {
 
         Action ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, -60, Math.toRadians(-90)))
                 //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
-                .strafeToConstantHeading(new Vector2d(0, -45),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(0, -58),  Math.toRadians(-90), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-4, -45),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-2, -58),  Math.toRadians(-90), slowVel, slowAccel)
                 //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
                 .build();
 
-        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, -58, Math.toRadians(-90)))
+        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(-2, -58, Math.toRadians(-90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
                 .strafeToConstantHeading(new Vector2d(0, -40),slowVel, slowAccel)
                 .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),slowVel, superSlowAccel)

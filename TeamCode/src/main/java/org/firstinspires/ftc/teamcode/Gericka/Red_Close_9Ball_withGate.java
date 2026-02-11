@@ -88,12 +88,12 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
         Action ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
-                .strafeToConstantHeading(new Vector2d(-2, 45),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(0, 58),  Math.toRadians(90), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-4, 45),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-2, 58),  Math.toRadians(90), slowVel, slowAccel)
                 //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
                 .build();
 
-        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 58, Math.toRadians(90)))
+        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(-2, 58, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
                 .strafeToConstantHeading(new Vector2d(0, 40),slowVel, slowAccel)
                 .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),slowVel, superSlowAccel)
@@ -166,6 +166,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoFourBalls();
         drive.updatePoseEstimate();
 
         // -------------------------
@@ -204,7 +205,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
         // SHOOT-3
         theRobot.ShootAutoThreeBalls();
-
+        //theRobot.ShootAutoFourBalls();
         // -------------------------
         // BIG TRIANGLE -> SECOND MARK -> BIG TRIANGLE SHOOT
         // -------------------------
@@ -222,6 +223,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(false, true);
         // SHOOT-3
         theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoFourBalls();
 
         theRobot.SetTurretRotationAngle(0.0);
 
