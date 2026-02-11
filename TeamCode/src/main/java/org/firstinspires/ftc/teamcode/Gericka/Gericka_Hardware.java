@@ -1130,7 +1130,7 @@ public class Gericka_Hardware {
     private final long LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 400;
 
     public void ShootThreeBalls() {
-        boolean SHOOT_3_BALLS_USING_SENSORS = false;
+        boolean SHOOT_3_BALLS_USING_SENSORS = true;
 
         if (SHOOT_3_BALLS_USING_SENSORS) {
             ShootThreeBalls_UsingSensors();
@@ -1142,7 +1142,7 @@ public class Gericka_Hardware {
         }
     }
     public void ShootFourBalls() {
-        boolean SHOOT_3_BALLS_USING_SENSORS = false;
+        boolean SHOOT_3_BALLS_USING_SENSORS = true;
 
         if (SHOOT_3_BALLS_USING_SENSORS) {
             ShootThreeBalls_UsingSensors();
@@ -1265,7 +1265,7 @@ public class Gericka_Hardware {
     }
 
     public void ShootAutoFourBalls(){ // Only for 6&9
-        boolean SHOOT_AUTO_3_BALLS_USING_SENSORS = false;
+        boolean SHOOT_AUTO_3_BALLS_USING_SENSORS = true;
 
         if (SHOOT_AUTO_3_BALLS_USING_SENSORS) {
             ShootThreeBalls_UsingSensors();
@@ -1278,7 +1278,7 @@ public class Gericka_Hardware {
 
 
     public void ShootAutoThreeBalls(){
-        boolean SHOOT_AUTO_3_BALLS_USING_SENSORS = false;
+        boolean SHOOT_AUTO_3_BALLS_USING_SENSORS = true;
 
         if (SHOOT_AUTO_3_BALLS_USING_SENSORS) {
             ShootThreeBalls_UsingSensors();

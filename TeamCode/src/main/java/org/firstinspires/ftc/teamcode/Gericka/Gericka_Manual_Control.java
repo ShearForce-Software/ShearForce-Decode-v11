@@ -182,22 +182,24 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
             }
             // ********  KICKSTAND CONTROLS ***********************
-            if (gamepad1.circleWasPressed()){
-                theRobot.setKickstandsUp();
-                theRobot.SetAutoLifterMode(true);
-            } else if (gamepad1.crossWasPressed()){
-                theRobot.setKickstandsDown();
-                // put the lifter down too
-                theRobot.SetAutoLifterMode(false);
-                theRobot.SetLifterDown();
-                theRobot.SetTurretAutoMode(false);
-                theRobot.SetTurretRotationAngle(90);
-                theRobot.SetAutoShooterMode(false);
-                theRobot.SetShooterMotorToSpecificRPM(0);
-                theRobot.SetAutoIntakeMode(false);
-                theRobot.SetIntakeMotor(false, false);
+            if (!gamepad1_optionsWasPressed || (!gamepad1.options) ||!gamepad2_optionsWasPressed || (!gamepad2.options)) {
+                if (gamepad1.circleWasPressed()) {
+                    theRobot.setKickstandsUp();
+                    theRobot.SetAutoLifterMode(true);
+                } else if (gamepad1.crossWasPressed()) {
+                    theRobot.setKickstandsDown();
+                    // put the lifter down too
+                    theRobot.SetAutoLifterMode(false);
+                    theRobot.SetLifterDown();
+                    theRobot.SetTurretAutoMode(false);
+                    theRobot.SetTurretRotationAngle(90);
+                    theRobot.SetAutoShooterMode(false);
+                    theRobot.SetShooterMotorToSpecificRPM(0);
+                    theRobot.SetAutoIntakeMode(false);
+                    theRobot.SetIntakeMotor(false, false);
 
 
+                }
             }
             /* *************************************************
              *************************************************
