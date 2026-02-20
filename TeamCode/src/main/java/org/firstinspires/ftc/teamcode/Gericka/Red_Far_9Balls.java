@@ -30,11 +30,11 @@ Red_Far_9Balls extends LinearOpMode {
     public void runOpMode() {
         final double startPoseHeadingDegrees = 90;
         Pose2d startPose = new Pose2d(60, 8.75, Math.toRadians(startPoseHeadingDegrees));
-        final double SMALL_TRIANGLE_RPM = 3500.0;
+        final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
         final double SMALL_TRIANGLE_TARGET_ANGLE = -115.0;
         //final double BIG_TRIANGLE_TARGET_ANGLE = -136.0;
-        final double SMALL_TRIANGLE_HOOD_POSITION = 1.0;
+        final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
         //final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
 
         /* Initialize the Robot */
@@ -159,7 +159,7 @@ Red_Far_9Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(1500);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
 

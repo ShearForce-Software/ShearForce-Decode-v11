@@ -67,15 +67,15 @@ public class Red_Far_12Balls extends LinearOpMode {
         // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
         double turretTargetAngle = -115;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(1.0);
+        theRobot.SetLaunchRampPosition(0.7);
 
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(60, 12, 90);
+        sleep(1500);
+        theRobot.SetRoadrunnerInitialPosition(60, 8.75, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
@@ -170,7 +170,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = 3500;
+        double shooterSpeedRPM = 3000;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // -------------------------
@@ -228,9 +228,9 @@ public class Red_Far_12Balls extends LinearOpMode {
         // -------------------------
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
-        final double BIG_TRIANGLE_RPM = 2800;
+        final double BIG_TRIANGLE_RPM = 2400;
         double turretTargetAngleBigTriangle = -142.0;
-        theRobot.SetLaunchRampPosition(0.6);
+        theRobot.SetLaunchRampPosition(0.5);
 
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);

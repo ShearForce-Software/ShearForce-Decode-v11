@@ -71,7 +71,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
         double turretTargetAngle = 117;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(1.0);
+        theRobot.SetLaunchRampPosition(0.7);
 
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
@@ -79,7 +79,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(60, -12, -90);
+        theRobot.SetRoadrunnerInitialPosition(60, -8.75, -90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -175,7 +175,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = 3500;
+        double shooterSpeedRPM = 3000;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // -------------------------
@@ -188,7 +188,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(false, true);
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         // SHOOT-3
-        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(1500);  // first time shooting give a tiny extra wait to allow shooter to spin up
         theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
 
@@ -233,9 +233,9 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // -------------------------
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
-        final double BIG_TRIANGLE_RPM = 2800;
+        final double BIG_TRIANGLE_RPM = 2400;
         double turretTargetAngleBigTriangle = 136.0;
-        theRobot.SetLaunchRampPosition(0.6);
+        theRobot.SetLaunchRampPosition(0.5);
 
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);

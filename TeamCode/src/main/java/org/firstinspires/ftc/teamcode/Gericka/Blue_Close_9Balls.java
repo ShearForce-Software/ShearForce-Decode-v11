@@ -41,9 +41,9 @@ Blue_Close_9Balls extends LinearOpMode {
 
         // initialize the turret angle and launch ramp
         final double turretTargetAngleBigTriangle = 136.0;
-        final double BIG_TRIANGLE_RPM = 2800.0;
+        final double BIG_TRIANGLE_RPM = 2400.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
-        theRobot.SetLaunchRampPosition(0.6);
+        theRobot.SetLaunchRampPosition(0.5);
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 

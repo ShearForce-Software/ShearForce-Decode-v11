@@ -1336,10 +1336,10 @@ public class Gericka_Hardware {
         SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
 
         // shoot ball 2
-        // SetIntakeMotor(false, true);
+        SetIntakeMotor(false, true);
         SetLifterPosition(LIFTER_UP_POSITION);
         SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        //SetIntakeMotor(true, true);
+        SetIntakeMotor(true, true);
         SetLifterPosition(LIFTER_DOWN_POSITION);
         SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
 
