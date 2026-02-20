@@ -55,7 +55,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
     public void runOpMode() {
 
 
-        startPose = new Pose2d(60, -12, Math.toRadians(-90));
+        startPose = new Pose2d(60, -8.75, Math.toRadians(-90));
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");

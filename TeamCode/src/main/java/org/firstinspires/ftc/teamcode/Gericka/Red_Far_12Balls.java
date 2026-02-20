@@ -52,7 +52,7 @@ public class Red_Far_12Balls extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        startPose = new Pose2d(60, 12, Math.toRadians(90));
+        startPose = new Pose2d(60, 8.75, Math.toRadians(90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
 

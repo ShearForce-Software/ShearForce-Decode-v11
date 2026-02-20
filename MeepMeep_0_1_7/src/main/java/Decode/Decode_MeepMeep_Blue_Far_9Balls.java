@@ -21,7 +21,7 @@ public class Decode_MeepMeep_Blue_Far_9Balls {
 
     public static void main(String[] args) {
         final double startPoseHeadingDegrees = -90;
-        Pose2d startPose = new Pose2d(60, -12, Math.toRadians(startPoseHeadingDegrees));
+        Pose2d startPose = new Pose2d(60, -8.75, Math.toRadians(startPoseHeadingDegrees));
 
         MeepMeep meepMeep = new MeepMeep(700);
 
