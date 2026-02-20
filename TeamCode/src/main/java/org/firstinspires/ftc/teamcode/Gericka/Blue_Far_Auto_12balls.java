@@ -79,7 +79,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(60, -12, -90);
+        theRobot.SetRoadrunnerInitialPosition(60, -8.75, -90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
