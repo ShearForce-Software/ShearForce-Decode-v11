@@ -52,7 +52,7 @@ Blue_Close_9Balls extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(60, -12, -90);
+        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, -90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);

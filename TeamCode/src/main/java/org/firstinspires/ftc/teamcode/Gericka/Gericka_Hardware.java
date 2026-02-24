@@ -425,7 +425,12 @@ public class Gericka_Hardware {
         }
     }
     public void SetRoadrunnerInitialPosition(double xPositionInches, double yPositionInches, double headingDegrees){
+        SetInitalPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
+    }
+    private void SetInitalPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
+        //pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
         startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
+        //pinpoint.update();
     }
 
     // *************************************************************************
@@ -504,11 +509,6 @@ public class Gericka_Hardware {
 
         }
 
-    }
-    public void SetInitalPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
-        //pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
-        startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
-        //pinpoint.update();
     }
 
     public boolean GetUpdateRoadrunnerFromWebcamEnabled() { return updateRoadrunnerFromWebcamEnabled; }

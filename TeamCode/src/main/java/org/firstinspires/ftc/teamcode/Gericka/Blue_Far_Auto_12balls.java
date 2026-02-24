@@ -79,7 +79,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(60, -8.75, -90);
+        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, -90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -90,7 +90,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
-        DriveToShootingPosition = drive.actionBuilder(new Pose2d(60, -12, Math.toRadians(-90)))
+        DriveToShootingPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
                 .build();
 
