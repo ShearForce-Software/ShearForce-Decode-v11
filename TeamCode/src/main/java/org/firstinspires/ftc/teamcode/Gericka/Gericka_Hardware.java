@@ -425,7 +425,12 @@ public class Gericka_Hardware {
         }
     }
     public void SetRoadrunnerInitialPosition(double xPositionInches, double yPositionInches, double headingDegrees){
+        SetInitalPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
+    }
+    private void SetInitalPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
+        //pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
         startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
+        //pinpoint.update();
     }
 
     // *************************************************************************
@@ -504,11 +509,6 @@ public class Gericka_Hardware {
 
         }
 
-    }
-    public void SetInitalPinpointPosition(double xPositionInches, double yPositionInches, double headingDegrees) {
-        //pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees));
-        startPose = new Pose2D(DistanceUnit.INCH, xPositionInches, yPositionInches, AngleUnit.DEGREES, headingDegrees);
-        //pinpoint.update();
     }
 
     public boolean GetUpdateRoadrunnerFromWebcamEnabled() { return updateRoadrunnerFromWebcamEnabled; }
@@ -1336,10 +1336,10 @@ public class Gericka_Hardware {
         SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
 
         // shoot ball 2
-        // SetIntakeMotor(false, true);
+        SetIntakeMotor(false, true);
         SetLifterPosition(LIFTER_UP_POSITION);
         SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        //SetIntakeMotor(true, true);
+        SetIntakeMotor(true, true);
         SetLifterPosition(LIFTER_DOWN_POSITION);
         SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
 

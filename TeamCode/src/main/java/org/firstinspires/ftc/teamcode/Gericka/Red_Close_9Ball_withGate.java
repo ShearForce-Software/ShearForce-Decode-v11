@@ -41,9 +41,9 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
         // initialize the turret angle and launch ramp
         final double turretTargetAngleBigTriangle = -136.0;
-        final double BIG_TRIANGLE_RPM = 2800.0;
+        final double BIG_TRIANGLE_RPM = 2400.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
-        theRobot.SetLaunchRampPosition(0.6);
+        theRobot.SetLaunchRampPosition(0.5);
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
@@ -52,7 +52,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(60, 12, 90);
+        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, 90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);

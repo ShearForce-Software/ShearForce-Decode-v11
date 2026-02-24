@@ -46,7 +46,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
 
     sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
     // finish initializing the pinpoint
-    theRobot.SetInitalPinpointPosition(-60, -39, -90);
+    theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, -90);
 
     blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -54,7 +54,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
     theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
 
-    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(-60, -39, Math.toRadians(-90)))
+    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(-90)))
             .strafeToConstantHeading(new Vector2d(-11.4, -10))
             .build();
 

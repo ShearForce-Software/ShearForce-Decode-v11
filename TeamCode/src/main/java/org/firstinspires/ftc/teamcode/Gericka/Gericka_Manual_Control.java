@@ -44,7 +44,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             xPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_X_POSITION);
             yPositionInches = (double) blackboard.get(Gericka_Hardware.FINAL_Y_POSITION);
             headingDegrees = (double) blackboard.get(Gericka_Hardware.FINAL_HEADING_DEGREES);
-            theRobot.SetInitalPinpointPosition(xPositionInches, yPositionInches, headingDegrees);
+            theRobot.SetRoadrunnerInitialPosition(xPositionInches, yPositionInches, headingDegrees);
         } catch (NullPointerException ignored) {
             //theRobot.SetPinpointPosition(0.0, 0.0, defaultHeadingDegrees);
             //theRobot.pinpoint.update();
