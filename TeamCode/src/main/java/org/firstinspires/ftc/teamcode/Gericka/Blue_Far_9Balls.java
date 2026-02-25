@@ -29,7 +29,7 @@ Blue_Far_9Balls extends LinearOpMode {
     @Override
     public void runOpMode() {
         final double startPoseHeadingDegrees = -90;
-        Pose2d startPose = new Pose2d(60, -8.75, Math.toRadians(startPoseHeadingDegrees));  //TODO WHY was this changed from -8.75 like all of the other FAR routines back to -12 ???
+        Pose2d startPose = new Pose2d(60, -8.75, Math.toRadians(startPoseHeadingDegrees));
         final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
         final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
@@ -157,7 +157,7 @@ Blue_Far_9Balls extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
-        Actions.runBlocking(new SleepAction(1));
+        Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
         sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up

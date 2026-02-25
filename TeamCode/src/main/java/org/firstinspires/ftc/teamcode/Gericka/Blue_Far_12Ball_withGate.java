@@ -164,7 +164,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // shooter speed for SMALL TRIANGLE
         double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        Actions.runBlocking(new SleepAction(0.5));
+        Actions.runBlocking(new SleepAction(0.5));  //TODO --why doing this here? there is already a sleep 4 lines below, just increase that time if not long enough
 
         // -------------------------
         // START -> SHOOT FROM SMALL TRIANGLE
@@ -176,7 +176,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
         theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
 
@@ -196,7 +196,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250),
                         new ParallelAction(SecondMarkToLock, setIntakeOff()),
-                        new SleepAction(2),
+                        new SleepAction(2),  // HOLD GATE OPEN timer
                         new ParallelAction(LockToBigTriangle)
                 )
         );
