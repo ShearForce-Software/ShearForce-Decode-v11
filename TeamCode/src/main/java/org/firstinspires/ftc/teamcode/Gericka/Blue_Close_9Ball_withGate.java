@@ -40,7 +40,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // initialize the turret angle and launch ramp
-        final double turretTargetAngleBigTriangle = 136.0;
+        final double turretTargetAngleBigTriangle = 132.0;
         final double BIG_TRIANGLE_RPM = 2400.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
         theRobot.SetLaunchRampPosition(0.5);
