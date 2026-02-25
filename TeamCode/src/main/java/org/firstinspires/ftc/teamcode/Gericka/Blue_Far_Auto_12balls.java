@@ -234,7 +234,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
         final double BIG_TRIANGLE_RPM = 2400;
-        double turretTargetAngleBigTriangle = 136.0;
+        double turretTargetAngleBigTriangle = 131.0;
         theRobot.SetLaunchRampPosition(0.5);
 
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
