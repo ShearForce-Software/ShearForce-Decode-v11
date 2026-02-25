@@ -29,7 +29,7 @@ Blue_Far_9Balls extends LinearOpMode {
     @Override
     public void runOpMode() {
         final double startPoseHeadingDegrees = -90;
-        Pose2d startPose = new Pose2d(60, -12, Math.toRadians(startPoseHeadingDegrees));  //TODO WHY was this changed from -8.75 like all of the other FAR routines back to -12 ???
+        Pose2d startPose = new Pose2d(60, -8.75, Math.toRadians(startPoseHeadingDegrees));  //TODO WHY was this changed from -8.75 like all of the other FAR routines back to -12 ???
         final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
         final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
