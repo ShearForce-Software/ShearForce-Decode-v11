@@ -41,7 +41,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
  * See the sensor's product page: https://www.gobilda.com/pinpoint-odometry-computer-imu-sensor-fusion-for-2-wheel-odometry/
  */
 @TeleOp(name = "Sensor: GoBilda Pinpoint", group = "Sensor")
-@Disabled
 public class SensorGoBildaPinpoint extends OpMode {
     // Create an instance of the sensor
     GoBildaPinpointDriver pinpoint;
@@ -56,6 +55,12 @@ public class SensorGoBildaPinpoint extends OpMode {
 
         // Set the location of the robot - this should be the place you are starting the robot from
         pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
+        double factoryYaw = 1.0015;
+        double newYawWith1 =0.99877591688;
+        double newYaw = factoryYaw * 0.99724447500937;
+        //pinpoint.setYawScalar(newYaw);
+        //pinpoint.setYawScalar(1.0);
+        pinpoint.setYawScalar(newYawWith1);
     }
 
     @Override
@@ -72,6 +77,7 @@ public class SensorGoBildaPinpoint extends OpMode {
         telemetry.addData("X coordinate (IN)", pose2D.getX(DistanceUnit.INCH));
         telemetry.addData("Y coordinate (IN)", pose2D.getY(DistanceUnit.INCH));
         telemetry.addData("Heading angle (DEGREES)", pose2D.getHeading(AngleUnit.DEGREES));
+        telemetry.addData("Yaw scalar",pinpoint.getYawScalar());
     }
 
     public void configurePinpoint(){

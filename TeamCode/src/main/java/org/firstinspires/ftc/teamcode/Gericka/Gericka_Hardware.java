@@ -264,8 +264,8 @@ public class Gericka_Hardware {
 
         rightKickstand = hardwareMap.get(Servo.class, "rightKickstand");
         leftKickstand = hardwareMap.get(Servo.class, "leftKickstand");
-        leftKickstand.setDirection(Servo.Direction.FORWARD);
-        rightKickstand.setDirection(Servo.Direction.REVERSE);
+        leftKickstand.setDirection(Servo.Direction.REVERSE);
+            rightKickstand.setDirection(Servo.Direction.FORWARD);
         // ********** Color Sensors ********************
         ColorSensorRight = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
         ColorSensorLeft = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");

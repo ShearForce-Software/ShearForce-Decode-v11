@@ -192,7 +192,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetAutoLifterMode(false);
                     theRobot.SetLifterDown();
                     theRobot.SetTurretAutoMode(false);
-                    theRobot.SetTurretRotationAngle(90);
+                    theRobot.SetTurretRotationAngle(0);
                     theRobot.SetAutoShooterMode(false);
                     theRobot.SetShooterMotorToSpecificRPM(0);
                     theRobot.SetAutoIntakeMode(false);
