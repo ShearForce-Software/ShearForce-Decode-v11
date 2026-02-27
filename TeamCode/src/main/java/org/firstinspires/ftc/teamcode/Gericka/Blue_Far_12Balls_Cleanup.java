@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.Gericka;
 
 import androidx.annotation.NonNull;
@@ -19,125 +18,119 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Autonomous(name = "BLUE Far Auto 12 balls", preselectTeleOp = "Gericka 1 Manual Control")
-public class Blue_Far_Auto_12balls extends LinearOpMode {
+@Autonomous(name = "BLUE FAR 12 BALLS CLEANUP", preselectTeleOp = "Gericka 1 Manual Control")
+public class
+
+Blue_Far_12Balls_Cleanup extends LinearOpMode {
 
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
-    Pose2d startPose;
-
-    // Trajectories
-    Action DriveToShootingPosition;
-
-    Action DriveToFirstMark;
-    Action ReturnFromFirstMark;
-
-    Action DriveToSecondMark;
-    Action ReturnFromSecondMark;
-
-    Action DriveToThirdMark;
-    Action DriveThirdMarkToBigTriangle;
-    Action DriveToGateLock;
-
-    public static boolean shoot3enabled = true;
-
-    // Constraints
-    VelConstraint fastVel = new TranslationalVelConstraint(85);
-    AccelConstraint fastAccel = new ProfileAccelConstraint(-60, 60);
-
-    VelConstraint intakeVel = new TranslationalVelConstraint(50);
-    AccelConstraint intakeAccel = new ProfileAccelConstraint(-30, 40);
-
-    int lifterUpSleepTime = 300;
-    int lifterDownSleepTime = 400;
 
     @Override
     public void runOpMode() {
-
-
-        startPose = new Pose2d(60, -8.75, Math.toRadians(-90));
+        final double startPoseHeadingDegrees = -90;
+        Pose2d startPose = new Pose2d(60, -8.75, Math.toRadians(startPoseHeadingDegrees));
+        final double SMALL_TRIANGLE_RPM = 3000.0;
+        //final double BIG_TRIANGLE_RPM = 2800;
+        final double SMALL_TRIANGLE_TARGET_ANGLE = 114.0;
+        //final double BIG_TRIANGLE_TARGET_ANGLE = 136.0;
+        final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
+        //final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
-
-        // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
-
-
-        // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
+        theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
+        theRobot.SetAutoLifterMode(true);
+        theRobot.SetShooterPIDF_Enabled(true);
+        Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
-        // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
-        double turretTargetAngle = 116;
+        // Turn turret toward the target
+        double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(0.7);
+        theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
 
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, -90);
+        sleep(1500);
+        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, startPoseHeadingDegrees);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
-        // set lifter half up (so can get 3 balls loaded in robot)
-        theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
+
+        // ***************************************************
+        // ****  Define Velocity and Acceleration Constraints
+        // ***************************************************
+
+        VelConstraint fastVel = new TranslationalVelConstraint(90);
+        AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
+
+        VelConstraint normalVel = new TranslationalVelConstraint(60);
+        AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
+
+        VelConstraint slowVel = new TranslationalVelConstraint(40);
+        AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
+
+        VelConstraint superSlowVel = new TranslationalVelConstraint(30);
+        AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
+
 
         // ***************************************************
         // ****  Define Trajectories    **********************
         // ***************************************************
 
-        DriveToShootingPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(-90)))
+        Action DriveToShootingPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(startPoseHeadingDegrees)))
                 .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
                 .build();
 
-        // FIRST  = far-right strip (closest to GOAL side)
-        // SECOND = center strip
-        // THIRD  = far-left strip
-
-        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                // Smooth into the strip (fast -> intake). Tangent set to -Y so it flows into the downfield run.
-                .splineToConstantHeading(new Vector2d(34.75, -30), Math.toRadians(-90), fastVel, fastAccel)
-                //.splineToConstantHeading(new Vector2d(34.75, -60), Math.toRadians(-90), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(34.75, -60), intakeVel, intakeAccel)
+        Action DriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .splineToConstantHeading(new Vector2d(34.75, -30),  Math.toRadians(-90),fastVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), normalVel, normalAccel)
                 .build();
 
-        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(45, -23), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(48, -12), intakeVel, intakeAccel)
+        Action DriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(48, -12),  Math.toRadians(-270), fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(48, -12), fastVel, normalAccel)
                 .build();
 
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+        Action DriveShootingPositionToCollectGateBalls = drive.actionBuilder(new Pose2d(48,-12, Math.toRadians(-90)))
+                .splineToLinearHeading(new Pose2d(25,-56,Math.toRadians(-30)),Math.toRadians(-150), fastVel, normalAccel)
+                //.splineToLinearHeading(new Pose2d(60,-58,Math.toRadians(0)),Math.toRadians(90), normalVel, normalAccel)
+                .strafeToLinearHeading(new Vector2d(60,-58), Math.toRadians(0), normalVel, normalAccel)
+                //.splineToConstantHeading(new Vector2d(60, -60),  Math.toRadians(0), fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(60,-60), fastVel, normalAccel)
+                .build();
+
+        Action DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
-                //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(11.5, -60), intakeVel, intakeAccel)
+                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
                 .build();
 
-        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(45, -23), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(48, -12), intakeVel, intakeAccel)
+        Action DriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,-58,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(48,-12), Math.toRadians(-90), fastVel, normalAccel)
                 .build();
 
-        DriveToThirdMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(-15, -31), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(-15, -60), intakeVel, intakeAccel)
+        Action DriveOutOfSmallTriangle = drive.actionBuilder(new Pose2d(48,-12,Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(36,-12), fastVel, fastAccel)
                 .build();
 
-
-        DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, -60, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, -21), fastVel, fastAccel)
+        Action DriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, -32),  Math.toRadians(-270), fastVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(48, -12),  Math.toRadians(90), normalVel, slowAccel)
+                //.strafeToConstantHeading(new Vector2d(30,-12),fastVel,fastAccel)
+                //.strafeToConstantHeading(new Vector2d(48,-12),fastVel,normalAccel)
                 .build();
 
-        DriveToGateLock = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(0, -40), fastVel, fastAccel)
+        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(0, -30), fastVel, fastAccel)
                 .build();
-
-        theRobot.SetAutoLifterMode(true);
-        theRobot.SetShooterPIDF_Enabled(true);
-        Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
@@ -167,15 +160,14 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         resetRuntime();
         Gericka_Hardware.autoTimeLeft = 0.0;
 
-
-        double turretTargetAngleSmallTriangle = 114;
-        theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
+        // re-command the turret angle to get the power back on
+        theRobot.SetTurretRotationAngle(turretTargetAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = 3000;
+        double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
         // -------------------------
@@ -186,67 +178,40 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
-        theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
-        // SHOOT-3
-        sleep(1500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-        theRobot.ShootAutoThreeBalls();
-        drive.updatePoseEstimate();
-
-        // -------------------------
-        // FIRST STRIP -> BACK -> SHOOT
-        // -------------------------
-        drive.updatePoseEstimate();
-        Actions.runBlocking(
-                new SequentialAction(
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
-                        new ParallelAction(ReturnFromFirstMark, setIntakeOff())
-                )
-        );
-
-
-        drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+        Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
 
-        // -------------------------
-        // SECOND STRIP -> BACK -> SHOOT
-        // -------------------------
+                // -------------------------
+                // -> SECOND STRIP -> SMALL TRIANGLE -> SHOOT
+                // -------------------------
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250),
-                        new ParallelAction(ReturnFromSecondMark, setIntakeOff())
+                        new ParallelAction(DriveSecondMarkToShootingPosition, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
-
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
 
-        // -------------------------
-        // THIRD STRIP -> BIG TRIANGLE -> SHOOT
-        // -------------------------
-        final double BIG_TRIANGLE_RPM = 2400;
-        double turretTargetAngleBigTriangle = 131.0;
-        theRobot.SetLaunchRampPosition(0.5);
-
-        shooterSpeedRPM = BIG_TRIANGLE_RPM;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
-
+                // -------------------------
+                // SMALL TRIANGLE -> FIRST STRIP -> SMALL TRIANGLE -> SHOOT
+                // -------------------------
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250),
-                        new ParallelAction(DriveThirdMarkToBigTriangle, setIntakeOff())
+                        new ParallelAction(DriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -254,15 +219,36 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
 
+        // -------------------------
+        // SMALL TRIANGLE -> COLLECT BALLS FROM GATE -> SMALL TRIANGLE -> SHOOT
+        // -------------------------
+        drive.updatePoseEstimate();
+        Actions.runBlocking(
+                new SequentialAction(
+                        new ParallelAction(DriveShootingPositionToCollectGateBalls, setIntakeOn(), new SetLifterDown()),
+                        new SleepAction(0.250),
+                        new ParallelAction(DriveCollectGateBallsToShootingPosition, setIntakeOn())
+                )
+        );
+        drive.updatePoseEstimate();
+
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
+        // SHOOT-3
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+
+        // Command Turret to start storing itself at 0
         theRobot.SetTurretRotationAngle(0.0);
 
         // -------------------------
-        // PARK NEXT TO GATE
+        // SMALL TRIANGLE -> PARK
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveToGateLock, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(DriveOutOfSmallTriangle, setIntakeOff()));
 
         // -------------------------
         // Cleanup
@@ -283,7 +269,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetTurretRotationAngle(0.0);
 
         // turn off intake
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
 
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
