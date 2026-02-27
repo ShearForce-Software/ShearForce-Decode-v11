@@ -73,8 +73,8 @@ public class Decode_MeepMeep_Blue_Far_9Balls_CleanupV2 {
                 .build();
 
         Action DriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .splineToConstantHeading(new Vector2d(11.5, -35), Math.toRadians(-90), fastVel, normalAccel)
-                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(11.5, -59), Math.toRadians(-90), normalVel, normalAccel)
                 .build();
 
         Action DriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
