@@ -40,7 +40,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // initialize the turret angle and launch ramp
-        final double turretTargetAngleBigTriangle = 131.0;
+        final double turretTargetAngleBigTriangle = 137.0;
         final double BIG_TRIANGLE_RPM = 2400.0;
         theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
         theRobot.SetLaunchRampPosition(0.5);
