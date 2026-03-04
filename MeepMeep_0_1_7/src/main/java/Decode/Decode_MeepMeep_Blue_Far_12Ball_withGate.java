@@ -75,17 +75,17 @@ public class Decode_MeepMeep_Blue_Far_12Ball_withGate {
                 .build();
 
         Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, -50, Math.toRadians(-90)))   // FIX
-                .strafeToConstantHeading(new Vector2d(0, -25), fastVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(0, -25), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(0, -25),  Math.toRadians(-270), fastVel, normalAccel)  // up-left
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(-90),normalVel, normalAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(-90),fastVel, fastAccel)  // up-left
                 .build();
 
         Action DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))   // FIX
-                .splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(-15, -58), normalVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(-11.5, -31), Math.toRadians(-90), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, -58), normalVel, normalAccel)
                 .build();
 
-        Action DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, -58, Math.toRadians(-90)))
+        Action DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, -58, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(-11.5, -21), fastVel, normalAccel)
                 .build();
 
@@ -101,9 +101,8 @@ public class Decode_MeepMeep_Blue_Far_12Ball_withGate {
 
         Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
                 //.strafeToConstantHeading(new Vector2d(0, -30), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(36,-12))
+                .strafeToConstantHeading(new Vector2d(40,-12), fastVel, fastAccel)
                 .build();
-
 
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************

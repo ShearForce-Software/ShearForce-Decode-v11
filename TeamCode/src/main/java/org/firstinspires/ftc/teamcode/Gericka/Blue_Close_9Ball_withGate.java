@@ -165,8 +165,8 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         sleep(500);
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
-        theRobot.ShootAutoThreeBalls();
-        //theRobot.ShootAutoFourBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
 
         drive.updatePoseEstimate();
 
@@ -205,8 +205,8 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
-        //theRobot.ShootAutoFourBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
         // -------------------------
         // BIG TRIANGLE -> SECOND MARK -> BIG TRIANGLE SHOOT
         // -------------------------
@@ -223,8 +223,8 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
-        //theRobot.ShootAutoFourBalls();
+        //theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
         theRobot.SetTurretRotationAngle(0.0);
 
         // -------------------------

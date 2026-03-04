@@ -1160,9 +1160,80 @@ public class Gericka_Hardware {
             //SetIntakeMotor(true, true);
         }
     }
+    private void ShootFourBalls_UsingSensors() {
+        long timeoutTime = 0;
+        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 300;
+        final long TIME_OUT = LIFTER_DOWN_SLEEP_TIME_MILLISECONDS - LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS;
+
+        // store the current auto lifter mode setting, then disable to ensure it doesn't interfere with logic
+        boolean tempLifterMode = GetAutoLifterMode();
+        SetAutoLifterMode(false);
+
+        // shoot ball 1
+        SetLifterPosition(LIFTER_UP_POSITION);
+        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+
+        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
+        timeoutTime = System.currentTimeMillis() + TIME_OUT;
+        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
+                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
+                ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
+                        (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
+                (beamBreak3.getState()) &&
+                (System.currentTimeMillis() < timeoutTime)) {
+            // sleep a tiny amount
+            SpecialSleep(10);
+        }
+
+        // shoot ball 2
+        SetLifterPosition(LIFTER_UP_POSITION);
+        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+
+        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
+        timeoutTime = System.currentTimeMillis() + TIME_OUT;
+        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
+                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
+                ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
+                        (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
+                (beamBreak3.getState()) &&
+                (System.currentTimeMillis() < timeoutTime)) {
+            // sleep a tiny amount
+            SpecialSleep(10);
+        }
+
+        // shoot ball 3
+        SetLifterPosition(LIFTER_UP_POSITION);
+        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+
+        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
+        timeoutTime = System.currentTimeMillis() + TIME_OUT;
+        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
+                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
+                ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
+                        (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
+                (beamBreak3.getState()) &&
+                (System.currentTimeMillis() < timeoutTime)) {
+            // sleep a tiny amount
+            SpecialSleep(10);
+        }
+        // shoot ball 4
+        SetLifterPosition(LIFTER_UP_POSITION);
+        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+
+        // reset auto lifter mode to whatever it was before
+        SetAutoLifterMode(tempLifterMode);
+    }
+
     private void ShootThreeBalls_UsingSensors() {
         long timeoutTime = 0;
-        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 275;
+        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 300;
         final long TIME_OUT = LIFTER_DOWN_SLEEP_TIME_MILLISECONDS - LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS;
 
         // store the current auto lifter mode setting, then disable to ensure it doesn't interfere with logic
@@ -1271,10 +1342,10 @@ public class Gericka_Hardware {
     }
 
     public void ShootAutoFourBalls(){ // Only for 6&9
-        boolean SHOOT_AUTO_3_BALLS_USING_SENSORS = true;
+        boolean SHOOT_AUTO_4_BALLS_USING_SENSORS = true;
 
-        if (SHOOT_AUTO_3_BALLS_USING_SENSORS) {
-            ShootThreeBalls_UsingSensors();
+        if (SHOOT_AUTO_4_BALLS_USING_SENSORS) {
+            ShootFourBalls_UsingSensors();
         }
         else {
 
