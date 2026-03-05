@@ -19,7 +19,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
-@Disabled
 @Autonomous(name = "RED FAR 12 BALL WITH GATE", preselectTeleOp = "Gericka 1 Manual Control")
 public class
 
@@ -31,13 +30,13 @@ Red_Far_12Ball_withGate extends LinearOpMode {
     @Override
     public void runOpMode() {
         final double startPoseHeadingDegrees = 90;
-        Pose2d startPose = new Pose2d(60, 12, Math.toRadians(startPoseHeadingDegrees));
-        final double SMALL_TRIANGLE_RPM = 3500.0;
-        final double BIG_TRIANGLE_RPM = 2800;
+        Pose2d startPose = new Pose2d(60, 8.75, Math.toRadians(startPoseHeadingDegrees));
+        final double SMALL_TRIANGLE_RPM = 3000.0;
+        final double BIG_TRIANGLE_RPM = 2400;
         final double SMALL_TRIANGLE_TARGET_ANGLE = -115.0;
-        final double BIG_TRIANGLE_TARGET_ANGLE = -136.0;
-        final double SMALL_TRIANGLE_HOOD_POSITION = 1.0;
-        final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
+        final double BIG_TRIANGLE_TARGET_ANGLE = -131.0;
+        final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
+        final double BIG_TRIANGLE_HOOD_POSITION = 0.5;
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
@@ -92,26 +91,26 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         Action DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .splineToConstantHeading(new Vector2d(11.5, 30), Math.toRadians(90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, 60), Math.toRadians(90), normalVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(11.5, 59), Math.toRadians(90), normalVel, normalAccel)
                 .build();
 
-        Action SecondMarkToLock = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))   // FIX
+        Action SecondMarkToLock = drive.actionBuilder(new Pose2d(11.5, 59, Math.toRadians(90)))   // FIX
                 .splineToConstantHeading(new Vector2d(5, 40),  Math.toRadians(180), slowVel, slowAccel)  // up-left
-                .splineToConstantHeading(new Vector2d(0, 52),  Math.toRadians(90), slowVel, slowAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(0, 53),  Math.toRadians(90), slowVel, slowAccel)  // up-left
                 .build();
 
-        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 50, Math.toRadians(90)))   // FIX
-                .splineToConstantHeading(new Vector2d(0, 20),  Math.toRadians(270), normalVel, normalAccel)  // up-left
+        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(0, 53, Math.toRadians(90)))   // FIX
+                .splineToConstantHeading(new Vector2d(0, 25),  Math.toRadians(270), normalVel, normalAccel)  // up-left
                 .splineToConstantHeading(new Vector2d(-11.5, 21),  Math.toRadians(90),slowVel, superSlowAccel)  // up-left
                 .build();
 
         Action DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))   // FIX
-                .splineToConstantHeading(new Vector2d(-15, 31), Math.toRadians(90), slowVel, slowAccel)
-                .strafeToConstantHeading(new Vector2d(-15, 60), slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-11.5, 31), Math.toRadians(90), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 57), slowVel, normalAccel)
                 .build();
 
-        Action DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, 25), fastVel, fastAccel)
+        Action DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, 57, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(-11.5, 21), fastVel, normalAccel)
                 .build();
 
         Action DriveBigTriangleToFirstMark =  drive.actionBuilder(new Pose2d(-11.5, 25, Math.toRadians(90)))
@@ -127,6 +126,11 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
                 .build();
+
+        Action DriveOutofShootingPosition =  drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(38, 12), fastVel, fastAccel)
+                .build();
+
 
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
@@ -176,7 +180,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
         theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
 
@@ -194,9 +198,9 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(SecondMarkToLock, setIntakeOff()),
-                        new SleepAction(0.1),
+                        new SleepAction(1.5),
                         new ParallelAction(LockToBigTriangle)
                 )
         );
@@ -214,7 +218,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
@@ -236,7 +240,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveBigTriangleToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
@@ -254,7 +258,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         // SMALL TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveShootingPositionToGateLock, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(DriveOutofShootingPosition, setIntakeOff()));
 
         // -------------------------
         // Cleanup
@@ -281,7 +285,10 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested())) {
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
     }

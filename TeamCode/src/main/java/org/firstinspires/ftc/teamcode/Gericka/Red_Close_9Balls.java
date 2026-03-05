@@ -168,7 +168,7 @@ Red_Close_9Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250), // sleep time to finish intaking the balls
+                        //new SleepAction(0.250), // sleep time to finish intaking the balls
                         new ParallelAction(ThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
@@ -188,7 +188,7 @@ Red_Close_9Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveBigTriangletoSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveSecondMarktoBigTriangle, setIntakeOff())
                 )
         );
@@ -233,7 +233,11 @@ Red_Close_9Balls extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested())) {
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            drive.updatePoseEstimate();
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
     }

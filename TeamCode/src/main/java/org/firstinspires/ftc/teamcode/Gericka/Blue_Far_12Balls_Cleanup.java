@@ -32,7 +32,7 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         Pose2d startPose = new Pose2d(60, -8.75, Math.toRadians(startPoseHeadingDegrees));
         final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
-        final double SMALL_TRIANGLE_TARGET_ANGLE = 114.0;
+        final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
         //final double BIG_TRIANGLE_TARGET_ANGLE = 136.0;
         final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
         //final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
@@ -178,7 +178,7 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
-        Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
+        //Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
         sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
@@ -192,7 +192,7 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveSecondMarkToShootingPosition, setIntakeOff())
                 )
         );
@@ -210,7 +210,7 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
@@ -229,7 +229,7 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveShootingPositionToCollectGateBalls, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveCollectGateBallsToShootingPosition, setIntakeOn())
                 )
         );

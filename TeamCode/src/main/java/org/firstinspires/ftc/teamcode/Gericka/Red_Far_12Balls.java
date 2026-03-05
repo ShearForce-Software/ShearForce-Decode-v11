@@ -183,7 +183,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(false, true);
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
         // SHOOT-3
-        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
         theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
 
@@ -194,7 +194,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(ReturnFromFirstMark, setIntakeOff())
                 )
         );
@@ -214,7 +214,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(ReturnFromSecondMark, setIntakeOff())
                 )
         );
@@ -240,7 +240,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToThirdMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
@@ -284,7 +284,11 @@ public class Red_Far_12Balls extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested())) {
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            drive.updatePoseEstimate();
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
     }

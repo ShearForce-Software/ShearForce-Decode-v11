@@ -157,7 +157,7 @@ Blue_Far_9Balls extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
-        Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
+        //Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
         sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
@@ -171,7 +171,7 @@ Blue_Far_9Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
@@ -189,7 +189,7 @@ Blue_Far_9Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveSecondMarkToShootingPosition, setIntakeOff())
                 )
         );

@@ -159,7 +159,7 @@ Red_Far_9Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(1500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
 
@@ -171,7 +171,7 @@ Red_Far_9Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
@@ -194,7 +194,7 @@ Red_Far_9Balls extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
-                        new SleepAction(0.250),
+                        //new SleepAction(0.250),
                         new ParallelAction(DriveSecondMarkToShootingPosition, setIntakeOff())
                 )
         );
@@ -240,7 +240,11 @@ Red_Far_9Balls extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested())) {
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            drive.updatePoseEstimate();
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
     }

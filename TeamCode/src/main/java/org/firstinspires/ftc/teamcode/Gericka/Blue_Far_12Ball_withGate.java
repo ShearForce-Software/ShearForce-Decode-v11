@@ -33,7 +33,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         Pose2d startPose = new Pose2d(60, -8.75, Math.toRadians(startPoseHeadingDegrees));
         final double SMALL_TRIANGLE_RPM = 3000.0;
         final double BIG_TRIANGLE_RPM = 2400;
-        final double SMALL_TRIANGLE_TARGET_ANGLE = 120.0;
+        final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
         final double BIG_TRIANGLE_TARGET_ANGLE = 131.0;
         final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
         final double BIG_TRIANGLE_HOOD_POSITION = 0.5;
@@ -168,7 +168,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // shooter speed for SMALL TRIANGLE
         double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        Actions.runBlocking(new SleepAction(0.5));  //TODO --why doing this here? there is already a sleep 4 lines below, just increase that time if not long enough
+        //Actions.runBlocking(new SleepAction(0.5));  //TODO --why doing this here? there is already a sleep 4 lines below, just increase that time if not long enough
 
         // -------------------------
         // START -> SHOOT FROM SMALL TRIANGLE
@@ -180,7 +180,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
+        sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
         theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
 
@@ -200,7 +200,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
                         new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.100),
                         new ParallelAction(SecondMarkToLock, setIntakeOff()),
-                        new SleepAction(2),  // HOLD GATE OPEN timer
+                        new SleepAction(1.5),  // HOLD GATE OPEN timer
                         new ParallelAction(LockToBigTriangle)
                 )
         );
@@ -285,7 +285,11 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested())) {
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            drive.updatePoseEstimate();
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
     }
