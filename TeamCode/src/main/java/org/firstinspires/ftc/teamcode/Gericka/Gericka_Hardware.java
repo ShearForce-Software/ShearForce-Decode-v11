@@ -228,7 +228,11 @@ public class Gericka_Hardware {
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        if (!this.IsDriverControl) {
+            turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
 
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooterMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
