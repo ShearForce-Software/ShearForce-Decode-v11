@@ -83,7 +83,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
 
                 if (isStarted()) {
                     theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
-
+                    theRobot.SetTurretPIDFCoefficients();
                     // Run the Auto Lift to Midway position (if enabled)
                     theRobot.RunAutoLifter();
 

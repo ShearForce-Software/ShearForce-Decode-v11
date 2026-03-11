@@ -116,6 +116,8 @@ public class Gericka_Hardware {
 
     public static boolean shooterPIDF_Enabled = false;
 
+    public static boolean turretPIDF_Enabled = false;
+
     public final double PIDF_F_SMALL_TRIANGLE = 13.25;
     public final double PIDF_F_BIG_TRIANGLE = 14.0;
     public final double PIDF_F_FROOTY_LOOPS = 14.25;
@@ -125,6 +127,12 @@ public class Gericka_Hardware {
     public static double shooterI = 0.0;
     public static double shooterD = 0.0;
     public static double shooterF = 14.25;
+
+    public static double turretP = 10.0;
+    public static double turretI = 3.0;
+    public static double turretD = 0.0;
+    public static double turretF = 0.0;
+
     final float MAX_SHOOTER_RPM = 4500;
     final float MIN_SHOOTER_RPM = 0;
     final double YELLOW_JACKET_19_1_TICKS = 537.7; // 19.2:1 - ticks per motor shaft revolution
@@ -173,7 +181,6 @@ public class Gericka_Hardware {
     RevColorSensorV3 ColorSensorLeft;
 
     private int detectedObeliskId = -1;
-
 
 
     DigitalChannel beamBreak1;
@@ -256,7 +263,9 @@ public class Gericka_Hardware {
             shooterMotorRight.setVelocityPIDFCoefficients(shooterP, shooterI, shooterD, shooterF);
         }
 
-
+        if (GetTurretPIDF_Enabled()) {
+            turretMotor.setVelocityPIDFCoefficients(turretP, turretI, turretD, turretF);
+        }
 
             // ****************** SERVOS ******************************************
         launchRampServo = hardwareMap.get(Servo.class, "launchRampServo");
@@ -356,6 +365,7 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Left Kickstand Position: ", leftKickstand.getPosition());
 
         ShowPIDF_Telemetry();
+        ShowTurretPIDF_Telemetry();
 
         //opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
@@ -395,6 +405,27 @@ public class Gericka_Hardware {
 
     public boolean GetShooterPIDF_Enabled() { return shooterPIDF_Enabled; }
     public void SetShooterPIDF_Enabled(boolean value) { shooterPIDF_Enabled = value; }
+
+
+    public void ShowTurretPIDF_Telemetry() {
+        PIDFCoefficients turretPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        opMode.telemetry.addData("Turret PIDF: ", "p: %.3f  i: %.2f  d: %.2f  f: %.2f", turretPIDF.p, turretPIDF.i, turretPIDF.d, turretPIDF.f);
+    }
+
+    public void SetTurretPIDFCoefficients() {
+
+        if (GetTurretPIDF_Enabled()) {
+            PIDFCoefficients turretPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            // if the static PIDF coefficients changed (probably through the dashboard)
+            if ((turretPIDF.p != turretP) || (turretPIDF.i != turretI) || (turretPIDF.d != turretD) || (turretPIDF.f != turretF)) {
+                turretMotor.setVelocityPIDFCoefficients(turretP, turretI, turretD, turretF);
+            }
+        }
+    }
+
+    public boolean GetTurretPIDF_Enabled() { return turretPIDF_Enabled; }
+    public void SetTurretPIDF_Enabled(boolean value) { turretPIDF_Enabled = value; }
 
     public void EndgameBuzzer(){
         boolean invalidHeading = false;
