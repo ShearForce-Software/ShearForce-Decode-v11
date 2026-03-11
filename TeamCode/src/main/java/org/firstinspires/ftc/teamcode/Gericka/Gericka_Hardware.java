@@ -25,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 //import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 //import org.firstinspires.ftc.teamcode.testign123;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -173,6 +174,8 @@ public class Gericka_Hardware {
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
     private int roadrunnerUpdatesFromWebcam = 0;
     double distanceToTarget = 0;
+    private boolean turretStall = false;
+    double stallTimer = 0;
 
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
@@ -378,6 +381,8 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("Auto Last Time Left: ", autoTimeLeft);
 
         opMode.telemetry.addData("Yaw Scalar: ", pinpoint.getYawScalar());
+
+        opMode.telemetry.addData("Motor Limit?:", turretStall);
 
         opMode.telemetry.update();
     }
@@ -1599,6 +1604,24 @@ public class Gericka_Hardware {
         double angleToTargetDeg = Math.toDegrees(Math.atan2(deltaY, deltaX));
 
         return angleToTargetDeg - robotHeadingDegrees;
+    }
+
+    public void checkTurretLimit(){
+        if (turretMotor.getVelocity() < 5 && turretMotor.getPower() > 0.1){
+            if (stallTimer == 0){
+                stallTimer = opMode.getRuntime();
+            }
+            if (opMode.getRuntime() > 0.3 + stallTimer) {
+                turretStall = true;
+
+            } else {
+                turretStall = false;
+            }
+        }
+        else {
+            stallTimer = 0;
+            turretStall = false;
+        }
     }
 
     public void resetTurret() {
