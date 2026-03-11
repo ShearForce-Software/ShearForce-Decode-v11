@@ -129,6 +129,7 @@ public class Gericka_Hardware {
     public static double shooterD = 0.0;
     public static double shooterF = 14.25;
 
+    public static double turretPositionCoefficient = 10.0;
     public static double turretP = 10.0;
     public static double turretI = 3.0;
     public static double turretD = 0.0;
@@ -142,6 +143,7 @@ public class Gericka_Hardware {
     final double YELLOW_JACKET_13_1_TICKS = 384.5; // 13.7:1 - ticks per motor shaft revolution
     final double YELLOW_JACKET_5_1_TICKS = 145.1; // 5.2:1 - ticks per motor shaft revolution
     final double TURRET_TICKS_IN_DEGREES = (133.0/24.0/360.0) * YELLOW_JACKET_5_1_TICKS; // 133/24 is the gear ratio
+    private int turretTicksErrorOffset = 0;
     private final double MAX_TURRET_ANGLE = 145.0;
     private final double MIN_TURRET_ANGLE = -165.0;
     final int MAX_TURRET_TICKS = (int)(MAX_TURRET_ANGLE * TURRET_TICKS_IN_DEGREES);
@@ -267,6 +269,18 @@ public class Gericka_Hardware {
         }
 
         if (GetTurretPIDF_Enabled()) {
+            // PIDF NOTES FOR TURRET:
+            // RUN_TO_POSITION actually uses a two-layer control system:
+            //     Position Loop: Uses the P-gain (setPositionPIDFCoefficients) to decide how fast to go based on distance.
+            //    Velocity Loop: Uses setVelocityPIDFCoefficients to actually achieve that speed.
+            //    Tuning: If the motor oscilliates around the target, reduce the P value. If it stops too early, increase it.
+
+            // Set PIDF Coefficients for Position used in RUN_TO_POSITION mode
+            // Only Proportional (P) really matters for position control.
+            // Higher P = more aggressive, lower P = gentler, too high = oscillation.
+            turretMotor.setPositionPIDFCoefficients(turretPositionCoefficient);
+
+            // Tune the underlying velocity PIDF for better movement (how fast it moves)
             turretMotor.setVelocityPIDFCoefficients(turretP, turretI, turretD, turretF);
         }
 
@@ -411,26 +425,6 @@ public class Gericka_Hardware {
     public boolean GetShooterPIDF_Enabled() { return shooterPIDF_Enabled; }
     public void SetShooterPIDF_Enabled(boolean value) { shooterPIDF_Enabled = value; }
 
-
-    public void ShowTurretPIDF_Telemetry() {
-        PIDFCoefficients turretPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        opMode.telemetry.addData("Turret PIDF: ", "p: %.3f  i: %.2f  d: %.2f  f: %.2f", turretPIDF.p, turretPIDF.i, turretPIDF.d, turretPIDF.f);
-    }
-
-    public void SetTurretPIDFCoefficients() {
-
-        if (GetTurretPIDF_Enabled()) {
-            PIDFCoefficients turretPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            // if the static PIDF coefficients changed (probably through the dashboard)
-            if ((turretPIDF.p != turretP) || (turretPIDF.i != turretI) || (turretPIDF.d != turretD) || (turretPIDF.f != turretF)) {
-                turretMotor.setVelocityPIDFCoefficients(turretP, turretI, turretD, turretF);
-            }
-        }
-    }
-
-    public boolean GetTurretPIDF_Enabled() { return turretPIDF_Enabled; }
-    public void SetTurretPIDF_Enabled(boolean value) { turretPIDF_Enabled = value; }
 
     public void EndgameBuzzer(){
         boolean invalidHeading = false;
@@ -1527,37 +1521,78 @@ public class Gericka_Hardware {
     // *************************************************************************
     //      Rotating Turret Functions
     // *************************************************************************
+    public void ShowTurretPIDF_Telemetry() {
+        PIDFCoefficients turretPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFCoefficients turretPositionPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
+        opMode.telemetry.addData("Turret PIDF: ", "PositionP: %.3f VelP: %.3f  i: %.2f  d: %.2f  f: %.2f", turretPositionPIDF.p, turretPIDF.p, turretPIDF.i, turretPIDF.d, turretPIDF.f);
+    }
 
-    public void
-    SetTurretRotationAngle(double degrees){
+    public void SetTurretPIDFCoefficients() {
+
+        if (GetTurretPIDF_Enabled()) {
+            PIDFCoefficients turretPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            PIDFCoefficients turretPositionPIDF = turretMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // if the static PIDF coefficients changed (probably through the dashboard)
+            if ((turretPositionPIDF.p != turretPositionCoefficient) || (turretPIDF.p != turretP) || (turretPIDF.i != turretI) || (turretPIDF.d != turretD) || (turretPIDF.f != turretF)) {
+                // PIDF NOTES FOR TURRET:
+                // RUN_TO_POSITION actually uses a two-layer control system:
+                //    Position Loop: Uses the P-gain (setPositionPIDFCoefficients) to decide how fast to go based on distance.
+                //    Velocity Loop: Uses setVelocityPIDFCoefficients to actually achieve that speed.
+                //    Tuning: If the motor oscilliates around the target, reduce the P value. If it stops too early, increase it.
+
+                // Set PIDF Coefficients for Position used in RUN_TO_POSITION mode
+                // Only Proportional (P) really matters for position control.
+                // Higher P = more aggressive, lower P = gentler, too high = oscillation.
+                turretMotor.setPositionPIDFCoefficients(turretPositionCoefficient);
+
+                // Tune the underlying velocity PIDF for better movement (how fast it moves)
+                turretMotor.setVelocityPIDFCoefficients(turretP, turretI, turretD, turretF);
+            }
+        }
+    }
+
+    public boolean GetTurretPIDF_Enabled() { return turretPIDF_Enabled; }
+    public void SetTurretPIDF_Enabled(boolean value) { turretPIDF_Enabled = value; }
+
+
+    public void SetTurretRotationAngle(double degrees){
         // normalize the angle to be -180 to +180
         while (degrees > 180) degrees -= 360;
         while (degrees < -180) degrees += 360;
         turretTargetAngle = degrees;
         turretTargetAngle = Math.min(turretTargetAngle,MAX_TURRET_ANGLE);
         turretTargetAngle = Math.max(turretTargetAngle,MIN_TURRET_ANGLE);
-        //int turretTargetTicks = Math.round((float)turretTargetAngle * (float)TURRET_TICKS_IN_DEGREES);
-        int turretTargetTicks = (int)(turretTargetAngle * TURRET_TICKS_IN_DEGREES);
-        turretTargetTicks = Math.min(turretTargetTicks,MAX_TURRET_TICKS);
-        turretTargetTicks = Math.max(turretTargetTicks,MIN_TURRET_TICKS);
+
+        // Calculate the correct ticks to achieve this angle
+        int turretTargetTicks = (int)(turretTargetAngle * TURRET_TICKS_IN_DEGREES) + turretTicksErrorOffset;
+        turretTargetTicks = Math.min(turretTargetTicks,MAX_TURRET_TICKS + turretTicksErrorOffset);
+        turretTargetTicks = Math.max(turretTargetTicks,MIN_TURRET_TICKS + turretTicksErrorOffset);
+
+        // Command the turret motor to go to that position
         turretMotor.setTargetPosition(turretTargetTicks);
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Limit the speed / velocity of the turret movement based on how far we have to move
         double differenceInAngles = turretTargetAngle - getCurrentTurretAngle();
+        // if more than 90 degrees of movement needed
         if (Math.abs(differenceInAngles) > 90){
-            turretMotor.setPower(0.5);
+            turretMotor.setPower(0.5);  //TODO why did we slow this down?
         }
+        // if less than 90 degrees of movement needed, but moving to a Limit position
         else if (turretTargetAngle == MAX_TURRET_ANGLE || turretTargetAngle == MIN_TURRET_ANGLE){
             turretMotor.setPower(0.5);
         }
+        // else moving less than 90 degrees
         else{
-        turretMotor.setPower(1.0);
+            turretMotor.setPower(1.0); //TODO Internet says it is better to set a maximum velocity like in the shooter code: turretMotor.setVelocity(turretTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
         }
     }
     double getTurretTargetAngle(){
         return turretTargetAngle;
     }
     double getCurrentTurretAngle (){
-        return turretMotor.getCurrentPosition()/TURRET_TICKS_IN_DEGREES;
+        return (turretMotor.getCurrentPosition() + turretTicksErrorOffset)/TURRET_TICKS_IN_DEGREES;
     }
 
     public void TurnOffTurret() {

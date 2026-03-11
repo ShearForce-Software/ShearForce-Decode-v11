@@ -60,6 +60,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
         theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         theRobot.SetShooterPIDF_Enabled(true);
+        theRobot.SetTurretPIDF_Enabled(false); //TODO enable this when PIDF for turret is tuned
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
         theRobot.SetAutoHoodMode(true);
 
@@ -170,7 +171,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     }*/
                 }
             }
-            if (gamepad1.dpadUpWasPressed()) {
+            else if (gamepad1.dpadUpWasPressed()) {
                 if (gamepad1_optionsWasPressed || gamepad1.options) {
                     theRobot.resetPositionToZero();
                 }
@@ -181,6 +182,26 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetFieldCentricMode(false);
                 }
             }
+            // ***********************************
+            // TEMP TEMP TEMP -- Testing Turret PIDF Controls -- REMOVE THESE BEFORE COMPETITION
+            // ***********************************
+            else if (gamepad1.dpadLeftWasPressed())
+            {
+                theRobot.SetTurretAutoMode(false);
+                theRobot.SetTurretRotationAngle(-90.0);
+            }
+            else if (gamepad1.dpadRightWasPressed())
+            {
+                theRobot.SetTurretAutoMode(false);
+                theRobot.SetTurretRotationAngle(90.0);
+            }
+            else if (gamepad1.dpadDownWasPressed())
+            {
+                theRobot.SetTurretAutoMode(false);
+                theRobot.SetTurretRotationAngle(0.0);
+            }
+
+
             // ********  KICKSTAND CONTROLS ***********************
             if (!gamepad1_optionsWasPressed || (!gamepad1.options) ||!gamepad2_optionsWasPressed || (!gamepad2.options)) {
                 if (gamepad1.circleWasPressed()) {

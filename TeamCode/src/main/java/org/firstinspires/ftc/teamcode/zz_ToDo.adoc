@@ -2,6 +2,34 @@
 
 == Tasks to be worked
 
+=== Turret Tracking
+
+- [ ] (Gianna/Shrey) Add PIDF and tune it for the turret
+- [ ] (Tong) Add stall detection on the Turret motor, auto trigger an offset update to turret ticks when needed
+- [ ] Turret is currently setting power to 50% if large change needed, and 100% power if small change needed, why?  Need to test if setting the opposite is better, also need to test if using SetVelocity is better than SetPower, internet says it is.
+- [ ] Change Reset Position to work in the 2 human player squares, squared up against the wall so we know for sure we are in the right spot when we run it
+- [ ] Experiment with Turret Tracking, cover up camera so only using pinpoint position to point turret, does it maintain tracking better?
+- [ ] Investigate if still getting IMU position issues with Pinpoint, drive to human player "reset spot" record value, then drive around and spin, then go to human player "reset spot" and compare results, try driving around without spinning to compare
+- [ ] Double check the target positions, are we really pointing at the back center corner of the target?
+- [ ] Tune roadrunner again (after burst mode changes)
+- [ ] Double check the X and Y positions of our Auto Start routines with a tape measure, do we really have the center of the robot at exactly 60 in the X direction?
+
+=== MORE Autonomous Routes
+
+==== Make creating new auto routes super easy
+
+- [ ] AUTO: Move Blue and Red far and close start positions to be a common variable in the hardware class so that every autonomous is using the same 4 start positions
+- [ ] AUTO: Create common variable position in Hardware class to store the 4 shooter positions we use in Auto, change all auto routines to reference those variables
+- [ ] AUTO: Create common routes in the Hardware class from each of the 4 shoot positions to a line on that side, then back to the shoot position, also move the cleanup route from both far shoot positions to the common class -- change all auto routines to use these common routes
+
+=== Quicker Grab / Intake
+
+- [ ] Change the current intake timer to have it run longer
+- [ ] change lifter servo over to a launch servo when the burst mode is implemented, and change intake logic to work with new burst mode shooter
+
+=== Other ideas to work
+
+- [ ] Add the ability to shoot while moving
 - [ ] Create function that can report true/false IF robot is in a legal shooting tile
 - [ ] Create an auto shoot mode that can be turned on/off that will shoot if in a legal shooting tile and a ball is loaded
 - [ ] AUTO: create an auto that gets and shoots multiple lines in the correct pattern order
