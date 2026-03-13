@@ -98,6 +98,7 @@ public class Gericka_Hardware {
     private boolean autoShooterMode = false;
     private boolean useRoadrunnerForTurretAnglesEnabled = true;
     private boolean updateRoadrunnerFromWebcamEnabled = false;
+    private boolean autoTurretResetMode = true;
     private boolean autoHoodMode = true;
     final float MAX_SHOOTER_SPEED = 1.0f;
     final float MIN_SHOOTER_SPEED = 0.0f;
@@ -363,6 +364,14 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Auto LaunchRamp Mode: ", GetAutoHoodMode());
         opMode.telemetry.addData("Use Only Webcam for Distance: ", GetUseOnlyWebcamForDistance());
         opMode.telemetry.addData("Use roadrunner for turret angles: ", GetUseRoadrunnerForTurretAnglesEnabled());
+        opMode.telemetry.addData("Auto Turret Reset Mode: ", GetTurretAutoResetMode());
+        opMode.telemetry.addData("Turret Stall?:", turretStall);
+        opMode.telemetry.addData("Turret Velocity:", turretMotor.getVelocity());
+        opMode.telemetry.addData("Turret Motor Is Busy?:", turretMotor.isBusy());
+        opMode.telemetry.addData("Turret Amps:", turretMotor.getCurrent(CurrentUnit.AMPS));
+        opMode.telemetry.addData("Turret Ticks Error Offset:", turretTicksErrorOffset);
+
+
 
         opMode.telemetry.addData("Turret ", "ticks: %d, MAX: %d, MIN: %d", turretMotor.getCurrentPosition(), MAX_TURRET_TICKS, MIN_TURRET_TICKS);
         opMode.telemetry.addData("       ", "currentAngle: %.1f, tgt-Angle: %.1f", getCurrentTurretAngle(), turretTargetAngle);
@@ -395,8 +404,6 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("Auto Last Time Left: ", autoTimeLeft);
 
         opMode.telemetry.addData("Yaw Scalar: ", pinpoint.getYawScalar());
-
-        opMode.telemetry.addData("Motor Limit?:", turretStall);
 
         opMode.telemetry.update();
     }
@@ -1562,12 +1569,12 @@ public class Gericka_Hardware {
         while (degrees < -180) degrees += 360;
         turretTargetAngle = degrees;
         turretTargetAngle = Math.min(turretTargetAngle,MAX_TURRET_ANGLE);
-        turretTargetAngle = Math.max(turretTargetAngle,MIN_TURRET_ANGLE);
+        //turretTargetAngle = Math.max(turretTargetAngle,MIN_TURRET_ANGLE);
 
         // Calculate the correct ticks to achieve this angle
         int turretTargetTicks = (int)(turretTargetAngle * TURRET_TICKS_IN_DEGREES) + turretTicksErrorOffset;
         turretTargetTicks = Math.min(turretTargetTicks,MAX_TURRET_TICKS + turretTicksErrorOffset);
-        turretTargetTicks = Math.max(turretTargetTicks,MIN_TURRET_TICKS + turretTicksErrorOffset);
+        //turretTargetTicks = Math.max(turretTargetTicks,MIN_TURRET_TICKS + turretTicksErrorOffset);
 
         // Command the turret motor to go to that position
         turretMotor.setTargetPosition(turretTargetTicks);
@@ -1642,7 +1649,7 @@ public class Gericka_Hardware {
     }
 
     public void checkTurretLimit(){
-        if (turretMotor.getVelocity() < 5 && turretMotor.getPower() > 0.1){
+        if (turretMotor.getVelocity() == 0 && turretMotor.isBusy() && turretTargetAngle < getCurrentTurretAngle() && turretMotor.getCurrent(CurrentUnit.AMPS) > 1.0){
             if (stallTimer == 0){
                 stallTimer = opMode.getRuntime();
             }
@@ -1659,12 +1666,25 @@ public class Gericka_Hardware {
         }
     }
 
+    public boolean GetTurretAutoResetMode() { return autoTurretResetMode; }
+    public void SetTurretAutoResetMode(boolean value) { autoTurretResetMode = value; }
+    public void autoTurretReset() {
+        if (autoTurretResetMode){
+            if (turretStall) {
+                turretTicksErrorOffset = -380 + turretMotor.getCurrentPosition();
+                turretStall = false;
+                stallTimer = 0;
+            }
+        }
+    }
+
     public void resetTurret() {
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretTargetAngle = 0.0;
         turretMotor.setTargetPosition(0);
         SpecialSleep(50);
         SetTurretRotationAngle(0.0);
+        turretTicksErrorOffset = 0;
     }
 
     public void resetPositionToZero() {

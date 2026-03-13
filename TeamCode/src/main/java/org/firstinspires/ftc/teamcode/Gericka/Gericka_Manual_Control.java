@@ -63,6 +63,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         //theRobot.SetTurretPIDF_Enabled(false); //TODO enable this when PIDF for turret is tuned
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
         theRobot.SetAutoHoodMode(true);
+        theRobot.SetTurretAutoResetMode(true);
 
         Pose2d startPose = new Pose2d(xPositionInches, yPositionInches, Math.toRadians(headingDegrees));
         Gericka_MecanumDrive drive = new Gericka_MecanumDrive(hardwareMap, startPose);
@@ -223,6 +224,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetShooterMotorToSpecificRPM(0);
                     theRobot.SetAutoIntakeMode(false);
                     theRobot.SetIntakeMotor(false, false);
+                    theRobot.SetTurretAutoResetMode(false);
 
 
                 }
@@ -387,6 +389,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
             if (theRobot.GetUpdateRoadrunnerFromWebcamEnabled()) {
                 // update the roadrunner position based on Webcam detected april tag if enabled
                 theRobot.SetRoadrunnerPositionFromWebcam();
+            }
+            theRobot.checkTurretLimit();
+
+            if (theRobot.GetTurretAutoResetMode()){
+                theRobot.autoTurretReset();
             }
 
             /*
