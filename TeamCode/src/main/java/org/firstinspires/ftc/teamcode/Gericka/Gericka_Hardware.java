@@ -117,7 +117,7 @@ public class Gericka_Hardware {
 
     public static boolean shooterPIDF_Enabled = false;
 
-    public static boolean turretPIDF_Enabled = false;
+    public static boolean turretPIDF_Enabled = true;
 
     public final double PIDF_F_SMALL_TRIANGLE = 13.25;
     public final double PIDF_F_BIG_TRIANGLE = 14.0;
@@ -129,9 +129,9 @@ public class Gericka_Hardware {
     public static double shooterD = 0.0;
     public static double shooterF = 14.25;
 
-    public static double turretPositionCoefficient = 10.0;
+    public static double turretPositionCoefficient = 25.0;
     public static double turretP = 10.0;
-    public static double turretI = 3.0;
+    public static double turretI = 0.0;
     public static double turretD = 0.0;
     public static double turretF = 0.0;
 
@@ -1577,11 +1577,11 @@ public class Gericka_Hardware {
         double differenceInAngles = turretTargetAngle - getCurrentTurretAngle();
         // if more than 90 degrees of movement needed
         if (Math.abs(differenceInAngles) > 90){
-            turretMotor.setPower(0.5);  //TODO why did we slow this down?
+            turretMotor.setPower(1);  //TODO why did we slow this down?
         }
         // if less than 90 degrees of movement needed, but moving to a Limit position
         else if (turretTargetAngle == MAX_TURRET_ANGLE || turretTargetAngle == MIN_TURRET_ANGLE){
-            turretMotor.setPower(0.5);
+            turretMotor.setPower(1);
         }
         // else moving less than 90 degrees
         else{

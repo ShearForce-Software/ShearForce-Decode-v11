@@ -60,7 +60,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetUseRoadrunnerForTurretAnglesEnabled(true); // if true then will use pinpoint position to calculate turret angles if webcam target not visible
         theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         theRobot.SetShooterPIDF_Enabled(true);
-        theRobot.SetTurretPIDF_Enabled(false); //TODO enable this when PIDF for turret is tuned
+        //theRobot.SetTurretPIDF_Enabled(false); //TODO enable this when PIDF for turret is tuned
         theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
         theRobot.SetAutoHoodMode(true);
 
@@ -89,11 +89,16 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.RunAutoLifter();
 
                     theRobot.RunAutoIntake();  // this method may sleep for a little while, so needs to be in a separate thread from main
+
+                    if (theRobot.GetTurretAutoMode()) {
+                        theRobot.adjustTurretToTargetAprilTag();
+                    }
+
                 }
 
                 theRobot.ShowTelemetry();
 
-                sleep(20);
+                sleep(5);
             }
         });
         SecondaryThread.start();
@@ -375,9 +380,9 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
             }
 
-            if (theRobot.GetTurretAutoMode()) {
+            /*if (theRobot.GetTurretAutoMode()) {
                 theRobot.adjustTurretToTargetAprilTag();
-            }
+            }*/
 
             if (theRobot.GetUpdateRoadrunnerFromWebcamEnabled()) {
                 // update the roadrunner position based on Webcam detected april tag if enabled
