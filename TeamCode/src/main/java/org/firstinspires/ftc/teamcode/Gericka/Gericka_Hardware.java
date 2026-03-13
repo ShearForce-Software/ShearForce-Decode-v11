@@ -1687,24 +1687,35 @@ public class Gericka_Hardware {
         turretTicksErrorOffset = 0;
     }
 
-    public void resetPositionToZero() {
-        double headingDegrees = 0;
-        if (allianceColorString.equals("RED")) {
-            headingDegrees = 90;
-        }
-        else if (allianceColorString.equals("BLUE")) {
-            headingDegrees = -90;
-        }
-        SetInitalPinpointPosition(0, 0, headingDegrees);
-        Pose2d resetPose = new Pose2d(0,0,Math.toRadians(headingDegrees));
+    public void resetPositionToRedAlliance() {
+        double headingDegrees = -90;
+
+        SetInitalPinpointPosition(64.25, -63.25, headingDegrees);
+        Pose2d resetPose = new Pose2d(64.25,-63.25,Math.toRadians(headingDegrees));
         drive.localizer.setPose(resetPose);
         drive.localizer.update();
         drive.updatePoseEstimate();
     }
+    public void resetPositionToBlueAlliance() {
+        double headingDegrees = 90;
+
+        SetInitalPinpointPosition(64.25, 63.25, headingDegrees);
+        Pose2d resetPose = new Pose2d(64.25,63.25,Math.toRadians(headingDegrees));
+        drive.localizer.setPose(resetPose);
+        drive.localizer.update();
+        drive.updatePoseEstimate();
+    }
+
+
     public void resetTurretAndPosition(){
         resetTurret();
 
-        resetPositionToZero();
+        if(allianceColorString.equals("Blue")){
+            resetPositionToBlueAlliance();
+        }
+        else if (allianceColorString.equals("Red")){
+            resetPositionToRedAlliance();
+        };
     }
 
     public boolean GetUseRoadrunnerForTurretAnglesEnabled() { return useRoadrunnerForTurretAnglesEnabled; }

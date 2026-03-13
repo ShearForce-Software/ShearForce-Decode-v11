@@ -179,7 +179,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
             }
             else if (gamepad1.dpadUpWasPressed()) {
                 if (gamepad1_optionsWasPressed || gamepad1.options) {
-                    theRobot.resetPositionToZero();
+                    theRobot.resetTurretAndPosition();
                 }
             }
             // robot centric drive mode
