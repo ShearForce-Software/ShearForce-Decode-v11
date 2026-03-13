@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -135,6 +136,7 @@ public class Gericka_Hardware {
     public static double turretI = 0.0;
     public static double turretD = 0.0;
     public static double turretF = 0.0;
+    public static double turretF_spinning = 1.0;
 
     final float MAX_SHOOTER_RPM = 4500;
     final float MIN_SHOOTER_RPM = 0;
@@ -362,19 +364,19 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Auto Lifter Mode: ", autoLifterMode);
         opMode.telemetry.addData("Auto Intake Mode: ", autoIntakeMode);
         opMode.telemetry.addData("Auto LaunchRamp Mode: ", GetAutoHoodMode());
+
         opMode.telemetry.addData("Use Only Webcam for Distance: ", GetUseOnlyWebcamForDistance());
         opMode.telemetry.addData("Use roadrunner for turret angles: ", GetUseRoadrunnerForTurretAnglesEnabled());
+
         opMode.telemetry.addData("Auto Turret Reset Mode: ", GetTurretAutoResetMode());
         opMode.telemetry.addData("Turret Stall?:", turretStall);
-        opMode.telemetry.addData("Turret Velocity:", turretMotor.getVelocity());
         opMode.telemetry.addData("Turret Motor Is Busy?:", turretMotor.isBusy());
+        opMode.telemetry.addData("Turret Velocity:", turretMotor.getVelocity());
         opMode.telemetry.addData("Turret Amps:", turretMotor.getCurrent(CurrentUnit.AMPS));
-        opMode.telemetry.addData("Turret Ticks Error Offset:", turretTicksErrorOffset);
-
-
 
         opMode.telemetry.addData("Turret ", "ticks: %d, MAX: %d, MIN: %d", turretMotor.getCurrentPosition(), MAX_TURRET_TICKS, MIN_TURRET_TICKS);
         opMode.telemetry.addData("       ", "currentAngle: %.1f, tgt-Angle: %.1f", getCurrentTurretAngle(), turretTargetAngle);
+        opMode.telemetry.addData("       Error Offset:", turretTicksErrorOffset);
         //opMode.telemetry.addData("       ", "Pow: %.1f, Amp: %.1f", turretMotor.getPower(),turretMotor.getCurrent(CurrentUnit.AMPS));
 
         //opMode.telemetry.addData("Intake ", "Pow: %.1f, Amp: %.1f", intakeMotor.getPower(), intakeMotor.getCurrent(CurrentUnit.AMPS));
@@ -1568,13 +1570,32 @@ public class Gericka_Hardware {
         while (degrees > 180) degrees -= 360;
         while (degrees < -180) degrees += 360;
         turretTargetAngle = degrees;
-        turretTargetAngle = Math.min(turretTargetAngle,MAX_TURRET_ANGLE);
-        //turretTargetAngle = Math.max(turretTargetAngle,MIN_TURRET_ANGLE);
+
+        if (autoTurretMode) {
+            // if turretTargetAngle is in the dead-zone
+            if ((turretTargetAngle <= MIN_TURRET_ANGLE) || (turretTargetAngle >= MAX_TURRET_ANGLE)) {
+                // Keep the turret on the same side until robot moves into a valid shooting position
+                // as opposed to swinging into the other extreme position and still being invalid
+                if (getCurrentTurretAngle() < -90) {
+                    turretTargetAngle = MIN_TURRET_ANGLE;
+                }
+                else if (getCurrentTurretAngle() > 90.0) {
+                    turretTargetAngle = MAX_TURRET_ANGLE;
+                }
+                else {
+                    turretTargetAngle = Math.min(turretTargetAngle, MAX_TURRET_ANGLE);
+                    turretTargetAngle = Math.max(turretTargetAngle, MIN_TURRET_ANGLE);
+                }
+            }
+        }
 
         // Calculate the correct ticks to achieve this angle
         int turretTargetTicks = (int)(turretTargetAngle * TURRET_TICKS_IN_DEGREES) + turretTicksErrorOffset;
-        turretTargetTicks = Math.min(turretTargetTicks,MAX_TURRET_TICKS + turretTicksErrorOffset);
-        //turretTargetTicks = Math.max(turretTargetTicks,MIN_TURRET_TICKS + turretTicksErrorOffset);
+
+        if (autoTurretMode) {
+            turretTargetTicks = Math.min(turretTargetTicks, MAX_TURRET_TICKS + turretTicksErrorOffset);
+            turretTargetTicks = Math.max(turretTargetTicks, MIN_TURRET_TICKS + turretTicksErrorOffset);
+        }
 
         // Command the turret motor to go to that position
         turretMotor.setTargetPosition(turretTargetTicks);
@@ -1584,13 +1605,13 @@ public class Gericka_Hardware {
         double differenceInAngles = turretTargetAngle - getCurrentTurretAngle();
         // if more than 90 degrees of movement needed
         if (Math.abs(differenceInAngles) > 90){
-            turretMotor.setPower(1);  //TODO why did we slow this down?
+            turretMotor.setPower(1);
         }
         // if less than 90 degrees of movement needed, but moving to a Limit position
         else if (turretTargetAngle == MAX_TURRET_ANGLE || turretTargetAngle == MIN_TURRET_ANGLE){
-            turretMotor.setPower(1);
+            turretMotor.setPower(0.5);
         }
-        // else moving less than 90 degrees
+        // else moving less than 90 degrees, but it should be safe
         else{
             turretMotor.setPower(1.0); //TODO Internet says it is better to set a maximum velocity like in the shooter code: turretMotor.setVelocity(turretTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
         }
@@ -1640,12 +1661,52 @@ public class Gericka_Hardware {
 
         return bearingToAprilTag;
     }
-    public static double calculateBearingToPointInDegrees(double robotXInInches, double robotYInInches, double targetXInInches, double targetYInInches, double robotHeadingDegrees) {
+    public static boolean turret_use_rotation_velocity = false;
+    public static boolean turret_shoot_while_moving_enabled = false;
+
+    public double calculateBearingToPointInDegrees(double robotXInInches, double robotYInInches, double targetXInInches, double targetYInInches, double robotHeadingDegrees) {
+        double calculatedAngle = 0.0;
+
         double deltaX = targetXInInches - robotXInInches;
         double deltaY = targetYInInches - robotYInInches;
         double angleToTargetDeg = Math.toDegrees(Math.atan2(deltaY, deltaX));
 
-        return angleToTargetDeg - robotHeadingDegrees;
+        // Calculate the robot's angular velocity from RoadRunner
+        PoseVelocity2d currentVelocity = drive.updatePoseEstimate();
+        double robotAngularVelocity = currentVelocity.angVel;
+
+        //TODO -- test this code from Google AI to take robot velocity into consideration so can counteract the robot's rotation and movement to stay on target
+        if (turret_shoot_while_moving_enabled || (turret_use_rotation_velocity && Math.abs(robotAngularVelocity) > 1.0)) {
+            if (turret_use_rotation_velocity) {
+                // Google notes on how to tune the turret's PIDF
+                // Tune turretF_spinning:  set turretP, turretI, and turretD to zero, then spin the robot in circles, adjusting turretF until the turret stay ROUGHLY pointed at the same field coordinate without any PID help
+                // Tune turretP: increase turretP until the turret snaps to targets quickly.
+                // Tune turretD: increase turretD to remove "jitter" or overshooting when the turret stops
+
+                // Adjust Feedforward component to negate robot rotation
+                // This pushes the turret in the opposite direction of the robot's turn
+                turretF = -robotAngularVelocity * turretF_spinning;
+            }
+
+            if (turret_shoot_while_moving_enabled) {
+                double projectileVelocity = 15.0; //TODO need to calculate this
+                double timeOfFlight = distanceToTarget / projectileVelocity;
+
+                // Adjust target position based on how much the robot will move during flight
+                double adjustedDx = deltaX - (currentVelocity.linearVel.x * timeOfFlight);
+                double adjustedDy = deltaY - (currentVelocity.linearVel.y * timeOfFlight);
+                calculatedAngle = Math.toDegrees(Math.atan2(adjustedDy, adjustedDx)) - robotHeadingDegrees;
+            }
+            else {
+                calculatedAngle = angleToTargetDeg - robotHeadingDegrees;
+            }
+        }
+        else {
+            calculatedAngle = angleToTargetDeg - robotHeadingDegrees;
+            turretF = 0.0;
+        }
+
+        return calculatedAngle;
     }
 
     public void checkTurretLimit(){
@@ -1671,7 +1732,7 @@ public class Gericka_Hardware {
     public void autoTurretReset() {
         if (autoTurretResetMode){
             if (turretStall) {
-                turretTicksErrorOffset = -380 + turretMotor.getCurrentPosition();
+                turretTicksErrorOffset = turretMotor.getCurrentPosition() - -380;
                 turretStall = false;
                 stallTimer = 0;
             }
@@ -1706,6 +1767,14 @@ public class Gericka_Hardware {
         drive.updatePoseEstimate();
     }
 
+    public void resetPositionOnly() {
+        if(allianceColorString.equals("Blue")){
+            resetPositionToBlueAlliance();
+        }
+        else if (allianceColorString.equals("Red")){
+            resetPositionToRedAlliance();
+        }
+    }
 
     public void resetTurretAndPosition(){
         resetTurret();
@@ -1715,7 +1784,7 @@ public class Gericka_Hardware {
         }
         else if (allianceColorString.equals("Red")){
             resetPositionToRedAlliance();
-        };
+        }
     }
 
     public boolean GetUseRoadrunnerForTurretAnglesEnabled() { return useRoadrunnerForTurretAnglesEnabled; }

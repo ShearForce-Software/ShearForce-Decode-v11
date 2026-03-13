@@ -172,14 +172,11 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 }
                 else {
                     theRobot.imu.resetYaw();
-                   /* if (resetTurretEnabled) {
-                        theRobot.resetTurretAndPosition();
-                    }*/
                 }
             }
             else if (gamepad1.dpadUpWasPressed()) {
                 if (gamepad1_optionsWasPressed || gamepad1.options) {
-                    theRobot.resetTurretAndPosition();
+                    theRobot.resetPositionOnly();
                 }
             }
             // robot centric drive mode
@@ -188,23 +185,26 @@ public class Gericka_Manual_Control extends LinearOpMode {
                     theRobot.SetFieldCentricMode(false);
                 }
             }
-            // ***********************************
-            // TEMP TEMP TEMP -- Testing Turret PIDF Controls -- REMOVE THESE BEFORE COMPETITION
-            // ***********************************
             else if (gamepad1.dpadLeftWasPressed())
             {
-                theRobot.SetTurretAutoMode(false);
-                theRobot.SetTurretRotationAngle(-90.0);
+                if (gamepad1_optionsWasPressed || gamepad1.options) {
+                    theRobot.SetTurretAutoMode(false);
+                    theRobot.SetTurretRotationAngle(-90.0);
+                }
             }
             else if (gamepad1.dpadRightWasPressed())
             {
-                theRobot.SetTurretAutoMode(false);
-                theRobot.SetTurretRotationAngle(90.0);
+                if (gamepad1_optionsWasPressed || gamepad1.options) {
+                    theRobot.SetTurretAutoMode(false);
+                    theRobot.SetTurretRotationAngle(90.0);
+                }
             }
             else if (gamepad1.dpadDownWasPressed())
             {
-                theRobot.SetTurretAutoMode(false);
-                theRobot.SetTurretRotationAngle(0.0);
+                if (gamepad1_optionsWasPressed || gamepad1.options) {
+                    theRobot.SetTurretAutoMode(false);
+                    theRobot.SetTurretRotationAngle(0.0);
+                }
             }
 
 
