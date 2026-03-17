@@ -1689,7 +1689,7 @@ public class Gericka_Hardware {
             }
 
             if (turret_shoot_while_moving_enabled) {
-                double projectileVelocity = 15.0; //TODO need to calculate this
+                double projectileVelocity = 60.0; // Video seems to show small triangle shots (120 inches) take 2 seconds of air time, so trying out 60 here to start
                 double timeOfFlight = distanceToTarget / projectileVelocity;
 
                 // Adjust target position based on how much the robot will move during flight
