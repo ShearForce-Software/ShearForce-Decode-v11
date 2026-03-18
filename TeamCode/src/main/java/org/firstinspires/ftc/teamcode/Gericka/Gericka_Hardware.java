@@ -1751,27 +1751,28 @@ public class Gericka_Hardware {
     public void resetPositionToRedAlliance() {
         double headingDegrees = -90;
 
-        SetInitalPinpointPosition(64.25, -63.25, headingDegrees);
-        Pose2d resetPose = new Pose2d(64.25,-63.25,Math.toRadians(headingDegrees));
+        SetInitalPinpointPosition(62.785, -62.66, headingDegrees);
+        Pose2d resetPose = new Pose2d(62.785,-62.66,Math.toRadians(headingDegrees));
         drive.localizer.setPose(resetPose);
         drive.localizer.update();
         drive.updatePoseEstimate();
     }
     public void resetPositionToBlueAlliance() {
         double headingDegrees = 90;
+        //OLD NUMBERS: 62.25, 63.25,
 
-        SetInitalPinpointPosition(64.25, 63.25, headingDegrees);
-        Pose2d resetPose = new Pose2d(64.25,63.25,Math.toRadians(headingDegrees));
+        SetInitalPinpointPosition(62.785, 62.66, headingDegrees);
+        Pose2d resetPose = new Pose2d(62.785,62.66,Math.toRadians(headingDegrees));
         drive.localizer.setPose(resetPose);
         drive.localizer.update();
         drive.updatePoseEstimate();
     }
 
     public void resetPositionOnly() {
-        if(allianceColorString.equals("Blue")){
+        if(allianceColorString.equals("BLUE")){
             resetPositionToBlueAlliance();
         }
-        else if (allianceColorString.equals("Red")){
+        else if (allianceColorString.equals("RED")){
             resetPositionToRedAlliance();
         }
     }
@@ -1779,10 +1780,10 @@ public class Gericka_Hardware {
     public void resetTurretAndPosition(){
         resetTurret();
 
-        if(allianceColorString.equals("Blue")){
+        if(allianceColorString.equals("BLUE")){
             resetPositionToBlueAlliance();
         }
-        else if (allianceColorString.equals("Red")){
+        else if (allianceColorString.equals("RED")){
             resetPositionToRedAlliance();
         }
     }
