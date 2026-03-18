@@ -182,6 +182,10 @@ public class Gericka_Hardware {
     private boolean turretStall = false;
     double stallTimer = 0;
 
+    //ROADRUNNER AUTOROUTE
+    Pose2d closeRedStartPose = new Pose2d(-60,39,Math.toRadians(90));
+    Pose2d closeBlueStartPose = new Pose2d(-60,-39,Math.toRadians(-90));
+
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;

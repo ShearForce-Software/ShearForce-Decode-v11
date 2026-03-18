@@ -4,12 +4,13 @@
 
 === Turret Tracking
 
-- [ ] (Tong) Add stall detection on the Turret motor, auto trigger an offset update to turret ticks when needed
-- [ ] (Shrey) Change Reset Position to work in the 2 human player squares, squared up against the wall so we know for sure we are in the right spot when we run it
+- [X] (Tong) Add stall detection on the Turret motor, auto trigger an offset update to turret ticks when needed
+- [X] (Shrey) Change Reset Position to work in the 2 human player squares, squared up against the wall so we know for sure we are in the right spot when we run it
 - [ ] Experiment with Turret Tracking, cover up camera so only using pinpoint position to point turret, does it maintain tracking better?
-- [ ] Investigate if still getting IMU position issues with Pinpoint, drive to human player "reset spot" record value, then drive around and spin, then go to human player "reset spot" and compare results, try driving around without spinning to compare
+- [X] Investigate if still getting IMU position issues with Pinpoint, drive to human player "reset spot" record value, then drive around and spin, then go to human player "reset spot" and compare results, try driving around without spinning to compare
 - [ ] Double check the target positions, are we really pointing at the back center corner of the target?
 - [ ] Tune roadrunner again (after burst mode changes)
+- [ ] Akshay: Just cleaning up code and moving unnecessary roadrunner routes and positions to HardWare class.
 - [ ] Double check the X and Y positions of our Auto Start routines with a tape measure, do we really have the center of the robot at exactly 60 in the X direction?
 - [ ] Add robot velocity considerations into the turret target angle calculation (example code currently disabled in calculateBearingToPointInDegrees)
 

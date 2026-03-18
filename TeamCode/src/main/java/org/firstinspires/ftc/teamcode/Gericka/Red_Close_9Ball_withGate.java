@@ -28,12 +28,12 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(-60,39,Math.toRadians(90));
+        //Pose2d startPose = new Pose2d(-60,39,Math.toRadians(90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeRedStartPose);
         theRobot.InitRoadRunner(drive);
 
         // initialize the webcam
@@ -52,7 +52,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, 90);
+        theRobot.SetRoadrunnerInitialPosition(theRobot.closeRedStartPose.position.x, theRobot.closeRedStartPose.position.y, 90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
@@ -77,7 +77,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
-        Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
+        Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(theRobot.closeRedStartPose)
                 .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
 
