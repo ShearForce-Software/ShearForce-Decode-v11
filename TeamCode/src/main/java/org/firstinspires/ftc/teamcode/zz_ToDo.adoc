@@ -2,33 +2,40 @@
 
 == Tasks to be worked
 
+=== Testing Needed
+
+- [ ] Do some strafing experiments, if we strafe 48", does it actually agree that we went 48"?  Can we tune roadrunner or pinpoint to improve?
+- [ ] Experiment with Turret Tracking, cover up camera so only using pinpoint position to point turret, does it maintain tracking better?
+- [ ] Run some Far Autos with the new start pose, run manual after and assess the turret tracking for maintaining pointing correctly
+
+
 === Turret Tracking
 
 - [X] (Tong) Add stall detection on the Turret motor, auto trigger an offset update to turret ticks when needed
 - [X] (Shrey) Change Reset Position to work in the 2 human player squares, squared up against the wall so we know for sure we are in the right spot when we run it
-- [ ] Experiment with Turret Tracking, cover up camera so only using pinpoint position to point turret, does it maintain tracking better?
 - [X] Investigate if still getting IMU position issues with Pinpoint, drive to human player "reset spot" record value, then drive around and spin, then go to human player "reset spot" and compare results, try driving around without spinning to compare
-- [ ] Double check the target positions, are we really pointing at the back center corner of the target?
-- [ ] Tune roadrunner again (after burst mode changes)
-- [ ] Akshay: Just cleaning up code and moving unnecessary roadrunner routes and positions to HardWare class.
-- [ ] Double check the X and Y positions of our Auto Start routines with a tape measure, do we really have the center of the robot at exactly 60 in the X direction?
-- [ ] Add robot velocity considerations into the turret target angle calculation (example code currently disabled in calculateBearingToPointInDegrees)
+- [X] Double check the X and Y positions of our Auto Start routines with a tape measure, do we really have the center of the robot at exactly 60 in the X direction?
+- [ ] (Giana) Add robot velocity considerations into the turret target angle calculation (example code currently disabled in calculateBearingToPointInDegrees)
+- [ ] Physically measure the actual CLOSE start positions and then adjust the new common start positions in Hardware class
+- [ ] Double check the target positions, are we really pointing at the back center corner of the target (Use tape measure)?
 
 === MORE Autonomous Routes
+- [ ] Plan out what new Auto routes we need
 
 ==== Make creating new auto routes super easy
 
-- [ ] AUTO: Move Blue and Red far and close start positions to be a common variable in the hardware class so that every autonomous is using the same 4 start positions
-- [ ] AUTO: Create common variable position in Hardware class to store the 4 shooter positions we use in Auto, change all auto routines to reference those variables
-- [ ] AUTO: Create common routes in the Hardware class from each of the 4 shoot positions to a line on that side, then back to the shoot position, also move the cleanup route from both far shoot positions to the common class -- change all auto routines to use these common routes
+- [ ] AUTO: (Akshay) Move Blue and Red far and close start positions to be a common variable in the hardware class so that every autonomous is using the same 4 start positions
+- [ ] AUTO: (Akshay) Create common variable position in Hardware class to store the 4 shooter positions we use in Auto, change all auto routines to reference those variables
+- [ ] AUTO: (Akshay) Create common routes in the Hardware class from each of the 4 shoot positions to a line on that side, then back to the shoot position, also move the cleanup route from both far shoot positions to the common class -- change all auto routines to use these common routes
 
 === Quicker Grab / Intake
 
 - [ ] Change the current intake timer to have it run longer
-- [ ] change lifter servo over to a launch servo when the burst mode is implemented, and change intake logic to work with new burst mode shooter
+- [ ] (Tuesday March 24) change lifter servo over to a launch servo when the burst mode is implemented, and change intake logic to work with new burst mode shooter
 
 === Other ideas to work
 
+- [ ] Tune roadrunner again (after burst mode changes)
 - [ ] Create function that can report true/false IF robot is in a legal shooting tile
 - [ ] Create an auto shoot mode that can be turned on/off that will shoot if in a legal shooting tile and a ball is loaded
 - [ ] AUTO: create an auto that gets and shoots multiple lines in the correct pattern order
