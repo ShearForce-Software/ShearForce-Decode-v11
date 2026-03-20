@@ -172,8 +172,8 @@ public class Gericka_Hardware {
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
     public final double RADIANS_PER_SECOND_TO_RPM = 9.54929658551; // 60 / (2 * Math.PI)
-    private double aprilTagTargetX = -72.0;
-    private double aprilTagTargetY = -72.0;
+    private double aprilTagTargetX = -62.0;
+    private double aprilTagTargetY = -62.0;
     private int currentAprilTargetId = 20;
     GoBildaPinpointDriver pinpoint;
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
@@ -765,12 +765,12 @@ public class Gericka_Hardware {
     public void SetAprilTagTargetId(int value) {
         currentAprilTargetId = value;
         if (currentAprilTargetId == 24) {
-            aprilTagTargetX = -72.0;
-            aprilTagTargetY = 72.0;
+            aprilTagTargetX = -62.0;
+            aprilTagTargetY = 62.0;
         }
         else if (currentAprilTargetId == 20) {
-            aprilTagTargetX = -72.0;
-            aprilTagTargetY = -72.0;
+            aprilTagTargetX = -62.0;
+            aprilTagTargetY = -62.0;
         }
     }
     public int GetAprilTagTargetId() { return currentAprilTargetId; }

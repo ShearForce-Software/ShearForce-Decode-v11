@@ -28,7 +28,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(-60,-39,Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-62.785,-33.75,Math.toRadians(-90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
 
