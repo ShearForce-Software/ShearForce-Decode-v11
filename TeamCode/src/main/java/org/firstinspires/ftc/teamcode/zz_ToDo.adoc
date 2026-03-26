@@ -16,8 +16,9 @@
 - [X] Investigate if still getting IMU position issues with Pinpoint, drive to human player "reset spot" record value, then drive around and spin, then go to human player "reset spot" and compare results, try driving around without spinning to compare
 - [X] Double check the X and Y positions of our Auto Start routines with a tape measure, do we really have the center of the robot at exactly 60 in the X direction?
 - [ ] (Gianna) Add robot velocity considerations into the turret target angle calculation (example code currently disabled in calculateBearingToPointInDegrees)
+- [X] (Gianna) Add robot velocity considerations into the turret target angle calculation (example code currently disabled in calculateBearingToPointInDegrees)
 - [ ] Physically measure the actual CLOSE start positions and then adjust the new common start positions in Hardware class
-- [ ] Double check the target positions, are we really pointing at the back center corner of the target (Use tape measure)?
+- [X] Double check the target positions, are we really pointing at the back center corner of the target (Use tape measure)?
 
 === MORE Autonomous Routes
 - [ ] Plan out what new Auto routes we need
