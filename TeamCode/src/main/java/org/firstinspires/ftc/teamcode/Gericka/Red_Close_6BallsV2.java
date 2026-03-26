@@ -35,6 +35,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
+        theRobot.buildCommonAutoRoutes();
 
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
@@ -77,6 +78,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
+        /*
         Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
@@ -109,6 +111,9 @@ Red_Close_6BallsV2 extends LinearOpMode {
         Action DriveToInsideBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(-54, 16))
                 .build();
+
+
+         */
 
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
@@ -152,7 +157,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveCloseStartPositiontoBigTriangle));
+        Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveCloseStartPositionToBigTriangle));
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
@@ -169,9 +174,9 @@ Red_Close_6BallsV2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.RedCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(ThirdMarkToBigTriangle, setIntakeOff())
+                        new ParallelAction(theRobot.RedCloseDriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
 
@@ -192,7 +197,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // BIG TRIANGLE -> PARK INSIDE BIG TRIANGLE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveToInsideBigTriangle, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveToInsideBigTriangle, setIntakeOff()));
 
         // -------------------------
         // Cleanup

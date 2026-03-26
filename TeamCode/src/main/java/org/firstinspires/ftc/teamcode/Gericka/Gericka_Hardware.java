@@ -3,8 +3,21 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import static org.firstinspires.ftc.teamcode.Gericka.Gericka_MecanumDrive.PARAMS;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
+import com.acmerobotics.roadrunner.ftc.Actions;
+
+
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -182,10 +195,103 @@ public class Gericka_Hardware {
     private boolean turretStall = false;
     double stallTimer = 0;
 
-    //ROADRUNNER AUTOROUTE
+    //////////////////////////////////////////ROADRUNNER AUTOROUTE
+
+    // Constraints
+    VelConstraint fastVel = new TranslationalVelConstraint(90);
+    AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
+
+    VelConstraint normalVel = new TranslationalVelConstraint(60);
+    AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
+
+    VelConstraint slowVel = new TranslationalVelConstraint(40);
+    AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
+
+    VelConstraint superSlowVel = new TranslationalVelConstraint(40);
+    AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
+
+
+
+
+
+    //Common Start Positions:
     Pose2d closeRedStartPose = new Pose2d(-60,39,Math.toRadians(90));
     Pose2d closeBlueStartPose = new Pose2d(-60,-39,Math.toRadians(-90));
+    Pose2d farRedStartPose = new Pose2d(62.785, 9.375, Math.toRadians(90));
+    Pose2d farBlueStartPose = new Pose2d(62.785, -9.375, Math.toRadians(-90));
 
+    //Common Shooter Positions
+    Pose2d redCloseShootPositionBigTriangle = new Pose2d(-11.5, 21, Math.toRadians(90));
+    Pose2d blueCloseShootPositionBigTriangle = new Pose2d(-11.5, -21, Math.toRadians(-90));
+
+    Pose2d redFarShootPositionSmallTriangle = new Pose2d(48, 12, Math.toRadians(90));
+
+    Pose2d blueFarShootPositionSmallTriangle = new Pose2d(48, -12, Math.toRadians(-90));
+
+    //Red Close routes:
+    public Action RedCloseDriveCloseStartPositionToBigTriangle;
+    public Action RedCloseDriveBigTriangleToThirdMark;
+    public Action RedCloseDriveThirdMarkToBigTriangle;
+    public Action RedCloseDriveToInsideBigTriangle;
+
+    public Action RedCloseDriveThirdMarkToLock;
+
+    public Action RedCloseDriveLockToBigTriangle;
+
+    public Action RedCloseDriveBigTriangleToSecondMark;
+
+    public Action RedCloseDriveSecondMarkToBigTriangle;
+
+    public Action RedCloseDriveShootingPositionToGateLock;
+
+
+    //Red Far Routes
+    public Action RedFarDriveFarStartPositionToShootingPosition;
+
+    public Action RedFarDriveShootingPositionToFirstMark;
+
+    public Action RedFarDriveFirstMarkToShootingPosition;
+
+    public Action RedFarDriveShootingPositionToSecondMark;
+
+    public Action RedFarDriveSecondMarkToShootingPosition;
+
+    public Action RedFarDriveShootingPositionToGateLock;
+
+    public Action RedFarDriveSecondMarkToLock;
+
+    public Action RedFarDriveLockToBigTriangle;
+
+    public Action RedFarDriveBigTriangleToThirdMark;
+
+    public Action RedFarDriveThirdMarkToBigTriangle;
+
+    public Action RedFarDriveBigTriangleToFirstMark;
+
+    public Action RedFarDriveOutOfShootingPosition;
+
+    public Action RedFarDriveShootingPositionToThirdMark;
+
+    public Action RedFarDriveBigTriangleToGateLock;
+
+    public Action RedFarCleanUpDriveFirstMarkToShootingPosition;
+
+    public Action RedFarCleanUpDriveShootingPositionToCollectGateBalls;
+
+    public Action RedFarCleanUpDriveToSecondMark;
+
+    public Action RedFarCleanUpDriveCollectGateBallsToShootingPosition;
+
+    public Action RedFarCleanUpDriveOutOfSmallTriangle;
+
+    public Action RedFarCleanUpDriveSecondMarkToShootingPosition;
+
+    public Action RedFarDriveOutOfSmallTriangle;
+
+
+
+
+/// //////////////////////////////////////////////////////////////////
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -461,6 +567,181 @@ public class Gericka_Hardware {
     public void InitRoadRunner(Gericka_MecanumDrive roadrunner)
     {
         drive = roadrunner;
+
+    }
+
+    public void buildCommonAutoRoutes(){
+        RedCloseDriveCloseStartPositionToBigTriangle = drive.actionBuilder(closeRedStartPose)
+                .strafeToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y))
+                .build();
+
+        RedCloseDriveBigTriangleToThirdMark = drive.actionBuilder(redCloseShootPositionBigTriangle)
+                //.splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 60), slowVel, slowAccel)
+                .build();
+
+        RedCloseDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),slowVel, superSlowAccel)
+                .build();
+
+        RedCloseDriveToInsideBigTriangle = drive.actionBuilder(redCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(-54, 16))
+                .build();
+
+        RedCloseDriveThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
+                //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
+                .strafeToConstantHeading(new Vector2d(-4, 45),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-2, 58),  Math.toRadians(90), slowVel, slowAccel)
+                //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
+                .build();
+
+        RedCloseDriveLockToBigTriangle = drive.actionBuilder(new Pose2d(-2, 58, Math.toRadians(90)))
+                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(0, 40),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),slowVel, superSlowAccel)
+                .build();
+
+        RedCloseDriveBigTriangleToSecondMark = drive.actionBuilder(redCloseShootPositionBigTriangle)
+                .splineToConstantHeading(new Vector2d(14.5, 20), Math.toRadians(90), fastVel, fastAccel)
+                //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(14.5, 61),slowVel, slowAccel)
+                .build();
+        RedCloseDriveSecondMarkToBigTriangle = drive.actionBuilder(new Pose2d(14.5,61,Math.toRadians(90)))
+                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(11.5, 30),fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
+                .splineToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),fastVel, slowAccel)
+                .build();
+
+        RedCloseDriveShootingPositionToGateLock =  drive.actionBuilder(redCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(0, 30), normalVel, normalAccel)
+                .build();
+        /// /////////////////
+
+        RedFarDriveFarStartPositionToShootingPosition = drive.actionBuilder(farRedStartPose)
+                .strafeToConstantHeading(new Vector2d(redFarShootPositionSmallTriangle.position.x, redFarShootPositionSmallTriangle.position.y), fastVel, fastAccel)
+                .build();
+
+        RedFarDriveShootingPositionToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(34.75, 30),  Math.toRadians(90),fastVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, 60), normalVel, normalAccel)
+                .build();
+
+        RedFarDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 60, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(redFarShootPositionSmallTriangle.position.x, redFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+
+        RedFarDriveShootingPositionToSecondMark = drive.actionBuilder(redFarShootPositionSmallTriangle)
+                .splineToConstantHeading(new Vector2d(11.5, 30), Math.toRadians(90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(11.5, 59), Math.toRadians(90), normalVel, normalAccel)
+                .build();
+
+        RedFarDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, 59, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(redFarShootPositionSmallTriangle.position.x, redFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+        RedFarDriveShootingPositionToGateLock =  drive.actionBuilder(redFarShootPositionSmallTriangle)
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .build();
+
+        RedFarDriveSecondMarkToLock = drive.actionBuilder(new Pose2d(11.5, 59, Math.toRadians(90)))   // FIX
+                .splineToConstantHeading(new Vector2d(5, 40),  Math.toRadians(180), slowVel, slowAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(0, 53),  Math.toRadians(90), slowVel, slowAccel)  // up-left
+                .build();
+
+        RedFarDriveLockToBigTriangle = drive.actionBuilder(new Pose2d(0, 53, Math.toRadians(90)))   // FIX
+                .splineToConstantHeading(new Vector2d(0, 25),  Math.toRadians(270), normalVel, normalAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),slowVel, superSlowAccel)  // up-left
+                .build();
+
+        RedFarDriveBigTriangleToThirdMark = drive.actionBuilder(redCloseShootPositionBigTriangle)   // FIX
+                .splineToConstantHeading(new Vector2d(-11.5, 31), Math.toRadians(90), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 57), slowVel, normalAccel)
+                .build();
+
+        RedFarDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 57, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+        RedFarDriveBigTriangleToFirstMark =  drive.actionBuilder(redCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
+                //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, 60), normalVel, normalAccel)
+                .build();
+
+
+
+        RedFarDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 60, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(redFarShootPositionSmallTriangle.position.x, redFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+
+        RedFarDriveOutOfShootingPosition =  drive.actionBuilder(redFarShootPositionSmallTriangle)
+                .strafeToConstantHeading(new Vector2d(38, 12), fastVel, fastAccel)
+                .build();
+
+        RedFarDriveShootingPositionToThirdMark = drive.actionBuilder(redFarShootPositionSmallTriangle)
+                .strafeToConstantHeading(new Vector2d(-15, 31), fastVel, fastAccel)
+                .strafeToConstantHeading(new Vector2d(-15, 57), normalVel, normalAccel)
+                .build();
+
+        RedFarDriveBigTriangleToGateLock = drive.actionBuilder(new Pose2d(-11.5, 57, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
+                .build();
+
+        RedFarCleanUpDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(48, 12),  Math.toRadians(270), fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
+                .build();
+
+        RedFarCleanUpDriveShootingPositionToCollectGateBalls = drive.actionBuilder(new Pose2d(48,12, Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(25,56,Math.toRadians(30)),Math.toRadians(150), fastVel, normalAccel)
+                .strafeToLinearHeading(new Vector2d(60,58), Math.toRadians(0), normalVel, normalAccel)
+                .build();
+
+        RedFarCleanUpDriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,58,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(48,12), Math.toRadians(90), fastVel, normalAccel)
+                .build();
+
+        RedFarCleanUpDriveOutOfSmallTriangle = drive.actionBuilder(new Pose2d(48,12,Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(36,12), fastVel, fastAccel)
+                .build();
+
+        RedFarCleanUpDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(12.5, 60, Math.toRadians(90)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, 32),  Math.toRadians(270), fastVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(48, 12),  Math.toRadians(-90), normalVel, slowAccel)
+                .build();
+
+        RedFarCleanUpDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(48, 12),  Math.toRadians(270), fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
+                .build();
+
+        RedFarDriveOutOfSmallTriangle = drive.actionBuilder(new Pose2d(48,12,Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(36,12), fastVel, fastAccel)
+                .build();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 

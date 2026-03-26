@@ -28,8 +28,8 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        final double startPoseHeadingDegrees = -90;
-        Pose2d startPose = new Pose2d(62.785, -9.375, Math.toRadians(startPoseHeadingDegrees));
+        //final double startPoseHeadingDegrees = -90;
+        //Pose2d startPose = new Pose2d(62.785, -9.375, Math.toRadians(startPoseHeadingDegrees));
         final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
         final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
@@ -39,7 +39,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.farBlueStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.WebcamInit(this.hardwareMap);
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
@@ -58,7 +58,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(1500);
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, startPoseHeadingDegrees);
+        theRobot.SetRoadrunnerInitialPosition(theRobot.farBlueStartPose.position.x, theRobot.farBlueStartPose.position.y, theRobot.farBlueStartPose.heading.toDouble());
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -84,7 +84,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
-        Action DriveToShootingPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(startPoseHeadingDegrees)))
+        Action DriveToShootingPosition = drive.actionBuilder(new Pose2d(theRobot.farBlueStartPose.position.x, theRobot.farBlueStartPose.position.y, theRobot.farBlueStartPose.heading.toDouble()))
                 .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
                 .build();
 

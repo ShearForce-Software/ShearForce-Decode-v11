@@ -35,6 +35,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeRedStartPose);
         theRobot.InitRoadRunner(drive);
+        theRobot.buildCommonAutoRoutes();
 
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
@@ -76,7 +77,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // ***************************************************
         // ****  Define Trajectories    **********************
         // ***************************************************
-
+/*
         Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(theRobot.closeRedStartPose)
                 .strafeToConstantHeading(new Vector2d(-11.5, 21))
                 .build();
@@ -115,7 +116,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 30), normalVel, normalAccel)
                 .build();
-
+*/
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
@@ -158,7 +159,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveCloseStartPositiontoBigTriangle));
+        Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveCloseStartPositionToBigTriangle));
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
@@ -175,9 +176,9 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.RedCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(ThirdMarkToLock, setIntakeOff())
+                        new ParallelAction(theRobot.RedCloseDriveThirdMarkToLock, setIntakeOff())
                 )
         );
         // turn off intake to save battery power
@@ -195,7 +196,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
                 new SequentialAction(
 
                         //new SleepAction(0.4), // sleep time to hold the gate open
-                        new ParallelAction(LockToBigTriangle)
+                        new ParallelAction(theRobot.RedCloseDriveLockToBigTriangle)
                 )
         );
 
@@ -212,9 +213,9 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveBigTriangletoSecondMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.RedCloseDriveBigTriangleToSecondMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.250),
-                        new ParallelAction(DriveSecondMarktoBigTriangle, setIntakeOff())
+                        new ParallelAction(theRobot.RedCloseDriveSecondMarkToBigTriangle, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -231,7 +232,7 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // BIG TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveShootingPositionToGateLock, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveShootingPositionToGateLock, setIntakeOff()));
 
         // -------------------------
         // Cleanup

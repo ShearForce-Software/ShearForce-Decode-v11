@@ -52,13 +52,14 @@ public class Red_Far_12Balls extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        startPose = new Pose2d(60, 8.75, Math.toRadians(90));
+
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
+        theRobot.buildCommonAutoRoutes();
 
 
         // initialize the webcam
@@ -75,7 +76,7 @@ public class Red_Far_12Balls extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(1500);
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, 90);
+        theRobot.SetRoadrunnerInitialPosition(theRobot.farRedStartPose.position.x, theRobot.farRedStartPose.position.y, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
@@ -85,8 +86,8 @@ public class Red_Far_12Balls extends LinearOpMode {
         // ***************************************************
         // ****  Define Trajectories    **********************
         // ***************************************************
-
-        DriveToShootingPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(90)))
+/*
+        DriveToShootingPosition = drive.actionBuilder(theRobot.farRedStartPose)
                 .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
                 .build();
 
@@ -130,6 +131,8 @@ public class Red_Far_12Balls extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
                 .build();
 
+
+ */
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
@@ -178,7 +181,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
+        Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
         theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
@@ -193,9 +196,9 @@ public class Red_Far_12Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.RedFarDriveShootingPositionToFirstMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.250),
-                        new ParallelAction(ReturnFromFirstMark, setIntakeOff())
+                        new ParallelAction(theRobot.RedFarDriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
 
@@ -213,9 +216,9 @@ public class Red_Far_12Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.RedFarDriveShootingPositionToSecondMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.250),
-                        new ParallelAction(ReturnFromSecondMark, setIntakeOff())
+                        new ParallelAction(theRobot.RedFarDriveSecondMarkToShootingPosition, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -239,9 +242,9 @@ public class Red_Far_12Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.RedFarDriveShootingPositionToThirdMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.250),
-                        new ParallelAction(DriveThirdMarkToBigTriangle, setIntakeOff())
+                        new ParallelAction(theRobot.RedFarDriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -257,7 +260,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         // PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveToGateLock, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveBigTriangleToGateLock, setIntakeOff()));
 
         // -------------------------
         // Cleanup

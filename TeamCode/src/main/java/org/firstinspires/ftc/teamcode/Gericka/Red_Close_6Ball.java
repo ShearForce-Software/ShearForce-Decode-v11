@@ -33,13 +33,15 @@ public class Red_Close_6Ball extends LinearOpMode {
 
     public void runOpMode(){
         //We will start at big trianlge start
-        startPose = new Pose2d(-60,39,Math.toRadians(90));
+        startPose = theRobot.closeRedStartPose;
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, startPose);
         theRobot.InitRoadRunner(drive);
+
+        theRobot.buildCommonAutoRoutes();
 
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
@@ -54,13 +56,13 @@ public class Red_Close_6Ball extends LinearOpMode {
         // set lifter half up (so can get 3 ball loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
-
+/*
         DriveStartToMidPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, 21))
+                .strafeToConstantHeading(new Vector2d(theRobot.redCloseShootPosition.position.x, theRobot.redCloseShootPosition.position.y))
                 .build();
 
         // Mid (-10, -10, 270) -> closest line (-10, -40)
-        DriveMidToClosestLine = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
+        DriveMidToClosestLine = drive.actionBuilder(new Pose2d(theRobot.redCloseShootPosition.position.x, theRobot.redCloseShootPosition.position.y, Math.toRadians(90)))
 
                 .strafeToConstantHeading(new Vector2d(-11.4, 55))
                 .build();
@@ -75,6 +77,8 @@ public class Red_Close_6Ball extends LinearOpMode {
         DriveClosestLineBackToLaunchPark = drive.actionBuilder(new Pose2d(-11.5, 21, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(-54, 16))
                 .build();
+
+ */
 
         theRobot.SetAutoLifterMode(true);
 
@@ -123,7 +127,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         theRobot.SetShooterMotorToSpecificRPM(2800);
 
         Actions.runBlocking(new SleepAction((1)));
-        Actions.runBlocking(DriveStartToMidPosition);
+        Actions.runBlocking(theRobot.RedCloseDriveCloseStartPositionToBigTriangle);
 
     theRobot.SetIntakeMotor(false,true);
 
@@ -150,13 +154,13 @@ public class Red_Close_6Ball extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         // Mid -> closest line
-                        DriveMidToClosestLine,
+                        theRobot.RedCloseDriveBigTriangleToThirdMark,
                         new SleepAction(0.250), // sleep time to finish intaking the balls
 
                         // tiny sleep to finish ingesting rings
                         // Closest line -> launch park
 
-                        DriveClosestLineBackToMid
+                        theRobot.RedCloseDriveThirdMarkToBigTriangle
 
                 )
         );
@@ -186,7 +190,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        DriveClosestLineBackToLaunchPark
+                        theRobot.RedCloseDriveToInsideBigTriangle
                 )
         );
 
