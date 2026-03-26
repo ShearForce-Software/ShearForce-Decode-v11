@@ -304,6 +304,7 @@ public class Gericka_Hardware {
     DigitalChannel beamBreak1;
     DigitalChannel beamBreak2;
     DigitalChannel beamBreak3;
+    DigitalChannel beamBreak4;
 
     public Gericka_Hardware(boolean isDriverControl, boolean isFieldCentric, LinearOpMode opMode) {
         this.IsDriverControl = isDriverControl;
@@ -432,9 +433,11 @@ public class Gericka_Hardware {
         beamBreak1 =  hardwareMap.get(DigitalChannel.class, "beamBreak1");
         beamBreak2 =  hardwareMap.get(DigitalChannel.class, "beamBreak2");
         beamBreak3 =  hardwareMap.get(DigitalChannel.class, "beamBreak3");
+        beamBreak4 =  hardwareMap.get(DigitalChannel.class, "beamBreak4");
         beamBreak1.setMode(DigitalChannel.Mode.INPUT);
         beamBreak2.setMode(DigitalChannel.Mode.INPUT);
         beamBreak3.setMode(DigitalChannel.Mode.INPUT);
+        beamBreak4.setMode(DigitalChannel.Mode.INPUT);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
