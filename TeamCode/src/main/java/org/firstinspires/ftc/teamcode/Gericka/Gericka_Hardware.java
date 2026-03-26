@@ -1285,7 +1285,7 @@ public class Gericka_Hardware {
         // *************************************************
         // **** INDICATOR LIGHT #1              ************
         // *************************************************
-        if (invalidHeading)
+        /*if (invalidHeading)
         {
             // RED = INVALID Heading, the turret can't see the target, rotate robot
             light1.setPosition(INDICATOR_RED);
@@ -1361,8 +1361,30 @@ public class Gericka_Hardware {
         }
         else {
             light3.setPosition(INDICATOR_BLACK);
-        }
+        }*/
+        boolean beam2IsBroken = !beamBreak2.getState(); // Invert if 'true' means broken
+        boolean beam3IsBroken = !beamBreak3.getState();
+        boolean beam4IsBroken = !beamBreak4.getState();
+        boolean turretReady = ((turretMotor.getCurrentPosition() > (turretMotor.getTargetPosition() - 5)) && (turretMotor.getCurrentPosition() < (turretMotor.getTargetPosition() + 5)));  // 5 ticks is a little bit more than 2 degrees
+        double currentMotorRPM = CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS);
+        boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 50) && (currentMotorRPM <= shooterTargetRPM + 200));
 
+        // **** INDICATOR LIGHT #1              ************
+        if (!turretReady) {
+            light1.setPosition(INDICATOR_RED);
+        } else if (beam2IsBroken) {
+            light1.setPosition(INDICATOR_GREEN);
+        }
+        // **** INDICATOR LIGHT #2              ************
+        if (!shooterReady){
+            light2.setPosition(INDICATOR_RED);
+        } else if (beam3IsBroken){
+            light2.setPosition(INDICATOR_GREEN);
+        }
+        // **** INDICATOR LIGHT #3              ************
+        if (beam4IsBroken){
+            light3.setPosition(INDICATOR_GREEN);
+        }
     }
     public void InitBlinkin(HardwareMap hardwareMap) {
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class,"RevBLinkinLedDriver");
