@@ -28,13 +28,14 @@ Blue_Close_6BallsV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(-62.785,-33.75,Math.toRadians(-90));
+        //Pose2d startPose = new Pose2d(-62.785,-33.75,Math.toRadians(-90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeBlueStartPose);
         theRobot.InitRoadRunner(drive);
+        theRobot.buildCommonAutoRoutes();
 
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
@@ -52,7 +53,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, 90);
+        theRobot.SetRoadrunnerInitialPosition(theRobot.closeBlueStartPose.position.x, theRobot.closeBlueStartPose.position.y, -90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
@@ -77,6 +78,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
+        /*
         Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-11.5, -21))
                 .build();
@@ -110,6 +112,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(-54, -16))
                 .build();
 
+         */
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
@@ -152,7 +155,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveCloseStartPositiontoBigTriangle));
+        Actions.runBlocking(new SequentialAction(theRobot.BlueCloseDriveCloseStartPositionToBigTriangle));
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
@@ -169,9 +172,9 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(ThirdMarkToBigTriangle, setIntakeOff())
+                        new ParallelAction(theRobot.BlueCloseDriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
 
@@ -192,7 +195,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         // BIG TRIANGLE -> PARK INSIDE BIG TRIANGLE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveToInsideBigTriangle, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(theRobot.BlueCloseDriveToInsideBigTriangle, setIntakeOff()));
 
         // -------------------------
         // Cleanup

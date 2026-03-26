@@ -28,13 +28,14 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(-60,-39,Math.toRadians(-90));
+        //Pose2d startPose = new Pose2d(-60,-39,Math.toRadians(-90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeBlueStartPose);
         theRobot.InitRoadRunner(drive);
+        theRobot.buildCommonAutoRoutes();
 
         // initialize the webcam
         theRobot.WebcamInit(this.hardwareMap);
@@ -52,7 +53,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, -90);
+        theRobot.SetRoadrunnerInitialPosition(theRobot.closeBlueStartPose.position.x, theRobot.closeBlueStartPose.position.y, -90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
@@ -77,6 +78,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
+        /*
         Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
                 .strafeToConstantHeading(new Vector2d(-11.5, -21))
                 .build();
@@ -116,6 +118,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(0, -30), normalVel, normalAccel)
                 .build();
 
+         */
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
@@ -158,7 +161,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveCloseStartPositiontoBigTriangle));
+        Actions.runBlocking(new SequentialAction(theRobot.BlueCloseDriveCloseStartPositionToBigTriangle));
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
@@ -176,9 +179,9 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(ThirdMarkToLock, setIntakeOff())
+                        new ParallelAction(theRobot.BlueCloseDriveThirdMarkToLock, setIntakeOff())
                 )
         );
         // turn off intake to save battery power
@@ -196,7 +199,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
                 new SequentialAction(
 
                         //new SleepAction(0.4), // sleep time to hold the gate open
-                        new ParallelAction(LockToBigTriangle)
+                        new ParallelAction(theRobot.BlueCloseDriveLockToBigTriangle)
                 )
         );
 
@@ -213,9 +216,9 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveBigTriangletoSecondMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueCloseDriveDriveBigTriangletoSecondMark, setIntakeOn(), new SetLifterDown()),
                         new SleepAction(0.250),
-                        new ParallelAction(DriveSecondMarktoBigTriangle, setIntakeOff())
+                        new ParallelAction(theRobot.BlueCloseDriveDriveSecondMarktoBigTriangle, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -231,7 +234,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         // BIG TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveShootingPositionToGateLock, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(theRobot.BlueCloseDriveDriveShootingPositionToGateLock, setIntakeOff()));
 
         // -------------------------
         // Cleanup

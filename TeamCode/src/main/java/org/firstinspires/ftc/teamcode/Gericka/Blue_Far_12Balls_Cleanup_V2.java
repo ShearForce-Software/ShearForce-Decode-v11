@@ -41,6 +41,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         theRobot.Init(hardwareMap, "BLUE");
         drive = new Gericka_MecanumDrive(hardwareMap, theRobot.farBlueStartPose);
         theRobot.InitRoadRunner(drive);
+        theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
         theRobot.SetAutoLifterMode(true);
@@ -84,6 +85,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // ****  Define Trajectories    **********************
         // ***************************************************
 
+        /*
         Action DriveToShootingPosition = drive.actionBuilder(new Pose2d(theRobot.farBlueStartPose.position.x, theRobot.farBlueStartPose.position.y, theRobot.farBlueStartPose.heading.toDouble()))
                 .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
                 .build();
@@ -132,6 +134,8 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
                 .strafeToConstantHeading(new Vector2d(0, -30), fastVel, fastAccel)
                 .build();
 
+
+         */
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
@@ -175,7 +179,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
+        Actions.runBlocking(new SequentialAction(theRobot.BlueFarDriveStartingPositionToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
        // Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
@@ -191,9 +195,9 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarCleanUpDriveToFirstMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.250),
-                        new ParallelAction(DriveFirstMarkToShootingPosition, setIntakeOff())
+                        new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -209,9 +213,9 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarCleanUpDriveToSecondMark, setIntakeOn(), new SetLifterDown()),
                         //new SleepAction(0.250),
-                        new ParallelAction(DriveSecondMarkToShootingPosition, setIntakeOff())
+                        new ParallelAction(theRobot.BlueFarCleanUpDriveSecondMarkToShootingPosition, setIntakeOff())
                 )
         );
         drive.updatePoseEstimate();
@@ -228,9 +232,9 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(DriveShootingPositionToCollectGateBalls, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarCleanUpDriveShootingPositionToCollectGateBalls, setIntakeOn(), new SetLifterDown()),
                         // new SleepAction(0.250),
-                        new ParallelAction(DriveCollectGateBallsToShootingPosition, setIntakeOn())
+                        new ParallelAction(theRobot.BlueFarCleanUpDriveCollectGateBallsToShootingPosition, setIntakeOn())
                 )
         );
         drive.updatePoseEstimate();
@@ -248,7 +252,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // SMALL TRIANGLE -> PARK
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(DriveOutOfSmallTriangle, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(theRobot.BlueFarCleanUpDriveOutOfSmallTriangle, setIntakeOff()));
 
         // -------------------------
         // Cleanup

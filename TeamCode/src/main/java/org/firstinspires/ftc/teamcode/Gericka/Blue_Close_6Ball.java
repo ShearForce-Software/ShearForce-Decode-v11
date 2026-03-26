@@ -33,28 +33,29 @@ public class Blue_Close_6Ball extends LinearOpMode {
 
     public void runOpMode(){
     //We will start at big trianlge start
-    startPose = new Pose2d(-60,-39,Math.toRadians(-90));
+    //startPose = new Pose2d(-60,-39,Math.toRadians(-90));
     /* Initialize the Robot */
     theRobot.Init(hardwareMap, "BLUE");
 
     // initialize roadrunner
     drive = new Gericka_MecanumDrive(hardwareMap, startPose);
     theRobot.InitRoadRunner(drive);
+    theRobot.buildCommonAutoRoutes();
 
     // initialize the webcam
     theRobot.WebcamInit(this.hardwareMap);
 
     sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
     // finish initializing the pinpoint
-    theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, -90);
+    theRobot.SetRoadrunnerInitialPosition(theRobot.closeBlueStartPose.position.x, theRobot.closeBlueStartPose.position.y, -90);
 
     blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
     // set lifter half up (so can get 3 ball loaded in robot)
     theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
-
-    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(-90)))
+/*
+    DriveStartToMidPosition = drive.actionBuilder(theRobot.closeBlueStartPose)
             .strafeToConstantHeading(new Vector2d(-11.4, -10))
             .build();
 
@@ -75,6 +76,8 @@ public class Blue_Close_6Ball extends LinearOpMode {
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
+
+ */
         theRobot.SetAutoLifterMode(true);
 
     // ***************************************************
@@ -121,7 +124,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
     theRobot.SetShooterMotorToSpecificRPM(2700);
 
     Actions.runBlocking(new SleepAction((1)));
-    Actions.runBlocking(DriveStartToMidPosition);
+    Actions.runBlocking(theRobot.BlueCloseDriveCloseStartPositionToBigTriangle);
 
     theRobot.SetIntakeMotor(false,true);
 
@@ -152,11 +155,11 @@ public class Blue_Close_6Ball extends LinearOpMode {
     Actions.runBlocking(
             new SequentialAction(
                     // Mid -> closest line
-                    DriveMidToClosestLine,
+                    theRobot.BlueCloseDriveBigTriangleToThirdMark,
                     new SleepAction(0.250), // sleep time to finish intaking the balls
                     // Closest line -> launch park
 
-                    DriveClosestLineBackToMid
+                    theRobot.BlueCloseDriveThirdMarkToBigTriangle
 
                     )
     );
@@ -186,7 +189,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        DriveClosestLineBackToLaunchPark
+                        theRobot.BlueCloseDriveToInsideBigTriangle
                 )
         );
 

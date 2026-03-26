@@ -288,10 +288,66 @@ public class Gericka_Hardware {
 
     public Action RedFarDriveOutOfSmallTriangle;
 
+    public Action BlueCloseDriveCloseStartPositionToBigTriangle;
+
+    public Action BlueCloseDriveBigTriangleToThirdMark;
+
+    public Action BlueCloseDriveThirdMarkToBigTriangle;
+
+    public Action BlueCloseDriveToInsideBigTriangle;
+
+    public Action BlueCloseDriveThirdMarkToLock;
+
+    public Action BlueCloseDriveLockToBigTriangle;
+
+    public Action BlueCloseDriveDriveBigTriangletoSecondMark;
+
+    public Action BlueCloseDriveDriveSecondMarktoBigTriangle;
+
+    public Action BlueCloseDriveDriveShootingPositionToGateLock;
+
+    public Action BlueFarDriveStartingPositionToShootingPosition;
+
+    public Action BlueFarDriveShootingPositionToFirstMark;
+
+    public Action BlueFarDriveFirstMarkToShootingPosition;
+
+    public Action BlueFarDriveShootingPositionToSecondMark;
+
+    public Action BlueFarDriveSecondMarkToShootingPosition;
+
+    public Action BlueFarDriveSecondMarkToLock;
+
+    public Action BlueFarDriveLockToBigTriangle;
+
+    public Action BlueFarDriveBigTriangleToThirdMark;
+
+    public Action BlueFarDriveThirdMarkToBigTriangle;
+
+    public Action BlueFarDriveBigTriangleToFirstMark;
+
+    public Action BlueFarDriveShootingPositionToGateLock;
+
+    public Action BlueFarDriveOutofShootingPosition;
+
+    public Action BlueFarCleanUpDriveToFirstMark;
+
+    public Action BlueFarCleanUpDriveFirstMarkToShootingPosition;
+
+    public Action BlueFarCleanUpDriveShootingPositionToCollectGateBalls;
+
+    public Action BlueFarCleanUpDriveToSecondMark;
+
+    public Action BlueFarCleanUpDriveCollectGateBallsToShootingPosition;
+
+    public Action BlueFarCleanUpDriveOutOfSmallTriangle;
+
+    public Action BlueFarCleanUpDriveSecondMarkToShootingPosition;
 
 
 
-/// //////////////////////////////////////////////////////////////////
+
+    /// //////////////////////////////////////////////////////////////////
 
     RevBlinkinLedDriver.BlinkinPattern Blinken_pattern;
     RevBlinkinLedDriver blinkinLedDriver;
@@ -583,6 +639,7 @@ public class Gericka_Hardware {
                 .strafeToConstantHeading(new Vector2d(-11.5, 60), slowVel, slowAccel)
                 .build();
 
+
         RedCloseDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
                 .splineToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),slowVel, superSlowAccel)
                 .build();
@@ -726,6 +783,154 @@ public class Gericka_Hardware {
 
         RedFarDriveOutOfSmallTriangle = drive.actionBuilder(new Pose2d(48,12,Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(36,12), fastVel, fastAccel)
+                .build();
+
+
+        //BlueClose:
+        BlueCloseDriveCloseStartPositionToBigTriangle = drive.actionBuilder(closeBlueStartPose)
+                .strafeToConstantHeading(new Vector2d(blueCloseShootPositionBigTriangle.position.x, blueCloseShootPositionBigTriangle.position.y))
+                .build();
+
+        BlueCloseDriveBigTriangleToThirdMark = drive.actionBuilder(blueCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(-11.4, -55))
+                .build();
+
+        BlueCloseDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.4, -55, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(blueCloseShootPositionBigTriangle.position.x, blueCloseShootPositionBigTriangle.position.y))
+                .build();
+
+        BlueCloseDriveToInsideBigTriangle = drive.actionBuilder(blueCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(-54, -16))
+                .build();
+
+        BlueCloseDriveThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, -60, Math.toRadians(-90)))
+                //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
+                .strafeToConstantHeading(new Vector2d(-4, -45),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(-2, -58),  Math.toRadians(-90), slowVel, slowAccel)
+                //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
+                .build();
+
+        BlueCloseDriveLockToBigTriangle = drive.actionBuilder(new Pose2d(-2, -58, Math.toRadians(-90)))
+                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(0, -40),slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(blueCloseShootPositionBigTriangle.position.x, blueCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),slowVel, superSlowAccel)
+                .build();
+
+        BlueCloseDriveDriveBigTriangletoSecondMark = drive.actionBuilder(blueCloseShootPositionBigTriangle)
+                .splineToConstantHeading(new Vector2d(13.5, -20), Math.toRadians(-90), fastVel, fastAccel)
+                //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(13.5, -60),slowVel, slowAccel)
+                .build();
+
+        BlueCloseDriveDriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(13.5,-60,Math.toRadians(-90)))
+                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(11.5, -30),fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
+                .splineToConstantHeading(new Vector2d(blueCloseShootPositionBigTriangle.position.x, blueCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),fastVel, slowAccel)
+                .build();
+
+        BlueCloseDriveDriveShootingPositionToGateLock =  drive.actionBuilder(blueCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(0, -30), normalVel, normalAccel)
+                .build();
+
+        //BlueFarDrive
+        BlueFarDriveStartingPositionToShootingPosition = drive.actionBuilder(farBlueStartPose)
+                .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
+                .build();
+
+        BlueFarDriveShootingPositionToFirstMark = drive.actionBuilder(blueFarShootPositionSmallTriangle)
+                .strafeToConstantHeading(new Vector2d(34.75, -30), fastVel, fastAccel)
+                //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), normalVel, normalAccel)
+                .build();
+
+        BlueFarDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(blueFarShootPositionSmallTriangle.position.x, blueFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+        BlueFarDriveShootingPositionToSecondMark = drive.actionBuilder(blueFarShootPositionSmallTriangle)
+                .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
+                .build();
+
+        BlueFarDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(blueFarShootPositionSmallTriangle.position.x, blueFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+        BlueFarDriveSecondMarkToLock = drive.actionBuilder(new Pose2d(11.5, -59, Math.toRadians(-90)))   // FIX
+                .splineToConstantHeading(new Vector2d(5, -40),  Math.toRadians(-180), normalVel, slowAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(0, -53),  Math.toRadians(-90), normalVel, slowAccel)  // up-left
+                .build();
+
+        BlueFarDriveLockToBigTriangle = drive.actionBuilder(new Pose2d(0, -53, Math.toRadians(-90)))   // FIX
+                .splineToConstantHeading(new Vector2d(0, -25),  Math.toRadians(-270), fastVel, normalAccel)  // up-left
+                .splineToConstantHeading(new Vector2d(blueCloseShootPositionBigTriangle.position.x, blueCloseShootPositionBigTriangle.position.y),  Math.toRadians(-90),fastVel, normalAccel)  // up-left
+                .build();
+
+        BlueFarDriveBigTriangleToThirdMark = drive.actionBuilder(blueCloseShootPositionBigTriangle)   // FIX
+                .splineToConstantHeading(new Vector2d(-14, -31), Math.toRadians(-90), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(-14, -57), normalVel, normalAccel)
+                .build();
+
+        BlueFarDriveShootingPositionToGateLock =  drive.actionBuilder(blueFarShootPositionSmallTriangle)
+                .strafeToConstantHeading(new Vector2d(0, -30), fastVel, fastAccel)
+                .build();
+
+        BlueFarDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-14, -57, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(blueCloseShootPositionBigTriangle.position.x, blueCloseShootPositionBigTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+        BlueFarDriveBigTriangleToFirstMark =  drive.actionBuilder(blueCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(34.75, -30), fastVel, fastAccel)
+                //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), fastVel, normalAccel)
+                .build();
+
+        BlueFarDriveOutofShootingPosition =  drive.actionBuilder(blueFarShootPositionSmallTriangle)
+                .strafeToConstantHeading(new Vector2d(38, -12), fastVel, fastAccel)
+                .build();
+
+
+
+
+        BlueFarCleanUpDriveToFirstMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .splineToConstantHeading(new Vector2d(34.75, -30),  Math.toRadians(-90),fastVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), normalVel, normalAccel)
+                .build();
+
+        BlueFarCleanUpDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, -60, Math.toRadians(-90)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(48, -12),  Math.toRadians(-270), fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(48, -12), fastVel, normalAccel)
+                .build();
+
+        BlueFarCleanUpDriveShootingPositionToCollectGateBalls = drive.actionBuilder(new Pose2d(48,-12, Math.toRadians(-90)))
+                .splineToLinearHeading(new Pose2d(25,-56,Math.toRadians(-30)),Math.toRadians(-150), fastVel, normalAccel)
+                //.splineToLinearHeading(new Pose2d(60,-58,Math.toRadians(0)),Math.toRadians(90), normalVel, normalAccel)
+                .strafeToLinearHeading(new Vector2d(60,-58), Math.toRadians(0), normalVel, normalAccel)
+                //.splineToConstantHeading(new Vector2d(60, -60),  Math.toRadians(0), fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(60,-60), fastVel, normalAccel)
+                .build();
+
+        BlueFarCleanUpDriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
+                .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
+                .build();
+
+        BlueFarCleanUpDriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,-58,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(48,-12), Math.toRadians(-90), fastVel, normalAccel)
+                .build();
+
+        BlueFarCleanUpDriveOutOfSmallTriangle = drive.actionBuilder(new Pose2d(48,-12,Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(36,-12), fastVel, fastAccel)
+                .build();
+
+        BlueFarCleanUpDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, -32),  Math.toRadians(-270), fastVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(48, -12),  Math.toRadians(90), normalVel, slowAccel)
+                //.strafeToConstantHeading(new Vector2d(30,-12),fastVel,fastAccel)
+                //.strafeToConstantHeading(new Vector2d(48,-12),fastVel,normalAccel)
                 .build();
 
 
