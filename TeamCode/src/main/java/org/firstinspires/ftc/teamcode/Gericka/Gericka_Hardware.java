@@ -24,6 +24,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -101,9 +102,10 @@ public class Gericka_Hardware {
     private VisionPortal visionPortal;
 
     final double INTAKE_POWER = 0.65;
-    public final float LIFTER_UP_POSITION = 0.35f;
-    public final float LIFTER_MID_POSITION = 0.27f;
-    public final float LIFTER_DOWN_POSITION = 0.05f;
+    final double SHOOT_POWER = 1.0;
+    public final float LIFTER_UP_POSITION = 0.45f;
+    public final float LIFTER_MID_POSITION = 0.25f;
+    public final float LIFTER_DOWN_POSITION = 0.25f;
 
     private boolean useOnlyWebcamForDistance = false;
     private boolean autoTurretMode = true;
@@ -402,7 +404,7 @@ public class Gericka_Hardware {
         shooterMotorRight = hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
 
-        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         shooterMotorLeft.setDirection(DcMotor.Direction.REVERSE);
         shooterMotorRight.setDirection(DcMotor.Direction.FORWARD);
         turretMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -2017,22 +2019,24 @@ public class Gericka_Hardware {
             // A 'false' value usually means the beam IS broken (light is interrupted)
             boolean beam1IsBroken = !beamBreak1.getState(); // Invert if 'true' means broken
             boolean beam2IsBroken = !beamBreak2.getState();
+            boolean beam3IsBroken = !beamBreak3.getState();
+            boolean beam4IsBroken = !beamBreak4.getState();
+
 
             // if currently shooting a ball (then have room for another one to come in)
-            if (lifterServo.getPosition() == LIFTER_UP_POSITION) {
+            if (lifterServo.getPosition() != LIFTER_DOWN_POSITION) {
                 // briefly turn on the intake when the lifter is up, to unstick anything in the intake
-                intakeMotor.setPower(INTAKE_POWER);
+                intakeMotor.setPower(SHOOT_POWER);
             }
             // else if there is another ball ready to come in if allowed
             else if (beam1IsBroken)
             {
                 // if there is a ball in spot #3, and the lifter is half up (meaning ball #2 should be at the bottom of the ramp, so it isn't ball #2 breaking the beam)
-                if (beam2IsBroken && (lifterServo.getPosition() >= (LIFTER_MID_POSITION - 0.03)) && (lifterServo.getPosition() <= (LIFTER_MID_POSITION + 0.03))) {
-                    // if ready to turn off, leave on a tiny bit to push the last ball away
-                    SpecialSleep(250);
-                    intakeMotor.setPower(0);
-                } else {
+                if (!beam2IsBroken || !beam3IsBroken || !beam4IsBroken) {
                     intakeMotor.setPower(INTAKE_POWER);
+                }
+                else {
+                    intakeMotor.setPower(0);
                 }
             }
             // else there is NOT a ball ready to come in, but the intake is currently on
@@ -2329,7 +2333,7 @@ public class Gericka_Hardware {
 
     public void SetLifterPosition(float position){
         double lifterTargetPosition = Math.min(position,LIFTER_UP_POSITION);
-        lifterTargetPosition = Math.max(position,LIFTER_DOWN_POSITION);
+        lifterTargetPosition = Math.max(lifterTargetPosition,LIFTER_DOWN_POSITION);
         lifterServo.setPosition(lifterTargetPosition);
     }
 
@@ -2352,7 +2356,9 @@ public class Gericka_Hardware {
     }
 
     public void SetLifterUp(){
+        intakeMotor.setPower(INTAKE_POWER);
         SetLifterPosition(LIFTER_UP_POSITION);
+
         //opMode.sleep(10);
         //SetLifterPosition(LIFTER_DOWN_POSITION);
     }
