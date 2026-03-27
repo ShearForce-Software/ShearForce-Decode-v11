@@ -553,6 +553,7 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("beamBreak1", !beamBreak1.getState());
         opMode.telemetry.addData("beamBreak2", !beamBreak2.getState());
         opMode.telemetry.addData("beamBreak3", !beamBreak3.getState());
+        opMode.telemetry.addData("beamBreak4", !beamBreak4.getState());
 
         opMode.telemetry.addData("Lifter Position: ", lifterServo.getPosition());
         opMode.telemetry.addData("Lifter Sensor Left  (inch)", ColorSensorLeft.getDistance(DistanceUnit.INCH));
@@ -1384,6 +1385,8 @@ public class Gericka_Hardware {
         // **** INDICATOR LIGHT #3              ************
         if (beam4IsBroken){
             light3.setPosition(INDICATOR_GREEN);
+        } else {
+            light3.setPosition(INDICATOR_BLUE);
         }
     }
     public void InitBlinkin(HardwareMap hardwareMap) {
