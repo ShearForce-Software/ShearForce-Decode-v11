@@ -101,11 +101,11 @@ public class Gericka_Hardware {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
-    final double INTAKE_POWER = 0.65;
-    final double SHOOT_POWER = 1.0;
-    public final float LIFTER_UP_POSITION = 0.45f;
+    public static double INTAKE_POWER = 0.65;
+    public static double SHOOT_POWER = 1.0;
+    public static float LIFTER_UP_POSITION = 0.45f;
     public final float LIFTER_MID_POSITION = 0.25f;
-    public final float LIFTER_DOWN_POSITION = 0.25f;
+    public static float LIFTER_DOWN_POSITION = 0.25f;
 
     private boolean useOnlyWebcamForDistance = false;
     private boolean autoTurretMode = true;
@@ -187,8 +187,13 @@ public class Gericka_Hardware {
     public final double FEET_TO_METER = 0.3048;
     public final double METER_TO_FEET = 3.28084;
     public final double RADIANS_PER_SECOND_TO_RPM = 9.54929658551; // 60 / (2 * Math.PI)
-    private double aprilTagTargetX = -62.0;
-    private double aprilTagTargetY = -62.0;
+    public static double TARGET_X_RED = -62.0;
+    public static double TARGET_Y_RED = 62.0;
+    public static double TARGET_X_BLUE = -62.0;
+    public static double TARGET_Y_BLUE = -62.0;
+
+    public static double aprilTagTargetX = -62.0;
+    public static double aprilTagTargetY = -62.0;
     private int currentAprilTargetId = 20;
     GoBildaPinpointDriver pinpoint;
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0,AngleUnit.DEGREES,0);
@@ -1256,13 +1261,13 @@ public class Gericka_Hardware {
 
     public void SetAprilTagTargetId(int value) {
         currentAprilTargetId = value;
-        if (currentAprilTargetId == 24) {
-            aprilTagTargetX = -62.0;
-            aprilTagTargetY = 62.0;
+        if (currentAprilTargetId == 24) {  // RED
+            aprilTagTargetX = TARGET_X_RED;
+            aprilTagTargetY = TARGET_Y_RED;
         }
-        else if (currentAprilTargetId == 20) {
-            aprilTagTargetX = -62.0;
-            aprilTagTargetY = -62.0;
+        else if (currentAprilTargetId == 20) { // BLUE
+            aprilTagTargetX = TARGET_X_BLUE;
+            aprilTagTargetY = TARGET_Y_BLUE;
         }
     }
     public int GetAprilTagTargetId() { return currentAprilTargetId; }
