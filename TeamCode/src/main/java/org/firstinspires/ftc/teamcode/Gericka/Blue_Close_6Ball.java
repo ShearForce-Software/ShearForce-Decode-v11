@@ -20,14 +20,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class Blue_Close_6Ball extends LinearOpMode {
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
-    Pose2d startPose;
+    //Pose2d startPose;
 
     // Trajectories
-    Action DriveStartToMidPosition;
-    Action DriveMidToClosestLine;
-    Action DriveClosestLineBackToLaunchPark;
+    //Action DriveStartToMidPosition;
+    //Action DriveMidToClosestLine;
+    //Action DriveClosestLineBackToLaunchPark;
 
-    Action DriveClosestLineBackToMid;
+    //Action DriveClosestLineBackToMid;
     int lifterUpSleepTime = 500;
     int lifterDownSleepTime = 600;
 
@@ -38,7 +38,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
     theRobot.Init(hardwareMap, "BLUE");
 
     // initialize roadrunner
-    drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+    drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeBlueStartPose);
     theRobot.InitRoadRunner(drive);
     theRobot.buildCommonAutoRoutes();
 
