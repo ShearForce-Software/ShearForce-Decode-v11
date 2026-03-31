@@ -57,7 +57,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farRedStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
 
@@ -76,7 +76,7 @@ public class Red_Far_12Balls extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(1500);
-        theRobot.SetRoadrunnerInitialPosition(theRobot.farRedStartPose.position.x, theRobot.farRedStartPose.position.y, 90);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.farRedStartPose.position.x, Gericka_Hardware.farRedStartPose.position.y, 90);
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 

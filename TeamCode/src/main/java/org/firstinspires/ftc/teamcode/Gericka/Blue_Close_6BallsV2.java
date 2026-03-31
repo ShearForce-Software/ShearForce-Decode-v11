@@ -33,7 +33,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         theRobot.Init(hardwareMap, "BLUE");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeBlueStartPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.closeBlueStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
 
@@ -41,9 +41,9 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // initialize the turret angle and launch ramp
-        final double turretTargetAngleBigTriangle = 137.0;
-        final double BIG_TRIANGLE_RPM = 2400.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
+
+
+        theRobot.SetTurretRotationAngle(theRobot.BlueCloseLaunchTurretAngle);
         theRobot.SetLaunchRampPosition(0.5);
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
@@ -53,7 +53,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(theRobot.closeBlueStartPose.position.x, theRobot.closeBlueStartPose.position.y, -90);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.closeBlueStartPose.position.x, Gericka_Hardware.closeBlueStartPose.position.y,Math.toRadians(-90));
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
@@ -142,13 +142,13 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // command the turret to power on
-        theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
+        theRobot.SetTurretRotationAngle(theRobot.BlueCloseLaunchTurretAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
 
         // spin up the shooter
-        theRobot.SetShooterMotorToSpecificRPM(BIG_TRIANGLE_RPM);
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
         // -------------------------
         // START -> SHOOT FROM BIG TRIANGLE

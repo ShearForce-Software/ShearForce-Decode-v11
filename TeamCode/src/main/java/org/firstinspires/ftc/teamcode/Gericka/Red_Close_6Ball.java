@@ -33,12 +33,12 @@ public class Red_Close_6Ball extends LinearOpMode {
 
     public void runOpMode(){
         //We will start at big trianlge start
-        startPose = theRobot.closeRedStartPose;
+
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.closeRedStartPose);
         theRobot.InitRoadRunner(drive);
 
         theRobot.buildCommonAutoRoutes();
@@ -48,7 +48,7 @@ public class Red_Close_6Ball extends LinearOpMode {
 
         sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
         // finish initializing the pinpoint
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, 90);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.closeRedStartPose.position.x, Gericka_Hardware.closeRedStartPose.position.y, Math.toRadians(90));
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 

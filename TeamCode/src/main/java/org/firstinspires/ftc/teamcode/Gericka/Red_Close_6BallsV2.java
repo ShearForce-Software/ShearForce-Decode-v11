@@ -28,12 +28,12 @@ Red_Close_6BallsV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(-60,39,Math.toRadians(90));
+        //Pose2d startPose = new Pose2d(-60,39,Math.toRadians(90));
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.closeRedStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
 
@@ -53,7 +53,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, 90);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.closeRedStartPose.position.x, Gericka_Hardware.closeRedStartPose.position.y, 90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);

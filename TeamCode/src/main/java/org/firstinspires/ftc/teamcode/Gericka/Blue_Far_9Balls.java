@@ -30,16 +30,16 @@ Blue_Far_9Balls extends LinearOpMode {
     public void runOpMode() {
         //final double startPoseHeadingDegrees = -90;
         //Pose2d startPose = new Pose2d(62.785, -9.375, Math.toRadians(startPoseHeadingDegrees));
-        final double SMALL_TRIANGLE_RPM = 3000.0;
+        //final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
-        final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
+        //final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
         //final double BIG_TRIANGLE_TARGET_ANGLE = 136.0;
-        final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
+        //final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
         //final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
-        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.farBlueStartPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farBlueStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
@@ -49,9 +49,9 @@ Blue_Far_9Balls extends LinearOpMode {
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // Turn turret toward the target
-        double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
+        double turretTargetAngle = theRobot.BlueFarLaunchTurretAngle;
         theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
+        theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
 
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
@@ -59,7 +59,7 @@ Blue_Far_9Balls extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(1500);
-        theRobot.SetRoadrunnerInitialPosition(theRobot.farBlueStartPose.position.x, theRobot.farBlueStartPose.position.y, -90);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.farBlueStartPose.position.x, Gericka_Hardware.farBlueStartPose.position.y, Math.toRadians(-90));
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -149,8 +149,8 @@ Blue_Far_9Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.FarLaunchRPM);
 
         // -------------------------
         // START -> SHOOT FROM SMALL TRIANGLE

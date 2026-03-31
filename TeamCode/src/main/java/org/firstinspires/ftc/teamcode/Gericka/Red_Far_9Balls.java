@@ -28,8 +28,8 @@ Red_Far_9Balls extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        final double startPoseHeadingDegrees = 90;
-        Pose2d startPose = new Pose2d(62.785, 9.375, Math.toRadians(startPoseHeadingDegrees));
+        //final double startPoseHeadingDegrees = 90;
+        //Pose2d startPose = new Pose2d(62.785, 9.375, Math.toRadians(startPoseHeadingDegrees));
         final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
         final double SMALL_TRIANGLE_TARGET_ANGLE = -115.0;
@@ -39,7 +39,7 @@ Red_Far_9Balls extends LinearOpMode {
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
-        drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farRedStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
@@ -59,7 +59,7 @@ Red_Far_9Balls extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, startPoseHeadingDegrees);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.farRedStartPose.position.x, Gericka_Hardware.farRedStartPose.position.y, theRobot.farRedStartPose.heading.toDouble());
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 

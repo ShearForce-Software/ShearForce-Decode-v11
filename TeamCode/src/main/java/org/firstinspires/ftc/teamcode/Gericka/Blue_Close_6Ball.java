@@ -31,6 +31,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
     int lifterUpSleepTime = 500;
     int lifterDownSleepTime = 600;
 
+
     public void runOpMode(){
     //We will start at big trianlge start
     //startPose = new Pose2d(-60,-39,Math.toRadians(-90));
@@ -38,7 +39,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
     theRobot.Init(hardwareMap, "BLUE");
 
     // initialize roadrunner
-    drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeBlueStartPose);
+    drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.closeBlueStartPose);
     theRobot.InitRoadRunner(drive);
     theRobot.buildCommonAutoRoutes();
 
@@ -47,7 +48,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
 
     sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
     // finish initializing the pinpoint
-    theRobot.SetRoadrunnerInitialPosition(theRobot.closeBlueStartPose.position.x, theRobot.closeBlueStartPose.position.y, -90);
+    theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.closeBlueStartPose.position.x, Gericka_Hardware.closeBlueStartPose.position.y, Math.toRadians(-90));
 
     blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -100,10 +101,10 @@ public class Blue_Close_6Ball extends LinearOpMode {
     secondaryThread.start();
 
     // Turret initial rough angle toward speaker (tune as needed)
-    double turretTargetAngle = 142
+    //double turretTargetAngle = 142
 
             ;
-    theRobot.SetTurretRotationAngle(turretTargetAngle);
+    theRobot.SetTurretRotationAngle(theRobot.BlueCloseLaunchTurretAngle);
 
     // turn off turret power so doesn't twitch
     //theRobot.turretMotor.setPower(0);
@@ -175,8 +176,8 @@ public class Blue_Close_6Ball extends LinearOpMode {
         theRobot.SetAutoLifterMode(false);
 
         // return turret to zero position
-        turretTargetAngle = 0.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+
+        theRobot.SetTurretRotationAngle(0);
         //sleep(5000);
 
         // turn off shooter wheel

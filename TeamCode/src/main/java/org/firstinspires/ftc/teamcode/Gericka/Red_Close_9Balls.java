@@ -33,7 +33,7 @@ Red_Close_9Balls extends LinearOpMode {
         theRobot.Init(hardwareMap, "RED");
 
         // initialize roadrunner
-        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.closeRedStartPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.closeRedStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
 
@@ -53,7 +53,7 @@ Red_Close_9Balls extends LinearOpMode {
         theRobot.TurnOffTurret();
 
         // finish initializing pinpoint / roadrunner initial position
-        theRobot.SetRoadrunnerInitialPosition(theRobot.closeRedStartPose.position.x, theRobot.closeRedStartPose.position.y, 90);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.closeRedStartPose.position.x, Gericka_Hardware.closeRedStartPose.position.y, 90);
 
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);

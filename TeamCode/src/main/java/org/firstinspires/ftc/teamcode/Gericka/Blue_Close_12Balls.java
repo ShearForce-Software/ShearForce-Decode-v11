@@ -20,7 +20,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class Blue_Close_12Balls extends LinearOpMode {
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
-    Pose2d startPose;
 
     // Trajectories
     Action DriveStartToMidPosition;
@@ -33,12 +32,12 @@ public class Blue_Close_12Balls extends LinearOpMode {
 
     public void runOpMode(){
     //We will start at big triangle start
-    startPose = new Pose2d(-60,-39,Math.toRadians(-90));
+    //startPose = new Pose2d(-60,-39,Math.toRadians(-90));
     /* Initialize the Robot */
     theRobot.Init(hardwareMap, "BLUE");
 
     // initialize roadrunner
-    drive = new Gericka_MecanumDrive(hardwareMap, startPose);
+    drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.closeBlueStartPose);
     theRobot.InitRoadRunner(drive);
 
     // initialize the webcam
@@ -46,7 +45,7 @@ public class Blue_Close_12Balls extends LinearOpMode {
 
     sleep(500); // sleep at least 1/4 second to allow pinpoint to calibrate itself
     // finish initializing the pinpoint
-    theRobot.SetRoadrunnerInitialPosition(startPose.position.x, startPose.position.y, -90);
+    theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.closeBlueStartPose.position.x, Gericka_Hardware.closeBlueStartPose.position.y, Math.toRadians(-90));
 
     blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -54,7 +53,7 @@ public class Blue_Close_12Balls extends LinearOpMode {
     theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
 
-    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(-90)))
+    DriveStartToMidPosition = drive.actionBuilder(new Pose2d(theRobot.closeBlueStartPose.position.x, theRobot.closeBlueStartPose.position.y, Math.toRadians(-90)))
             .strafeToConstantHeading(new Vector2d(-11.4, -10))
             .build();
 
@@ -115,7 +114,7 @@ public class Blue_Close_12Balls extends LinearOpMode {
     theRobot.SetIntakeMotor(true,true);
     // spin up shooter wheel to max
     //theRobot.SetShooterSpeed(1.0);
-    theRobot.SetShooterMotorToSpecificRPM(2700);
+    theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
     Actions.runBlocking(new SleepAction((1)));
     Actions.runBlocking(DriveStartToMidPosition);

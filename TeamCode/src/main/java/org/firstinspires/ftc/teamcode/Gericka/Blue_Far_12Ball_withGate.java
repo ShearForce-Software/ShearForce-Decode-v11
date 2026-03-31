@@ -40,7 +40,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
-        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.farBlueStartPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farBlueStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
@@ -50,9 +50,9 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // Turn turret toward the target
-        double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
+
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
+        theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
 
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
@@ -60,7 +60,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(theRobot.farBlueStartPose.position.x, theRobot.farBlueStartPose.position.y, -90);
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.farBlueStartPose.position.x, Gericka_Hardware.farBlueStartPose.position.y, Math.toRadians(-90));
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
@@ -164,7 +164,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // re-command the turret angle to get the power back on
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
@@ -192,8 +192,8 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetLaunchRampPosition(BIG_TRIANGLE_HOOD_POSITION);
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        turretTargetAngle = BIG_TRIANGLE_TARGET_ANGLE;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
 
         // -------------------------
         // -> SECOND STRIP -> OPEN-GATE -> BIG TRIANGLE -> SHOOT

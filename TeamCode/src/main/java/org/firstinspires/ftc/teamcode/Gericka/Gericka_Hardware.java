@@ -202,6 +202,25 @@ public class Gericka_Hardware {
     private boolean turretStall = false;
     double stallTimer = 0;
 
+    //CommonAngles and RPM:
+    public double FarLaunchRPM= 3000;
+    public double CloseLaunchRPM=2400.0;
+
+
+    public double CloseLaunchHoodAngle=0.5;
+    public double FarLaunchHoodAngle=0.7;
+
+
+    public double RedFarLaunchTurretAngle=-115.0;
+    public double RedCloseLaunchTurretAngle=-136.0;
+
+    public double BlueFarLaunchTurretAngle=117;
+    public double BlueCloseLaunchTurretAngle=132;
+
+
+
+
+
     //////////////////////////////////////////ROADRUNNER AUTOROUTE
 
     // Constraints
@@ -222,18 +241,18 @@ public class Gericka_Hardware {
 
 
     //Common Start Positions:
-    Pose2d closeRedStartPose = new Pose2d(-60,39,Math.toRadians(90));
-    Pose2d closeBlueStartPose = new Pose2d(-60,-39,Math.toRadians(-90));
-    Pose2d farRedStartPose = new Pose2d(62.785, 9.375, Math.toRadians(90));
-    Pose2d farBlueStartPose = new Pose2d(62.785, -9.375, Math.toRadians(-90));
+    public static final Pose2d closeRedStartPose = new Pose2d(-60,39,Math.toRadians(90));
+    public static final Pose2d closeBlueStartPose = new Pose2d(-60,-39,Math.toRadians(-90));
+    public static final Pose2d farRedStartPose = new Pose2d(62.785, 9.375, Math.toRadians(90));
+    public static final Pose2d farBlueStartPose = new Pose2d(62.785, -9.375, Math.toRadians(-90));
 
     //Common Shooter Positions
-    Pose2d redCloseShootPositionBigTriangle = new Pose2d(-11.5, 21, Math.toRadians(90));
-    Pose2d blueCloseShootPositionBigTriangle = new Pose2d(-11.5, -21, Math.toRadians(-90));
+    public static final Pose2d redCloseShootPositionBigTriangle = new Pose2d(-11.5, 21, Math.toRadians(90));
+    public static final Pose2d blueCloseShootPositionBigTriangle = new Pose2d(-11.5, -21, Math.toRadians(-90));
 
-    Pose2d redFarShootPositionSmallTriangle = new Pose2d(48, 12, Math.toRadians(90));
+    public static final Pose2d redFarShootPositionSmallTriangle = new Pose2d(48, 12, Math.toRadians(90));
 
-    Pose2d blueFarShootPositionSmallTriangle = new Pose2d(48, -12, Math.toRadians(-90));
+    public static final Pose2d blueFarShootPositionSmallTriangle = new Pose2d(48, -12, Math.toRadians(-90));
 
     //Red Close routes:
     public Action RedCloseDriveCloseStartPositionToBigTriangle;

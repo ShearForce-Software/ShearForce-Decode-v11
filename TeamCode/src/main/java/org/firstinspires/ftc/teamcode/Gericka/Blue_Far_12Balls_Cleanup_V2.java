@@ -39,7 +39,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "BLUE");
-        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.farBlueStartPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farBlueStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
@@ -59,7 +59,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(1500);
-        theRobot.SetRoadrunnerInitialPosition(theRobot.farBlueStartPose.position.x, theRobot.farBlueStartPose.position.y, theRobot.farBlueStartPose.heading.toDouble());
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.farBlueStartPose.position.x, Gericka_Hardware.farBlueStartPose.position.y, Math.toRadians(-90));
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 

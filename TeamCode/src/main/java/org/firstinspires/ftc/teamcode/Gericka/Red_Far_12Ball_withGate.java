@@ -40,7 +40,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
-        drive = new Gericka_MecanumDrive(hardwareMap, theRobot.farRedStartPose);
+        drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farRedStartPose);
         theRobot.InitRoadRunner(drive);
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
@@ -50,8 +50,8 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // Turn turret toward the target
-        double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        //double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
+        theRobot.SetTurretRotationAngle(theRobot.RedFarLaunchTurretAngle);
         theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
 
         sleep(3000); // allow turret to reach position
@@ -60,7 +60,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
 
         // finish initializing pinpoint / roadrunner initial position
         sleep(500);
-        theRobot.SetRoadrunnerInitialPosition(theRobot.farRedStartPose.position.x, theRobot.farRedStartPose.position.y, theRobot.farRedStartPose.heading.toDouble());
+        theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.farRedStartPose.position.x, Gericka_Hardware.farRedStartPose.position.y, theRobot.farRedStartPose.heading.toDouble());
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
@@ -162,7 +162,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // re-command the turret angle to get the power back on
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetTurretRotationAngle(theRobot.RedFarLaunchTurretAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
@@ -189,8 +189,8 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetLaunchRampPosition(BIG_TRIANGLE_HOOD_POSITION);
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        turretTargetAngle = BIG_TRIANGLE_TARGET_ANGLE;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        //turretTargetAngle = BIG_TRIANGLE_TARGET_ANGLE;
+        theRobot.SetTurretRotationAngle(theRobot.RedFarLaunchTurretAngle);
 
         // -------------------------
         // -> SECOND STRIP -> OPEN-GATE -> BIG TRIANGLE -> SHOOT
