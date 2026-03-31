@@ -101,11 +101,11 @@ public class Gericka_Hardware {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
-    public static double INTAKE_POWER = 0.65;
+    public static double INTAKE_POWER = 0.90;
     public static double SHOOT_POWER = 1.0;
-    public static float LIFTER_UP_POSITION = 0.45f;
-    public final float LIFTER_MID_POSITION = 0.25f;
-    public static float LIFTER_DOWN_POSITION = 0.25f;
+    public static float LIFTER_UP_POSITION = 0.15f;
+    public final float LIFTER_MID_POSITION = 0.0f;
+    public static float LIFTER_DOWN_POSITION = 0.0f;
 
     private boolean useOnlyWebcamForDistance = false;
     private boolean autoTurretMode = true;
