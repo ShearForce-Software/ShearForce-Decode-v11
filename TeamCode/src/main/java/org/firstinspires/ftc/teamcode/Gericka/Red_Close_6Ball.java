@@ -121,7 +121,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
 
-        theRobot.SetIntakeMotor(true,true);
+        theRobot.SetIntakeMotor(false,true);
         // spin up shooter wheel to max
         //theRobot.SetShooterSpeed(1.0);
         theRobot.SetShooterMotorToSpecificRPM(2800);
@@ -129,7 +129,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         Actions.runBlocking(new SleepAction((1)));
         Actions.runBlocking(theRobot.RedCloseDriveCloseStartPositionToBigTriangle);
 
-    theRobot.SetIntakeMotor(false,true);
+        theRobot.SetIntakeMotor(false,true);
 
         // Turn turret more directly to target for auto shooting (tune on field)
         //turretTargetAngle = 45;    // CHANGE LLATER
@@ -143,12 +143,13 @@ public class Red_Close_6Ball extends LinearOpMode {
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
         sleep(500);
         // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(true, true);
+        theRobot.ShootAutoFourBalls();
         theRobot.SetIntakeMotor(false, true);
-        theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
 
         //Should we turn intake on while we go to the closest line
-        theRobot.SetIntakeMotor(true,true);
+        //theRobot.SetIntakeMotor(true,true);
 
 
         Actions.runBlocking(
@@ -167,8 +168,9 @@ public class Red_Close_6Ball extends LinearOpMode {
 
         // SHOOT-3
         // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(true, true);
+        theRobot.ShootAutoFourBalls();
         theRobot.SetIntakeMotor(false, true);
-        theRobot.ShootAutoThreeBalls();
         drive.updatePoseEstimate();
 
         //lower lifter

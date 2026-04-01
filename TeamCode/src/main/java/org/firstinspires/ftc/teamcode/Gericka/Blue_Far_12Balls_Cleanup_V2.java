@@ -181,13 +181,14 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.BlueFarDriveStartingPositionToShootingPosition));
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
        // Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
         sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
                 // -------------------------
                 // -> FIRST STRIP -> SMALL TRIANGLE -> SHOOT
@@ -202,10 +203,11 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         );
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
                 // -------------------------
                 // SMALL TRIANGLE -> SECOND STRIP -> SMALL TRIANGLE -> SHOOT
@@ -221,7 +223,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();

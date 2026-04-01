@@ -54,6 +54,15 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
         theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
 
+
+
+
+
+
+
+
+
+
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
         theRobot.TurnOffTurret();
@@ -185,11 +194,13 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
 
         // SHOOT-3
         sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
-        theRobot.ShootAutoThreeBalls();
+
+        theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
         // Change turret and shooter speeds for Big Triangle shots
-        theRobot.SetLaunchRampPosition(BIG_TRIANGLE_HOOD_POSITION);
+        theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
         shooterSpeedRPM = BIG_TRIANGLE_RPM;
         theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
 
@@ -211,9 +222,10 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
 
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
         // BIG TRIANGLE -> THIRD STRIP -> BIG TRIANGLE -> SHOOT
@@ -228,9 +240,10 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         );
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         // set turret and shooting wheel to small triangle shots
         theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
@@ -251,9 +264,10 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         // Command Turret to start storing itself at 0
         theRobot.SetTurretRotationAngle(0.0);

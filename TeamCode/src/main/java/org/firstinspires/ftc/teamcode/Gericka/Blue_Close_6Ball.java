@@ -127,7 +127,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
     Actions.runBlocking(new SleepAction((1)));
     Actions.runBlocking(theRobot.BlueCloseDriveCloseStartPositionToBigTriangle);
 
-    theRobot.SetIntakeMotor(false,true);
+    theRobot.SetIntakeMotor(true,true);
 
     // Turn turret more directly to target for auto shooting (tune on field)
     //turretTargetAngle = 45;    // CHANGE LLATER
@@ -142,14 +142,15 @@ public class Blue_Close_6Ball extends LinearOpMode {
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
         sleep(500);
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
 
         //Should we turn intake on while we go to the closest line
-        theRobot.SetIntakeMotor(true,true);
+
 
 
 
@@ -166,9 +167,10 @@ public class Blue_Close_6Ball extends LinearOpMode {
     );
         // SHOOT-3
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
         //lower lifter

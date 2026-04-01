@@ -1759,9 +1759,10 @@ public class Gericka_Hardware {
         // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);
         SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        //SetLifterPosition(LIFTER_DOWN_POSITION);
+        //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
 
+        /*
         // While no ball is being detected on the lifter by any of the three sensors && have not timed out
         timeoutTime = System.currentTimeMillis() + TIME_OUT;
         while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
@@ -1773,15 +1774,18 @@ public class Gericka_Hardware {
             // sleep a tiny amount
             SpecialSleep(10);
         }
+
+         */
 
         // shoot ball 2
         SetLifterPosition(LIFTER_UP_POSITION);
         SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        //SetLifterPosition(LIFTER_DOWN_POSITION);
+        //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
 
         // While no ball is being detected on the lifter by any of the three sensors && have not timed out
-        timeoutTime = System.currentTimeMillis() + TIME_OUT;
+
+        /*timeoutTime = System.currentTimeMillis() + TIME_OUT;
         while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
                 (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
                 ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
@@ -1791,15 +1795,17 @@ public class Gericka_Hardware {
             // sleep a tiny amount
             SpecialSleep(10);
         }
+
+         */
 
         // shoot ball 3
         SetLifterPosition(LIFTER_UP_POSITION);
         SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        //SetLifterPosition(LIFTER_DOWN_POSITION);
+        //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
 
         // While no ball is being detected on the lifter by any of the three sensors && have not timed out
-        timeoutTime = System.currentTimeMillis() + TIME_OUT;
+        /*timeoutTime = System.currentTimeMillis() + TIME_OUT;
         while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
                 (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
                 ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
@@ -1809,6 +1815,8 @@ public class Gericka_Hardware {
             // sleep a tiny amount
             SpecialSleep(10);
         }
+
+         */
         // shoot ball 4
         SetLifterPosition(LIFTER_UP_POSITION);
         SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);

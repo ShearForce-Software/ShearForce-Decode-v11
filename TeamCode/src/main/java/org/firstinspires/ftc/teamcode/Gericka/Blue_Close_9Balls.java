@@ -157,9 +157,10 @@ Blue_Close_9Balls extends LinearOpMode {
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
         sleep(500);  //TODO assess how much time is really needed here
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
         // -------------------------
@@ -176,11 +177,12 @@ Blue_Close_9Balls extends LinearOpMode {
 
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
         // BIG TRIANGLE -> SECOND MARK -> BIG TRIANGLE SHOOT
@@ -196,10 +198,11 @@ Blue_Close_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         theRobot.SetTurretRotationAngle(0.0);
 
