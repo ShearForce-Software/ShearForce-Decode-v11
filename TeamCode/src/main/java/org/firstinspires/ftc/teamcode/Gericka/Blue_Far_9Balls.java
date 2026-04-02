@@ -49,8 +49,8 @@ Blue_Far_9Balls extends LinearOpMode {
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // Turn turret toward the target
-        double turretTargetAngle = theRobot.BlueFarLaunchTurretAngle;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
         theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
 
         sleep(3000); // allow turret to reach position
@@ -143,7 +143,7 @@ Blue_Far_9Balls extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // re-command the turret angle to get the power back on
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);

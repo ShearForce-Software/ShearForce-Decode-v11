@@ -44,7 +44,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
 
 
         theRobot.SetTurretRotationAngle(theRobot.BlueCloseLaunchTurretAngle);
-        theRobot.SetLaunchRampPosition(0.5);
+        theRobot.SetLaunchRampPosition(theRobot.CloseLaunchHoodAngle);
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 

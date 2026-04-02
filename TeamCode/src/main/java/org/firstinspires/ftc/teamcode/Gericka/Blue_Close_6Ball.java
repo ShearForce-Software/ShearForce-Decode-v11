@@ -122,7 +122,7 @@ public class Blue_Close_6Ball extends LinearOpMode {
     theRobot.SetIntakeMotor(true,true);
     // spin up shooter wheel to max
     //theRobot.SetShooterSpeed(1.0);
-    theRobot.SetShooterMotorToSpecificRPM(2700);
+    theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
     Actions.runBlocking(new SleepAction((1)));
     Actions.runBlocking(theRobot.BlueCloseDriveCloseStartPositionToBigTriangle);
@@ -134,9 +134,9 @@ public class Blue_Close_6Ball extends LinearOpMode {
     //control.SetTurretRotationAngle(turretTargetAngle);
 
     // Shooter RPM for big triangle shots (tune as needed)
-    double shooterSpeedRPM = 2500;
-    theRobot.SetLaunchRampPosition(0.4);
-    theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+    //double shooterSpeedRPM = 2500;
+    theRobot.SetLaunchRampPosition(theRobot.CloseLaunchHoodAngle);
+    theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
@@ -183,8 +183,8 @@ public class Blue_Close_6Ball extends LinearOpMode {
         //sleep(5000);
 
         // turn off shooter wheel
-        shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
+        theRobot.SetShooterMotorToSpecificRPM(0);
 
         // turn off intake motor
         theRobot.SetIntakeMotor(false,false);

@@ -69,9 +69,9 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.WebcamInit(this.hardwareMap);
 
         // Turn turret toward the obelisk BEFORE scanning (useful if the camera is turret-mounted)
-        double turretTargetAngle = 116;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(0.7);
+        //double turretTargetAngle = 116;
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
+        theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
 
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
@@ -168,15 +168,15 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
 
-        double turretTargetAngleSmallTriangle = 114;
-        theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
+        //double turretTargetAngleSmallTriangle = 114;
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = 3000;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //double shooterSpeedRPM = 3000;
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.FarLaunchRPM);
 
         // -------------------------
         // START -> SHOOT FROM SMALL TRIANGLE
@@ -185,11 +185,12 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(DriveToShootingPosition));
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
-        theRobot.SetTurretRotationAngle(turretTargetAngleSmallTriangle);
+        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
         // SHOOT-3
         sleep(1500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-        theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
         // -------------------------
@@ -210,7 +211,9 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+
+        theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
         // SECOND STRIP -> BACK -> SHOOT
@@ -226,20 +229,21 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
         // THIRD STRIP -> BIG TRIANGLE -> SHOOT
         // -------------------------
-        final double BIG_TRIANGLE_RPM = 2400;
+        //final double BIG_TRIANGLE_RPM = 2400;
         double turretTargetAngleBigTriangle = 131.0;
-        theRobot.SetLaunchRampPosition(0.5);
+        theRobot.SetLaunchRampPosition(theRobot.CloseLaunchHoodAngle);
 
-        shooterSpeedRPM = BIG_TRIANGLE_RPM;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
-        theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
+        //shooterSpeedRPM = BIG_TRIANGLE_RPM;
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
+        theRobot.SetTurretRotationAngle(theRobot.BlueCloseLaunchTurretAngle);
 
         drive.updatePoseEstimate();
         Actions.runBlocking(
@@ -252,9 +256,10 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoThreeBalls();
+        theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         theRobot.SetTurretRotationAngle(0.0);
 

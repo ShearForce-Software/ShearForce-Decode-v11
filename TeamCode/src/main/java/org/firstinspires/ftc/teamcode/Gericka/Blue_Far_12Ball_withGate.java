@@ -31,11 +31,11 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
     public void runOpMode() {
         //final double startPoseHeadingDegrees = -90;
         //Pose2d startPose = new Pose2d(62.785, -9.375, Math.toRadians(startPoseHeadingDegrees));
-        final double SMALL_TRIANGLE_RPM = 3000.0;
-        final double BIG_TRIANGLE_RPM = 2400;
+        //final double SMALL_TRIANGLE_RPM = 3000.0;
+        //final double BIG_TRIANGLE_RPM = 2400;
         final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
         final double BIG_TRIANGLE_TARGET_ANGLE = 131.0;
-        final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
+        //final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
         final double BIG_TRIANGLE_HOOD_POSITION = 0.5;
 
         /* Initialize the Robot */
@@ -178,9 +178,8 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
 
-        // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.FarLaunchRPM);
         //Actions.runBlocking(new SleepAction(0.5));  //TODO --why doing this here? there is already a sleep 4 lines below, just increase that time if not long enough
 
         // -------------------------
@@ -200,11 +199,11 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // Change turret and shooter speeds for Big Triangle shots
-        theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
-        shooterSpeedRPM = BIG_TRIANGLE_RPM;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        theRobot.SetLaunchRampPosition(theRobot.CloseLaunchHoodAngle);
+        //shooterSpeedRPM = BIG_TRIANGLE_RPM;
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
-        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
+        theRobot.SetTurretRotationAngle(theRobot.BlueCloseLaunchTurretAngle);
 
         // -------------------------
         // -> SECOND STRIP -> OPEN-GATE -> BIG TRIANGLE -> SHOOT
@@ -246,9 +245,9 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(false, true);
 
         // set turret and shooting wheel to small triangle shots
-        theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
-        theRobot.SetShooterMotorToSpecificRPM(SMALL_TRIANGLE_RPM);
-        theRobot.SetTurretRotationAngle(SMALL_TRIANGLE_TARGET_ANGLE);
+        theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.FarLaunchRPM);
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
 
         // -------------------------
         // BIG TRIANGLE -> FIRST STRIP -> SMALL TRIANGLE -> SHOOT

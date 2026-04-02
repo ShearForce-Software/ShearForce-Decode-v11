@@ -203,12 +203,12 @@ public class Gericka_Hardware {
     double stallTimer = 0;
 
     //CommonAngles and RPM:
-    public double FarLaunchRPM= 3000;
-    public double CloseLaunchRPM=2400.0;
+    public double FarLaunchRPM= 3000; // References Done, needs tuning
+    public double CloseLaunchRPM=2400.0; // References Done, needs tuning
 
 
-    public double CloseLaunchHoodAngle=0.5;
-    public double FarLaunchHoodAngle=0.7;
+    public double CloseLaunchHoodAngle=0.5; // References Done, needs tuning
+    public double FarLaunchHoodAngle=0.7; // References Done, needs tuning
 
 
     public double RedFarLaunchTurretAngle=-115.0;

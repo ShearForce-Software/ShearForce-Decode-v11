@@ -30,11 +30,11 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
     public void runOpMode() {
         //final double startPoseHeadingDegrees = -90;
         //Pose2d startPose = new Pose2d(62.785, -9.375, Math.toRadians(startPoseHeadingDegrees));
-        final double SMALL_TRIANGLE_RPM = 3000.0;
+        //final double SMALL_TRIANGLE_RPM = 3000.0;
         //final double BIG_TRIANGLE_RPM = 2800;
         final double SMALL_TRIANGLE_TARGET_ANGLE = 117.0;
         //final double BIG_TRIANGLE_TARGET_ANGLE = 136.0;
-        final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
+        //final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
         //final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
 
         /* Initialize the Robot */
@@ -49,9 +49,9 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // Turn turret toward the target
-        double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(SMALL_TRIANGLE_HOOD_POSITION);
+        //double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
+        theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
 
         sleep(3000); // allow turret to reach position
         // turn off turret power so it doesn't twitch during init
@@ -165,14 +165,14 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // re-command the turret angle to get the power back on
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
 
         // shooter speed for SMALL TRIANGLE
-        double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //double shooterSpeedRPM = SMALL_TRIANGLE_RPM;
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.FarLaunchRPM);
 
         // -------------------------
         // START -> SHOOT FROM SMALL TRIANGLE
@@ -181,13 +181,14 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.BlueFarDriveStartingPositionToShootingPosition));
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         //Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
         sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
                 // -------------------------
                 // -> SECOND STRIP -> SMALL TRIANGLE -> SHOOT
@@ -202,10 +203,11 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         );
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
                 // -------------------------
                 // SMALL TRIANGLE -> FIRST STRIP -> SMALL TRIANGLE -> SHOOT
@@ -221,10 +223,11 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
         // SMALL TRIANGLE -> COLLECT BALLS FROM GATE -> SMALL TRIANGLE -> SHOOT
@@ -240,10 +243,11 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         // Command Turret to start storing itself at 0
         theRobot.SetTurretRotationAngle(0.0);

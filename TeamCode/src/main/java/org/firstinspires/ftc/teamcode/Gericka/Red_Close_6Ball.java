@@ -101,11 +101,11 @@ public class Red_Close_6Ball extends LinearOpMode {
         secondaryThread.start();
 
         // Turret initial rough angle toward speaker (tune as needed)
-        double turretTargetAngle = -136;
+        //double turretTargetAngle = -136;
 
                 ;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
-        theRobot.SetLaunchRampPosition(0.6);
+        theRobot.SetTurretRotationAngle(theRobot.RedCloseLaunchTurretAngle);
+        theRobot.SetLaunchRampPosition(theRobot.CloseLaunchHoodAngle);
 
 
         // turn off turret power so doesn't twitch
@@ -124,7 +124,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         theRobot.SetIntakeMotor(false,true);
         // spin up shooter wheel to max
         //theRobot.SetShooterSpeed(1.0);
-        theRobot.SetShooterMotorToSpecificRPM(2800);
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
         Actions.runBlocking(new SleepAction((1)));
         Actions.runBlocking(theRobot.RedCloseDriveCloseStartPositionToBigTriangle);
@@ -136,8 +136,8 @@ public class Red_Close_6Ball extends LinearOpMode {
         //control.SetTurretRotationAngle(turretTargetAngle);
 
         // Shooter RPM for big triangle shots (tune as needed)
-        double shooterSpeedRPM = 2800;
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //double shooterSpeedRPM = 2800;
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
@@ -178,13 +178,13 @@ public class Red_Close_6Ball extends LinearOpMode {
         theRobot.SetAutoLifterMode(false);
 
         // return turret to zero position
-        turretTargetAngle = 0.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        //turretTargetAngle = 0.0;
+        theRobot.SetTurretRotationAngle(0);
         //sleep(5000);
 
         // turn off shooter wheel
-        shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
-        theRobot.SetShooterMotorToSpecificRPM(shooterSpeedRPM);
+        //shooterSpeedRPM = 0.0; //3200rpm was about the value observed when the Motor was commanded to 75%.
+        theRobot.SetShooterMotorToSpecificRPM(0);
 
         // turn off intake motor
         theRobot.SetIntakeMotor(false,false);

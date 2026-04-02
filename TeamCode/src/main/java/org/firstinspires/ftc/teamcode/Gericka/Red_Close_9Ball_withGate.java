@@ -42,9 +42,9 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
         // initialize the turret angle and launch ramp
         final double turretTargetAngleBigTriangle = -136.0;
-        final double BIG_TRIANGLE_RPM = 2400.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
-        theRobot.SetLaunchRampPosition(0.5);
+        //final double BIG_TRIANGLE_RPM = 2400.0;
+        theRobot.SetTurretRotationAngle(theRobot.RedCloseLaunchTurretAngle);
+        theRobot.SetLaunchRampPosition(theRobot.CloseLaunchHoodAngle);
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
@@ -146,13 +146,13 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         Gericka_Hardware.autoTimeLeft = 0.0;
 
         // command the turret to power on
-        theRobot.SetTurretRotationAngle(turretTargetAngleBigTriangle);
+        theRobot.SetTurretRotationAngle(theRobot.RedCloseLaunchTurretAngle);
 
         // turn on intake to suck in any stuck balls
         theRobot.SetIntakeMotor(true, true);
 
         // spin up the shooter
-        theRobot.SetShooterMotorToSpecificRPM(BIG_TRIANGLE_RPM);
+        theRobot.SetShooterMotorToSpecificRPM(theRobot.CloseLaunchRPM);
 
         // -------------------------
         // START -> SHOOT FROM BIG TRIANGLE
@@ -165,9 +165,10 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
         sleep(500);  //TODO assess how much time is really needed here
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
         // -------------------------
@@ -202,11 +203,12 @@ Red_Close_9Ball_withGate extends LinearOpMode {
 
         drive.updatePoseEstimate();
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
         // -------------------------
         // BIG TRIANGLE -> SECOND MARK -> BIG TRIANGLE SHOOT
         // -------------------------
@@ -221,10 +223,11 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(false, true);
+        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
+        theRobot.SetIntakeMotor(false, true);
 
         theRobot.SetTurretRotationAngle(0.0);
 

@@ -230,7 +230,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoFourBalls();
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
         theRobot.SetTurretRotationAngle(0.0);
 
         // -------------------------

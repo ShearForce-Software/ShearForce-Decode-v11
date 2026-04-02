@@ -96,7 +96,7 @@ public class Blue_Close_12Balls extends LinearOpMode {
     double turretTargetAngle = 142
 
             ;
-    theRobot.SetTurretRotationAngle(turretTargetAngle);
+    theRobot.SetTurretRotationAngle(theRobot.BlueCloseLaunchTurretAngle);
 
     // turn off turret power so doesn't twitch
     //theRobot.turretMotor.setPower(0);
@@ -167,8 +167,8 @@ public class Blue_Close_12Balls extends LinearOpMode {
         theRobot.SetAutoLifterMode(false);
 
         // return turret to zero position
-        turretTargetAngle = 0.0;
-        theRobot.SetTurretRotationAngle(turretTargetAngle);
+        //turretTargetAngle = 0.0;
+        theRobot.SetTurretRotationAngle(0);
         //sleep(5000);
 
         // turn off shooter wheel
