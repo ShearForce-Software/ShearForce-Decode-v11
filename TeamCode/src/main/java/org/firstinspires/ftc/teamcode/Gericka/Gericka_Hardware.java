@@ -141,10 +141,10 @@ public class Gericka_Hardware {
     public final double PIDF_F_FROOTY_LOOPS = 14.25;
     public final double PIDF_F_CLOSE = 13.0;
 
-    public static double shooterP = 75.0; //change from 25.0
+    public static double shooterP = 650;//150; //was 75change from 25.0
     public static double shooterI = 0.0;
     public static double shooterD = 0.0;
-    public static double shooterF = 14.25;
+    public static double shooterF = 350;//25.0;//14.25;
 
     public static double turretPositionCoefficient = 25.0;
     public static double turretP = 10.0;
@@ -1755,6 +1755,7 @@ public class Gericka_Hardware {
         // store the current auto lifter mode setting, then disable to ensure it doesn't interfere with logic
         boolean tempLifterMode = GetAutoLifterMode();
         SetAutoLifterMode(false);
+
 
         // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);
