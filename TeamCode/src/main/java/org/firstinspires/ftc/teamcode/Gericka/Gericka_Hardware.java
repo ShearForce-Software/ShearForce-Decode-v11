@@ -689,9 +689,9 @@ public class Gericka_Hardware {
                 .build();
 
         RedCloseDriveBigTriangleToSecondMark = drive.actionBuilder(redCloseShootPositionBigTriangle)
-                .splineToConstantHeading(new Vector2d(14.5, 20), Math.toRadians(90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(15.5, 20), Math.toRadians(90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(14.5, 61),slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(15.5, 60),slowVel, slowAccel)
                 .build();
         RedCloseDriveSecondMarkToBigTriangle = drive.actionBuilder(new Pose2d(14.5,61,Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
@@ -844,9 +844,9 @@ public class Gericka_Hardware {
                 .build();
 
         BlueCloseDriveDriveBigTriangletoSecondMark = drive.actionBuilder(blueCloseShootPositionBigTriangle)
-                .splineToConstantHeading(new Vector2d(13.5, -20), Math.toRadians(-90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(15.5, -20), Math.toRadians(-90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(13.5, -60),slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(15.5, -60),slowVel, slowAccel)
                 .build();
 
         BlueCloseDriveDriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(13.5,-60,Math.toRadians(-90)))
