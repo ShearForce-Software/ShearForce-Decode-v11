@@ -10,12 +10,7 @@ import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
-import com.acmerobotics.roadrunner.ftc.Actions;
 
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -24,7 +19,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -40,7 +34,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 //import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 //import org.firstinspires.ftc.teamcode.testign123;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -102,7 +95,7 @@ public class Gericka_Hardware {
     private VisionPortal visionPortal;
 
     public static double INTAKE_POWER = 0.90;
-    public static double SHOOT_POWER = 1.0;
+    public static double SHOOT_POWER = 0.90; // 1.0;
     public static float LIFTER_UP_POSITION = 0.15f;
     public final float LIFTER_MID_POSITION = 0.0f;
     public static float LIFTER_DOWN_POSITION = 0.0f;
@@ -211,7 +204,7 @@ public class Gericka_Hardware {
     public double FarLaunchHoodAngle=0.7; // References Done, needs tuning
 
 
-    public double RedFarLaunchTurretAngle=-115.0;
+    public double RedFarLaunchTurretAngle=-122.0;
     public double RedCloseLaunchTurretAngle=-136.0;
 
     public double BlueFarLaunchTurretAngle=117;
@@ -416,11 +409,8 @@ public class Gericka_Hardware {
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
         // GoBilda Pinpoint Odometry computer (reports IMU heading and movement ticks)
         InitPinpoint(hardwareMap);
-
-
 
         // ********** Intake and Shooter System Motors **********************************
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
@@ -663,11 +653,11 @@ public class Gericka_Hardware {
 
         RedCloseDriveBigTriangleToThirdMark = drive.actionBuilder(redCloseShootPositionBigTriangle)
                 //.splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
-                .strafeToConstantHeading(new Vector2d(-11.5, 60), slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 58), slowVel, slowAccel)
                 .build();
 
 
-        RedCloseDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
+        RedCloseDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 58, Math.toRadians(90)))
                 .splineToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),slowVel, superSlowAccel)
                 .build();
 
@@ -675,7 +665,7 @@ public class Gericka_Hardware {
                 .strafeToConstantHeading(new Vector2d(-54, 16))
                 .build();
 
-        RedCloseDriveThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 60, Math.toRadians(90)))
+        RedCloseDriveThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, 58, Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
                 .strafeToConstantHeading(new Vector2d(-4, 45),slowVel, slowAccel)
                 .splineToConstantHeading(new Vector2d(-2, 58),  Math.toRadians(90), slowVel, slowAccel)
@@ -691,9 +681,9 @@ public class Gericka_Hardware {
         RedCloseDriveBigTriangleToSecondMark = drive.actionBuilder(redCloseShootPositionBigTriangle)
                 .splineToConstantHeading(new Vector2d(15.5, 20), Math.toRadians(90), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(15.5, 60),slowVel, slowAccel)
+                .strafeToConstantHeading(new Vector2d(15.5, 58),slowVel, slowAccel)
                 .build();
-        RedCloseDriveSecondMarkToBigTriangle = drive.actionBuilder(new Pose2d(14.5,61,Math.toRadians(90)))
+        RedCloseDriveSecondMarkToBigTriangle = drive.actionBuilder(new Pose2d(15.5,58,Math.toRadians(90)))
                 //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
                 .strafeToConstantHeading(new Vector2d(11.5, 30),fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
@@ -711,20 +701,20 @@ public class Gericka_Hardware {
 
         RedFarDriveShootingPositionToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
                 .splineToConstantHeading(new Vector2d(34.75, 30),  Math.toRadians(90),fastVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(34.75, 60), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, 58), normalVel, normalAccel)
                 .build();
 
-        RedFarDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 60, Math.toRadians(90)))
+        RedFarDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 58, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(redFarShootPositionSmallTriangle.position.x, redFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
                 .build();
 
 
         RedFarDriveShootingPositionToSecondMark = drive.actionBuilder(redFarShootPositionSmallTriangle)
-                .splineToConstantHeading(new Vector2d(11.5, 30), Math.toRadians(90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, 59), Math.toRadians(90), normalVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(15.5, 30), Math.toRadians(90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(15.5, 58), Math.toRadians(90), normalVel, normalAccel)
                 .build();
 
-        RedFarDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, 59, Math.toRadians(90)))
+        RedFarDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(15.5, 58, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(redFarShootPositionSmallTriangle.position.x, redFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
                 .build();
 
@@ -732,7 +722,7 @@ public class Gericka_Hardware {
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
                 .build();
 
-        RedFarDriveSecondMarkToLock = drive.actionBuilder(new Pose2d(11.5, 59, Math.toRadians(90)))   // FIX
+        RedFarDriveSecondMarkToLock = drive.actionBuilder(new Pose2d(15.5, 58, Math.toRadians(90)))   // FIX
                 .splineToConstantHeading(new Vector2d(5, 40),  Math.toRadians(180), slowVel, slowAccel)  // up-left
                 .splineToConstantHeading(new Vector2d(0, 53),  Math.toRadians(90), slowVel, slowAccel)  // up-left
                 .build();
@@ -744,22 +734,22 @@ public class Gericka_Hardware {
 
         RedFarDriveBigTriangleToThirdMark = drive.actionBuilder(redCloseShootPositionBigTriangle)   // FIX
                 .splineToConstantHeading(new Vector2d(-11.5, 31), Math.toRadians(90), slowVel, slowAccel)
-                .strafeToConstantHeading(new Vector2d(-11.5, 57), slowVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(-11.5, 58), slowVel, normalAccel)
                 .build();
 
-        RedFarDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 57, Math.toRadians(90)))
+        RedFarDriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-11.5, 58, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(redCloseShootPositionBigTriangle.position.x, redCloseShootPositionBigTriangle.position.y), fastVel, normalAccel)
                 .build();
 
         RedFarDriveBigTriangleToFirstMark =  drive.actionBuilder(redCloseShootPositionBigTriangle)
                 .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
                 //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(34.75, 60), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, 58), normalVel, normalAccel)
                 .build();
 
 
 
-        RedFarDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 60, Math.toRadians(90)))
+        RedFarDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 58, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(redFarShootPositionSmallTriangle.position.x, redFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
                 .build();
 
@@ -773,11 +763,11 @@ public class Gericka_Hardware {
                 .strafeToConstantHeading(new Vector2d(-15, 57), normalVel, normalAccel)
                 .build();
 
-        RedFarDriveBigTriangleToGateLock = drive.actionBuilder(new Pose2d(-11.5, 57, Math.toRadians(90)))
+        RedFarDriveBigTriangleToGateLock = drive.actionBuilder(new Pose2d(-11.5, 58, Math.toRadians(90)))
                 .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
                 .build();
 
-        RedFarCleanUpDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
+        RedFarCleanUpDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, 58, Math.toRadians(90)))
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(48, 12),  Math.toRadians(270), fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
@@ -796,13 +786,13 @@ public class Gericka_Hardware {
                 .strafeToConstantHeading(new Vector2d(36,12), fastVel, fastAccel)
                 .build();
 
-        RedFarCleanUpDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(12.5, 60, Math.toRadians(90)))
+        RedFarCleanUpDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(12.5, 58, Math.toRadians(90)))
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(15, 32),  Math.toRadians(270), fastVel, normalAccel)
                 .splineToConstantHeading(new Vector2d(48, 12),  Math.toRadians(-90), normalVel, slowAccel)
                 .build();
 
-        RedFarCleanUpDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
+        RedFarCleanUpDriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, 58, Math.toRadians(90)))
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(48, 12),  Math.toRadians(270), fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
@@ -876,15 +866,15 @@ public class Gericka_Hardware {
                 .build();
 
         BlueFarDriveShootingPositionToSecondMark = drive.actionBuilder(blueFarShootPositionSmallTriangle)
-                .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(15.5, -30), Math.toRadians(-90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(15.5, -60), Math.toRadians(-90), normalVel, normalAccel)
                 .build();
 
-        BlueFarDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+        BlueFarDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(15.5, -60, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(blueFarShootPositionSmallTriangle.position.x, blueFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
                 .build();
 
-        BlueFarDriveSecondMarkToLock = drive.actionBuilder(new Pose2d(11.5, -59, Math.toRadians(-90)))   // FIX
+        BlueFarDriveSecondMarkToLock = drive.actionBuilder(new Pose2d(15.5, -60, Math.toRadians(-90)))   // FIX
                 .splineToConstantHeading(new Vector2d(5, -40),  Math.toRadians(-180), normalVel, slowAccel)  // up-left
                 .splineToConstantHeading(new Vector2d(0, -53),  Math.toRadians(-90), normalVel, slowAccel)  // up-left
                 .build();
@@ -940,8 +930,8 @@ public class Gericka_Hardware {
                 .build();
 
         BlueFarCleanUpDriveToSecondMark = drive.actionBuilder(new Pose2d(48, -12, Math.toRadians(-90)))
-                .splineToConstantHeading(new Vector2d(11.5, -30), Math.toRadians(-90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
+                .splineToConstantHeading(new Vector2d(15.5, -30), Math.toRadians(-90), fastVel, fastAccel)
+                .splineToConstantHeading(new Vector2d(15.5, -60), Math.toRadians(-90), normalVel, normalAccel)
                 .build();
 
         BlueFarCleanUpDriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,-58,Math.toRadians(0)))
@@ -952,32 +942,13 @@ public class Gericka_Hardware {
                 .strafeToConstantHeading(new Vector2d(36,-12), fastVel, fastAccel)
                 .build();
 
-        BlueFarCleanUpDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, -60, Math.toRadians(-90)))
+        BlueFarCleanUpDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(15.5, -60, Math.toRadians(-90)))
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(15, -32),  Math.toRadians(-270), fastVel, normalAccel)
                 .splineToConstantHeading(new Vector2d(48, -12),  Math.toRadians(90), normalVel, slowAccel)
                 //.strafeToConstantHeading(new Vector2d(30,-12),fastVel,fastAccel)
                 //.strafeToConstantHeading(new Vector2d(48,-12),fastVel,normalAccel)
                 .build();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     public void ShowRoadrunnerPosition() {
@@ -1309,86 +1280,6 @@ public class Gericka_Hardware {
         {
             invalidHeading = true;
         }
-        // *************************************************
-        // **** INDICATOR LIGHT #1              ************
-        // *************************************************
-        /*if (invalidHeading)
-        {
-            // RED = INVALID Heading, the turret can't see the target, rotate robot
-            light1.setPosition(INDICATOR_RED);
-        }
-        // else if the beambreak2 is broken (ball3 present)
-        else if (!beamBreak2.getState()) {
-            if (autoLifterMode) {
-                // GREEN = 3 balls loaded and autolifter mode TRUE
-                light1.setPosition(INDICATOR_GREEN);
-            }
-            else {
-                // ORANGE = 3 balls loaded and autolifter mode False
-                light1.setPosition(INDICATOR_ORANGE);
-            }
-        } else {
-            // BLACK/OFF = NEED MORE BALLS
-            light1.setPosition(INDICATOR_BLACK);
-        }
-
-        // *************************************************
-        // **** INDICATOR LIGHT #2              ************
-        // *************************************************
-        // set light2 to red or blue based on alliance
-        if (autoTurretMode && autoShooterMode) {
-            if (allianceColorString.equals("RED")) {
-                light2.setPosition(INDICATOR_RED);
-            } else if (allianceColorString.equals("BLUE")) {
-                light2.setPosition(INDICATOR_BLUE);
-            }
-            else {
-                // this is an error condition that should never be reached, robot is probably powered off
-                light2.setPosition(INDICATOR_BLACK);
-            }
-        }
-        else if (autoTurretMode) {
-            // ORANGE = AUTO SHOOTER is OFF
-            light2.setPosition(INDICATOR_ORANGE);
-        }
-        else if (autoShooterMode) {
-            // YELLOW = AUTO TURRET is OFF
-            light2.setPosition(INDICATOR_YELLOW);
-        } else {
-            // PURPLE = AUTO TURRET and AUTO SHOOTER are OFF
-            light2.setPosition(INDICATOR_VIOLET);
-        }
-
-        // *************************************************
-        // **** INDICATOR LIGHT #3              ************
-        // *************************************************
-        // set light3 based on if shooter motor within tolerances and if turret is aligned
-        double currentMotorRPM = CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS);
-        boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 50) && (currentMotorRPM <= shooterTargetRPM + 200));
-        boolean turretReady = ((turretMotor.getCurrentPosition() > (turretMotor.getTargetPosition() - 5)) && (turretMotor.getCurrentPosition() < (turretMotor.getTargetPosition() + 5)));  // 5 ticks is a little bit more than 2 degrees
-        boolean ball1Loaded = (lifterServo.getPosition() >= LIFTER_MID_POSITION);
-
-        if (invalidHeading)
-        {
-            // RED = INVALID Heading, the turret can't see the target, rotate robot
-            light3.setPosition(INDICATOR_RED);
-        }
-        else if (shooterReady && turretReady && ball1Loaded) {
-            // GREEN = at least 1 ball loaded and everything ready to shoot
-            light3.setPosition(INDICATOR_GREEN);
-        }
-        else if (shooterReady && ball1Loaded) {
-            light3.setPosition(INDICATOR_YELLOW);
-        }
-        else if (turretReady && ball1Loaded) {
-            light3.setPosition(INDICATOR_ORANGE);
-        }
-        else if (ball1Loaded){
-            light3.setPosition(INDICATOR_VIOLET);
-        }
-        else {
-            light3.setPosition(INDICATOR_BLACK);
-        }*/
         boolean beam2IsBroken = !beamBreak2.getState(); // Invert if 'true' means broken
         boolean beam3IsBroken = !beamBreak3.getState();
         boolean beam4IsBroken = !beamBreak4.getState();
@@ -1397,22 +1288,27 @@ public class Gericka_Hardware {
         boolean shooterReady =  ((currentMotorRPM >= shooterTargetRPM - 50) && (currentMotorRPM <= shooterTargetRPM + 200));
 
         // **** INDICATOR LIGHT #1              ************
-        if (!turretReady) {
-            light1.setPosition(INDICATOR_RED);
-        } else if (beam2IsBroken) {
+        if (beam2IsBroken) {
             light1.setPosition(INDICATOR_GREEN);
         }
+        else {
+            light1.setPosition(INDICATOR_BLACK);
+        }
+
         // **** INDICATOR LIGHT #2              ************
-        if (!shooterReady){
-            light2.setPosition(INDICATOR_RED);
-        } else if (beam3IsBroken){
+        if (beam3IsBroken){
             light2.setPosition(INDICATOR_GREEN);
         }
+        else {
+            light2.setPosition(INDICATOR_BLACK);
+        }
+
         // **** INDICATOR LIGHT #3              ************
         if (beam4IsBroken){
             light3.setPosition(INDICATOR_GREEN);
-        } else {
-            light3.setPosition(INDICATOR_BLUE);
+        }
+        else {
+            light3.setPosition(INDICATOR_BLACK);
         }
     }
     public void InitBlinkin(HardwareMap hardwareMap) {
@@ -1722,115 +1618,9 @@ public class Gericka_Hardware {
     private final long LIFTER_UP_SLEEP_TIME_MILLISECONDS = 275; //175
     private final long LIFTER_DOWN_SLEEP_TIME_MILLISECONDS = 400;
 
-    public void ShootThreeBalls() {
-        boolean SHOOT_3_BALLS_USING_SENSORS = true;
 
-        if (SHOOT_3_BALLS_USING_SENSORS) {
-            ShootThreeBalls_UsingSensors();
-        }
-        else {
-            //SetIntakeMotor(true, true);
-            ShootThreeBalls_UsingTime();
-            //SetIntakeMotor(true, true);
-        }
-    }
-    public void ShootFourBalls() {
-        boolean SHOOT_3_BALLS_USING_SENSORS = true;
-
-        if (SHOOT_3_BALLS_USING_SENSORS) {
-            ShootThreeBalls_UsingSensors();
-        }
-        else {
-            //SetIntakeMotor(true, true);
-            //ShootThreeBalls_UsingTime();
-            ShootFourBalls_UsingTime();
-            //SetIntakeMotor(true, true);
-        }
-    }
-    private void ShootFourBalls_UsingSensors() {
-        long timeoutTime = 0;
-        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 300;
-        final long TIME_OUT = LIFTER_DOWN_SLEEP_TIME_MILLISECONDS - LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS;
-
-        // store the current auto lifter mode setting, then disable to ensure it doesn't interfere with logic
-        boolean tempLifterMode = GetAutoLifterMode();
-        SetAutoLifterMode(false);
-
-
-        // shoot ball 1
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        //SetLifterPosition(LIFTER_DOWN_POSITION);
-        //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        /*
-        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
-        timeoutTime = System.currentTimeMillis() + TIME_OUT;
-        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
-                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
-                ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
-                        (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
-                (beamBreak3.getState()) &&
-                (System.currentTimeMillis() < timeoutTime)) {
-            // sleep a tiny amount
-            SpecialSleep(10);
-        }
-
-         */
-
-        // shoot ball 2
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        //SetLifterPosition(LIFTER_DOWN_POSITION);
-        //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
-
-        /*timeoutTime = System.currentTimeMillis() + TIME_OUT;
-        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
-                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
-                ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
-                        (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
-                (beamBreak3.getState()) &&
-                (System.currentTimeMillis() < timeoutTime)) {
-            // sleep a tiny amount
-            SpecialSleep(10);
-        }
-
-         */
-
-        // shoot ball 3
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        //SetLifterPosition(LIFTER_DOWN_POSITION);
-        //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
-        /*timeoutTime = System.currentTimeMillis() + TIME_OUT;
-        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
-                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
-                ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
-                        (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
-                (beamBreak3.getState()) &&
-                (System.currentTimeMillis() < timeoutTime)) {
-            // sleep a tiny amount
-            SpecialSleep(10);
-        }
-
-         */
-        // shoot ball 4
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-
-        // reset auto lifter mode to whatever it was before
-        SetAutoLifterMode(tempLifterMode);
-    }
-
-    private void ShootThreeBalls_UsingSensors() {
-        long timeoutTime = 0;
-        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 300;
-        final long TIME_OUT = LIFTER_DOWN_SLEEP_TIME_MILLISECONDS - LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS;
+    public void ShootAutoBalls(){
+        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 1600;
 
         // store the current auto lifter mode setting, then disable to ensure it doesn't interfere with logic
         boolean tempLifterMode = GetAutoLifterMode();
@@ -1839,192 +1629,12 @@ public class Gericka_Hardware {
         // shoot ball 1
         SetLifterPosition(LIFTER_UP_POSITION);
         SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
 
-        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
-        timeoutTime = System.currentTimeMillis() + TIME_OUT;
-        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
-                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
-               ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
-                (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
-               (beamBreak3.getState()) &&
-               (System.currentTimeMillis() < timeoutTime)) {
-            // sleep a tiny amount
-            SpecialSleep(10);
-        }
-
-        // shoot ball 2
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // While no ball is being detected on the lifter by any of the three sensors && have not timed out
-        timeoutTime = System.currentTimeMillis() + TIME_OUT;
-        while (((ColorSensorRight.getDistance(DistanceUnit.INCH) > 1.2) ||
-                (ColorSensorRight.getDistance(DistanceUnit.INCH) <= 0)) &&
-               ((ColorSensorLeft.getDistance(DistanceUnit.INCH) > 1.2) ||
-                (ColorSensorLeft.getDistance(DistanceUnit.INCH) <= 0.0)) &&
-               (beamBreak3.getState()) &&
-               (System.currentTimeMillis() < timeoutTime)) {
-            // sleep a tiny amount
-            SpecialSleep(10);
-        }
-
-        // shoot ball 3
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
         SetLifterPosition(LIFTER_DOWN_POSITION);
 
         // reset auto lifter mode to whatever it was before
         SetAutoLifterMode(tempLifterMode);
     }
-    private void ShootThreeBalls_UsingTime(){
-        // shoot ball 1
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-        SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 2
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-        //SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 3
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-        //SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-    }
-
-    private void ShootFourBalls_UsingTime(){
-        // shoot ball 1
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-        SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 2
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-        //SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 3
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-        //SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 4
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-        //SpecialSleep(LIFTER_DOWN_SLEEP_TIME_MILLISECONDS);
-    }
-
-    public void ShootAutoFourBalls(){ // Only for 6&9
-        boolean SHOOT_AUTO_4_BALLS_USING_SENSORS = true;
-
-        if (SHOOT_AUTO_4_BALLS_USING_SENSORS) {
-            ShootFourBalls_UsingSensors();
-        }
-        else {
-
-            ShootAutoFourBalls_UsingTime();
-        }
-    }
-
-
-    public void ShootAutoThreeBalls(){
-        boolean SHOOT_AUTO_3_BALLS_USING_SENSORS = true;
-
-        if (SHOOT_AUTO_3_BALLS_USING_SENSORS) {
-            ShootThreeBalls_UsingSensors();
-        }
-        else {
-
-            ShootAutoThreeBalls_UsingTime();
-        }
-    }
-
-    public void ShootAutoThreeBalls_UsingTime(){
-        final long LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS = 275; //175
-        final long LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS = 470;
-
-        // shoot ball 1
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 2
-       // SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        //SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 3
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
-    }
-
-    public void ShootAutoFourBalls_UsingTime(){
-        final long LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS = 275; //175
-        final long LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS = 470;
-
-        // shoot ball 1
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 2
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
-
-        //Shoot ball 3
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        //SetIntakeMotor(true, true);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
-
-        // shoot ball 4
-        SetIntakeMotor(false, true);
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_UP_AUTO_SLEEP_TIME_MILLISECONDS);
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-        SpecialSleep(LIFTER_DOWN_AUTO_SLEEP_TIME_MILLISECONDS);
-    }
-
 
     // *************************************************************************
     //      Intake Functions
@@ -2389,7 +1999,7 @@ public class Gericka_Hardware {
     }
 
     public void SetLifterUp(){
-        intakeMotor.setPower(INTAKE_POWER);
+        intakeMotor.setPower(SHOOT_POWER);
         SetLifterPosition(LIFTER_UP_POSITION);
 
         //opMode.sleep(10);

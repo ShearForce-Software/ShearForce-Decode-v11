@@ -6,16 +6,13 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // auto select manual opMode next
@@ -192,9 +189,9 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
+        sleep(1600);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
 
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
@@ -223,7 +220,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
@@ -241,7 +238,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // set turret and shooting wheel to small triangle shots
@@ -265,7 +262,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // Command Turret to start storing itself at 0

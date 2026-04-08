@@ -6,12 +6,9 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -28,15 +25,6 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        //final double startPoseHeadingDegrees = 90;
-        //Pose2d startPose = new Pose2d(62.785, 9.375, Math.toRadians(startPoseHeadingDegrees));
-        //final double SMALL_TRIANGLE_RPM = 3000.0;
-        //final double BIG_TRIANGLE_RPM = 2800;
-        //final double SMALL_TRIANGLE_TARGET_ANGLE = -115.0;
-        //final double BIG_TRIANGLE_TARGET_ANGLE = 136.0;
-        //final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
-        //final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
-
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
         drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farRedStartPose);
@@ -49,7 +37,6 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // Turn turret toward the target
-        //double turretTargetAngle = SMALL_TRIANGLE_TARGET_ANGLE;
         theRobot.SetTurretRotationAngle(theRobot.RedFarLaunchTurretAngle);
         theRobot.SetLaunchRampPosition(theRobot.FarLaunchHoodAngle);
 
@@ -62,78 +49,6 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.farRedStartPose.position.x, Gericka_Hardware.farRedStartPose.position.y, Gericka_Hardware.farRedStartPose.heading.toDouble());
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
-
-
-        // ***************************************************
-        // ****  Define Velocity and Acceleration Constraints
-        // ***************************************************
-
-        VelConstraint fastVel = new TranslationalVelConstraint(90);
-        AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
-
-        VelConstraint normalVel = new TranslationalVelConstraint(60);
-        AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
-
-        VelConstraint slowVel = new TranslationalVelConstraint(40);
-        AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
-
-        VelConstraint superSlowVel = new TranslationalVelConstraint(30);
-        AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
-
-
-        // ***************************************************
-        // ****  Define Trajectories    **********************
-        // ***************************************************
-/*
-        Action DriveToShootingPosition = drive.actionBuilder(new Pose2d(theRobot.farRedStartPose.position.x, theRobot.farRedStartPose.position.y, theRobot.farRedStartPose.heading.toDouble()))
-                .strafeToConstantHeading(new Vector2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y), fastVel, fastAccel)
-                .build();
-
-        Action DriveToFirstMark = drive.actionBuilder(new Pose2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y, theRobot.RedFarShootingPosition.heading.toDouble()))
-                .splineToConstantHeading(new Vector2d(34.75, 30),  Math.toRadians(90),fastVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(34.75, 60), normalVel, normalAccel)
-                .build();
-
-        Action DriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y),  Math.toRadians(270), fastVel, normalAccel)
-                //.strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
-                .build();
-
-        Action DriveShootingPositionToCollectGateBalls = drive.actionBuilder(new Pose2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y, theRobot.RedFarShootingPosition.heading.toDouble()))
-                .splineToLinearHeading(new Pose2d(25,56,Math.toRadians(30)),Math.toRadians(150), fastVel, normalAccel)
-                //.splineToLinearHeading(new Pose2d(60,-58,Math.toRadians(0)),Math.toRadians(90), normalVel, normalAccel)
-                .strafeToLinearHeading(new Vector2d(60,58), Math.toRadians(0), normalVel, normalAccel)
-                //.splineToConstantHeading(new Vector2d(60, 60),  Math.toRadians(0), fastVel, normalAccel)
-                //.strafeToConstantHeading(new Vector2d(60,60), fastVel, normalAccel)
-                .build();
-
-        Action DriveToSecondMark = drive.actionBuilder(new Pose2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y, theRobot.RedFarShootingPosition.heading.toDouble()))
-                .splineToConstantHeading(new Vector2d(12.5, 30), Math.toRadians(90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(12.5, 60), Math.toRadians(90), normalVel, normalAccel)
-                .build();
-
-        Action DriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,58,Math.toRadians(0)))
-                .strafeToLinearHeading(new Vector2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y), theRobot.RedFarShootingPosition.heading.toDouble(), fastVel, normalAccel)
-                .build();
-
-        Action DriveOutOfSmallTriangle = drive.actionBuilder(new Pose2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y, theRobot.RedFarShootingPosition.heading.toDouble()))
-                .strafeToConstantHeading(new Vector2d(36,12), fastVel, fastAccel)
-                .build();
-
-        Action DriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(12.5, 60, Math.toRadians(90)))
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(15, 32),  Math.toRadians(270), fastVel, normalAccel)
-                .splineToConstantHeading(new Vector2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y),  Math.toRadians(-90), normalVel, slowAccel)
-                //.strafeToConstantHeading(new Vector2d(30,-12),fastVel,fastAccel)
-                //.strafeToConstantHeading(new Vector2d(48,-12),fastVel,normalAccel)
-                .build();
-
-        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(theRobot.RedFarShootingPosition.position.x, theRobot.RedFarShootingPosition.position.y, theRobot.RedFarShootingPosition.heading.toDouble()))
-                .strafeToConstantHeading(new Vector2d(0, 30), fastVel, fastAccel)
-                .build();
-
- */
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
@@ -180,12 +95,11 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
-        //Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
         sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
                 // -------------------------
@@ -204,7 +118,7 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
                 // -------------------------
@@ -224,7 +138,7 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
@@ -244,7 +158,7 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // Command Turret to start storing itself at 0

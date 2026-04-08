@@ -9,9 +9,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -83,56 +81,6 @@ public class Red_Far_12Balls extends LinearOpMode {
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
-        // ***************************************************
-        // ****  Define Trajectories    **********************
-        // ***************************************************
-/*
-        DriveToShootingPosition = drive.actionBuilder(theRobot.farRedStartPose)
-                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
-                .build();
-
-        // FIRST  = far-right strip (closest to GOAL side)
-        // SECOND = center strip
-        // THIRD  = far-left strip
-
-        DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                // Smooth into the strip (fast -> intake). Tangent set to +Y so it flows into the upfield run.
-                .splineToConstantHeading(new Vector2d(34.75, 30), Math.toRadians(90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
-                .build();
-
-        ReturnFromFirstMark = drive.actionBuilder(new Pose2d(34.75, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(45, 23), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(48, 12), intakeVel, intakeAccel)
-                .build();
-
-        DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-
-                .splineToConstantHeading(new Vector2d(11.5, 30), Math.toRadians(90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, 60), Math.toRadians(90), intakeVel, intakeAccel)
-                .build();
-
-        ReturnFromSecondMark = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(45, 23), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(48, 12), intakeVel, intakeAccel)
-                .build();
-
-        DriveToThirdMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-15, 31), fastVel, fastAccel)
-                .strafeToConstantHeading(new Vector2d(-15, 60), intakeVel, intakeAccel)
-                .build();
-
-
-        DriveThirdMarkToBigTriangle = drive.actionBuilder(new Pose2d(-15, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(-11.5, 16), fastVel, fastAccel)
-                .build();
-
-        DriveToGateLock = drive.actionBuilder(new Pose2d(-11.5, 16, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
-                .build();
-
-
- */
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
@@ -187,7 +135,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         theRobot.SetTurretRotationAngle(theRobot.RedFarLaunchTurretAngle);
         // SHOOT-3
         sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
@@ -209,7 +157,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
@@ -228,7 +176,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
@@ -255,7 +203,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         theRobot.SetTurretRotationAngle(0.0);

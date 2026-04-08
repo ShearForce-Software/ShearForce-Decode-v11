@@ -6,12 +6,10 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -163,7 +161,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
 
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
@@ -186,7 +184,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
 
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
        /* // -------------------------
         // BIG TRIANGLE -> PARK NEXT TO GATE

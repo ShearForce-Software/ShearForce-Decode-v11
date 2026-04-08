@@ -6,12 +6,9 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -28,15 +25,6 @@ Red_Far_9Balls extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        //final double startPoseHeadingDegrees = 90;
-        //Pose2d startPose = new Pose2d(62.785, 9.375, Math.toRadians(startPoseHeadingDegrees));
-        //final double SMALL_TRIANGLE_RPM = 3000.0;
-        //final double BIG_TRIANGLE_RPM = 2800;
-        //final double SMALL_TRIANGLE_TARGET_ANGLE = -115.0;
-        //final double BIG_TRIANGLE_TARGET_ANGLE = -136.0;
-        //final double SMALL_TRIANGLE_HOOD_POSITION = 0.7;
-        //final double BIG_TRIANGLE_HOOD_POSITION = 0.6;
-
         /* Initialize the Robot */
         theRobot.Init(hardwareMap, "RED");
         drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farRedStartPose);
@@ -63,57 +51,6 @@ Red_Far_9Balls extends LinearOpMode {
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
-
-        // ***************************************************
-        // ****  Define Velocity and Acceleration Constraints
-        // ***************************************************
-
-        VelConstraint fastVel = new TranslationalVelConstraint(90);
-        AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
-
-        VelConstraint normalVel = new TranslationalVelConstraint(60);
-        AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
-
-        VelConstraint slowVel = new TranslationalVelConstraint(40);
-        AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
-
-        VelConstraint superSlowVel = new TranslationalVelConstraint(30);
-        AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
-
-
-        // ***************************************************
-        // ****  Define Trajectories    **********************
-        // ***************************************************
-/*
-        Action DriveToShootingPosition = drive.actionBuilder(new Pose2d(startPose.position.x, startPose.position.y, Math.toRadians(startPoseHeadingDegrees)))
-                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, fastAccel)
-                .build();
-
-        Action DriveToFirstMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(34.75, 30), fastVel, fastAccel)
-                //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(34.75, 60), normalVel, normalAccel)
-                .build();
-
-        Action DriveFirstMarkToShootingPosition =  drive.actionBuilder(new Pose2d(34.74, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
-                .build();
-
-        Action DriveToSecondMark = drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(11.5, 30), Math.toRadians(90), fastVel, fastAccel)
-                .splineToConstantHeading(new Vector2d(11.5, 60), Math.toRadians(90), normalVel, normalAccel)
-                .build();
-
-        Action DriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(11.5, 60, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
-                .build();
-
-        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(48, 12, Math.toRadians(90)))
-                .strafeToConstantHeading(new Vector2d(0, 40), fastVel, fastAccel)
-                .build();
-
-
- */
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
@@ -164,7 +101,7 @@ Red_Far_9Balls extends LinearOpMode {
         // SHOOT-3
         sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
 
@@ -184,7 +121,7 @@ Red_Far_9Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // set turret and shooting wheel to small triangle shots
@@ -209,7 +146,7 @@ Red_Far_9Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
         //theRobot.ShootAutoThreeBalls();
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // Command Turret to start storing itself at 0

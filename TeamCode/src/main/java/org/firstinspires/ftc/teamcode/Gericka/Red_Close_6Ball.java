@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -144,7 +143,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         sleep(500);
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
@@ -169,7 +168,7 @@ public class Red_Close_6Ball extends LinearOpMode {
         // SHOOT-3
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 

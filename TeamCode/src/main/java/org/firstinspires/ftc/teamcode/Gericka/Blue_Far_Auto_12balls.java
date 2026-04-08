@@ -189,7 +189,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
         // SHOOT-3
         sleep(1500);  // first time shooting give a tiny extra wait to allow shooter to spin up
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
 
@@ -211,7 +211,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
 
         theRobot.SetIntakeMotor(false, true);
 
@@ -231,7 +231,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         // -------------------------
@@ -258,7 +258,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        theRobot.ShootAutoFourBalls();
+        theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
         theRobot.SetTurretRotationAngle(0.0);
