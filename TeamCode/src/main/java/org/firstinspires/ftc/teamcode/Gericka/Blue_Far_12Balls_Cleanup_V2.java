@@ -182,7 +182,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
        // Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
 
         // SHOOT-3
-        sleep(500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);

@@ -134,7 +134,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         theRobot.SetTurretRotationAngle(theRobot.RedFarLaunchTurretAngle);
         // SHOOT-3
-        sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();

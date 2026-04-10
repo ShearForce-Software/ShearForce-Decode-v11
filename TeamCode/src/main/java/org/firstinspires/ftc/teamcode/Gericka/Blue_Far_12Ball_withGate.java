@@ -189,7 +189,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(1600);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
+        sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up  TODO -- how much time really needed for spin up?
 
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);

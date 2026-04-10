@@ -97,7 +97,7 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        sleep(600);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);

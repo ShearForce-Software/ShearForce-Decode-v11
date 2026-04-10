@@ -363,8 +363,14 @@ public class Gericka_Manual_Control extends LinearOpMode {
             //} else if (gamepad1.rightBumperWasReleased()) {
             //    theRobot.SetLifterDown();
             } else if (gamepad2.leftBumperWasPressed()) {
-                //theRobot.ShootFourBalls();
-            } else if (gamepad2.left_trigger > 0.2) {
+                theRobot.GamePad2LeftBumper = true;
+                theRobot.SetLifterUp();
+            }
+            else if (gamepad2.leftBumperWasReleased()){
+                theRobot.GamePad2LeftBumper = false;
+                theRobot.SetLifterDown();
+            }
+            else if (gamepad2.left_trigger > 0.2) {
                 //Set lifter position to middle
                 theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
             } else if (gamepad2.right_trigger > 0.2) {

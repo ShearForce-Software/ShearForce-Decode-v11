@@ -95,7 +95,7 @@ public class Gericka_Hardware {
     private VisionPortal visionPortal;
 
     public static double INTAKE_POWER = 0.90;
-    public static double SHOOT_POWER = 0.90; // 1.0;
+    public static double SHOOT_POWER = 1.0;
     public static float LIFTER_UP_POSITION = 0.15f;
     public final float LIFTER_MID_POSITION = 0.0f;
     public static float LIFTER_DOWN_POSITION = 0.0f;
@@ -204,11 +204,12 @@ public class Gericka_Hardware {
     public double FarLaunchHoodAngle=0.7; // References Done, needs tuning
 
 
-    public double RedFarLaunchTurretAngle=-122.0;
-    public double RedCloseLaunchTurretAngle=-136.0;
+    public double RedFarLaunchTurretAngle = -116.0;
+    public double RedCloseLaunchTurretAngle = -136.0;
 
-    public double BlueFarLaunchTurretAngle=117;
-    public double BlueCloseLaunchTurretAngle=132;
+    public double BlueFarLaunchTurretAngle = 116;
+    public double BlueCloseLaunchTurretAngle = 132;
+    public boolean GamePad2LeftBumper = false;
 
 
 
@@ -1665,28 +1666,30 @@ public class Gericka_Hardware {
             boolean beam3IsBroken = !beamBreak3.getState();
             boolean beam4IsBroken = !beamBreak4.getState();
 
-
-            // if currently shooting a ball (then have room for another one to come in)
-            if (lifterServo.getPosition() != LIFTER_DOWN_POSITION) {
-                // briefly turn on the intake when the lifter is up, to unstick anything in the intake
-                intakeMotor.setPower(SHOOT_POWER);
+            if (GamePad2LeftBumper == true) {
+                intakeMotor.setPower(0);
             }
-            // else if there is another ball ready to come in if allowed
-            else if (beam1IsBroken)
-            {
-                // if there is a ball in spot #3, and the lifter is half up (meaning ball #2 should be at the bottom of the ramp, so it isn't ball #2 breaking the beam)
-                if (!beam2IsBroken || !beam3IsBroken || !beam4IsBroken) {
-                    intakeMotor.setPower(INTAKE_POWER);
+            else if (GamePad2LeftBumper == false){
+                // if currently shooting a ball (then have room for another one to come in)
+                if (lifterServo.getPosition() != LIFTER_DOWN_POSITION) {
+                    // briefly turn on the intake when the lifter is up, to unstick anything in the intake
+                    intakeMotor.setPower(SHOOT_POWER);
                 }
-                else {
+                // else if there is another ball ready to come in if allowed
+                else if (beam1IsBroken) {
+                    // if there is a ball in spot #3, and the lifter is half up (meaning ball #2 should be at the bottom of the ramp, so it isn't ball #2 breaking the beam)
+                    if (!beam2IsBroken || !beam3IsBroken || !beam4IsBroken) {
+                        intakeMotor.setPower(INTAKE_POWER);
+                    } else {
+                        intakeMotor.setPower(0);
+                    }
+                }
+                // else there is NOT a ball ready to come in, but the intake is currently on
+                else if (intakeMotor.getPower() != 0) {
+                    // if ready to turn off, leave on a tiny bit to push the last ball away
+                    SpecialSleep(250);
                     intakeMotor.setPower(0);
                 }
-            }
-            // else there is NOT a ball ready to come in, but the intake is currently on
-            else if (intakeMotor.getPower() != 0) {
-                // if ready to turn off, leave on a tiny bit to push the last ball away
-                SpecialSleep(250);
-                intakeMotor.setPower(0);
             }
         }
     }
@@ -1732,8 +1735,9 @@ public class Gericka_Hardware {
 
     public void SetTurretRotationAngle(double degrees){
         // normalize the angle to be -180 to +180
+        if (autoTurretMode){
         while (degrees > 180) degrees -= 360;
-        while (degrees < -180) degrees += 360;
+        while (degrees < -180) degrees += 360;}
         turretTargetAngle = degrees;
 
         if (autoTurretMode) {
@@ -2008,6 +2012,10 @@ public class Gericka_Hardware {
     public void SetLifterDown(){
 
         SetLifterPosition(LIFTER_DOWN_POSITION);
+    }
+    public void SetLifterDownWithoutIntake(){
+        SetLifterPosition(LIFTER_DOWN_POSITION);
+
     }
     // *************************************************************************
     //     Kickstand Functions

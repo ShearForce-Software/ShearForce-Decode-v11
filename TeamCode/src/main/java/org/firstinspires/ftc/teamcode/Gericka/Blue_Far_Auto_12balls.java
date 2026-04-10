@@ -188,7 +188,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetIntakeMotor(true, true);
         theRobot.SetTurretRotationAngle(theRobot.BlueFarLaunchTurretAngle);
         // SHOOT-3
-        sleep(1500);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
         drive.updatePoseEstimate();
