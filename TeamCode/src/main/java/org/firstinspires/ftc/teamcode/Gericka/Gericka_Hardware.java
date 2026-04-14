@@ -1570,13 +1570,6 @@ public class Gericka_Hardware {
         */
 
     }
-    public void SetShooterSpeed(double percent){
-        double shooterTargetSpeed = Math.min(percent,MAX_SHOOTER_SPEED);
-        shooterTargetSpeed = Math.max(percent,MIN_SHOOTER_SPEED);
-        shooterMotorRight.setPower(shooterTargetSpeed);
-        shooterMotorLeft.setPower(shooterTargetSpeed);
-    }
-
     double CalculateMotorRPM (double motorVelocity, double motorCountsPerRevolution)
     {
         return (motorVelocity / motorCountsPerRevolution) * 60.0;
@@ -1730,14 +1723,13 @@ public class Gericka_Hardware {
     }
 
     public boolean GetTurretPIDF_Enabled() { return turretPIDF_Enabled; }
-    public void SetTurretPIDF_Enabled(boolean value) { turretPIDF_Enabled = value; }
-
 
     public void SetTurretRotationAngle(double degrees){
         // normalize the angle to be -180 to +180
         if (autoTurretMode){
-        while (degrees > 180) degrees -= 360;
-        while (degrees < -180) degrees += 360;}
+            while (degrees > 180) degrees -= 360;
+            while (degrees < -180) degrees += 360;
+        }
         turretTargetAngle = degrees;
 
         if (autoTurretMode) {
@@ -1782,7 +1774,7 @@ public class Gericka_Hardware {
         }
         // else moving less than 90 degrees, but it should be safe
         else{
-            turretMotor.setPower(1.0); //TODO Internet says it is better to set a maximum velocity like in the shooter code: turretMotor.setVelocity(turretTargetRPM * YELLOW_JACKET_1_1_TICKS / 60);
+            turretMotor.setPower(1.0);
         }
     }
     double getTurretTargetAngle(){
@@ -1844,36 +1836,10 @@ public class Gericka_Hardware {
         PoseVelocity2d currentVelocity = drive.updatePoseEstimate();
         double robotAngularVelocity = currentVelocity.angVel;
 
-        //TODO -- test this code from Google AI to take robot velocity into consideration so can counteract the robot's rotation and movement to stay on target
-        if (turret_shoot_while_moving_enabled || (turret_use_rotation_velocity && Math.abs(robotAngularVelocity) > 1.0)) {
-            if (turret_use_rotation_velocity) {
-                // Google notes on how to tune the turret's PIDF
-                // Tune turretF_spinning:  set turretP, turretI, and turretD to zero, then spin the robot in circles, adjusting turretF until the turret stay ROUGHLY pointed at the same field coordinate without any PID help
-                // Tune turretP: increase turretP until the turret snaps to targets quickly.
-                // Tune turretD: increase turretD to remove "jitter" or overshooting when the turret stops
 
-                // Adjust Feedforward component to negate robot rotation
-                // This pushes the turret in the opposite direction of the robot's turn
-                turretF = -robotAngularVelocity * turretF_spinning;
-            }
+        calculatedAngle = angleToTargetDeg - robotHeadingDegrees;
+        turretF = 0.0;
 
-            if (turret_shoot_while_moving_enabled) {
-                double projectileVelocity = 60.0; // Video seems to show small triangle shots (120 inches) take 2 seconds of air time, so trying out 60 here to start
-                double timeOfFlight = distanceToTarget / projectileVelocity;
-
-                // Adjust target position based on how much the robot will move during flight
-                double adjustedDx = deltaX - (currentVelocity.linearVel.x * timeOfFlight);
-                double adjustedDy = deltaY - (currentVelocity.linearVel.y * timeOfFlight);
-                calculatedAngle = Math.toDegrees(Math.atan2(adjustedDy, adjustedDx)) - robotHeadingDegrees;
-            }
-            else {
-                calculatedAngle = angleToTargetDeg - robotHeadingDegrees;
-            }
-        }
-        else {
-            calculatedAngle = angleToTargetDeg - robotHeadingDegrees;
-            turretF = 0.0;
-        }
 
         return calculatedAngle;
     }

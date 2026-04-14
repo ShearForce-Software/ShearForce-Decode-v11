@@ -4,11 +4,10 @@
 
 === Testing Needed
 
-- [ ] Test burst mode shooting version3
-- [ ] Test auto intake logic with moved breakbeams
-- [ ] Test all of the auto routines, verify all working correctly
-- [ ] Test turret tracking with camera uncovered, is it better or worse?
-- [ ] Test auto shoot routines, how fast can we make it?
+- [ ] Test & tweak new Auto small triangle shoot angle (16) until consistently making shots
+- [ ] Test turret tracking with camera reinstalled, is it better or worse?
+- [ ] Test flexible gate blocking mechanism, are misfires not happening anymore?
+- [ ] Test & tweak auto shoot routines, how fast can we make it and still get 3 shots out consistently?
 - [ ] Test gate hit then intake, do we need to just leave intake on, or can we use auto intake?
 
 === MORE Autonomous Routes
@@ -16,17 +15,6 @@
 - [ ] Create new gate hit then cleanup route to big triangle shoot
 - [ ] Create new gate hit then cleanup route to small triangle shoot
 
-
-
-=== Other ideas to work
-
-- [ ] Tune roadrunner again (after burst mode changes)
-- [ ] Create function that can report true/false IF robot is in a legal shooting tile
-- [ ] Create an auto shoot mode that can be turned on/off that will shoot if in a legal shooting tile and a ball is loaded
-- [ ] AUTO: create an auto that gets and shoots multiple lines in the correct pattern order
-- [ ] Create a common blackboard position storage routine in Hardware class, that the auto methods can call after every move, so if crashes on next move, the position is hopefully correct for manual usage
-- [ ] Have manual write position to blackboard periodically when in a stopped web-cam verified location?  (So can start and restart manual better)
-- [ ] Integrate logic to use the ball distance detection sensor to detect the loaded ball color and change an indicator light to that color
 
 
 
