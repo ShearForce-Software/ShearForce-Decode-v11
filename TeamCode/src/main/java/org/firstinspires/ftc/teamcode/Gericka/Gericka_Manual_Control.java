@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Gericka_Manual_Control extends LinearOpMode {
     Gericka_Hardware theRobot;
     //public int turretTrackingID = 24; // default to Red
-    final float TURRET_ROTATION_ANGLE_INCREMENT = 5.0f;
+    final float TURRET_ROTATION_ANGLE_INCREMENT = 7.0f;
     final double shooterSpeedRPMIncrement = 50;
     boolean resetTurretEnabled = true;
 
