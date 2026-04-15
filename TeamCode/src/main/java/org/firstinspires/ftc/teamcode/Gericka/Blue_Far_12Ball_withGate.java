@@ -44,6 +44,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
         theRobot.SetAutoLifterMode(true);
         theRobot.SetShooterPIDF_Enabled(true);
+        theRobot.SetAutoIntakeMode(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
         // Turn turret toward the target
@@ -152,6 +153,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                     theRobot.SetShooterPIDFCoefficients();
+                    theRobot.RunAutoIntake();
                 }
                 telemetry.update();
 
@@ -208,9 +210,9 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, new SetLifterDown()),
                         //new SleepAction(0.100),
-                        new ParallelAction(theRobot.BlueFarDriveSecondMarkToLock, setIntakeOff()),
+                        new ParallelAction(theRobot.BlueFarDriveSecondMarkToLock),
                         new SleepAction(1.5),  // HOLD GATE OPEN timer
                         new ParallelAction(theRobot.BlueFarDriveLockToBigTriangle)
                 )
@@ -229,9 +231,9 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarDriveBigTriangleToThirdMark, new SetLifterDown()),
                         //new SleepAction(0.100),
-                        new ParallelAction(theRobot.BlueFarDriveThirdMarkToBigTriangle, setIntakeOff())
+                        new ParallelAction(theRobot.BlueFarDriveThirdMarkToBigTriangle)
                 )
         );
         drive.updatePoseEstimate();
@@ -252,9 +254,9 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveBigTriangleToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarDriveBigTriangleToFirstMark, new SetLifterDown()),
                         //new SleepAction(0.100),
-                        new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition, setIntakeOff())
+                        new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition)
                 )
         );
         drive.updatePoseEstimate();
@@ -272,7 +274,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // SMALL TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.BlueFarDriveOutofShootingPosition, setIntakeOff()));
+        Actions.runBlocking(new SequentialAction(theRobot.BlueFarDriveOutofShootingPosition));
 
         // -------------------------
         // Cleanup
