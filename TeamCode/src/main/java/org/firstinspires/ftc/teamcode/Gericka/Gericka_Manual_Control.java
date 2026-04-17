@@ -61,7 +61,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         theRobot.SetAutoIntakeMode(true);   // auto intakes balls when sensors detect room for another ball and ball present, auto turns off intake when full or nothing present
         theRobot.SetShooterPIDF_Enabled(true);
         //theRobot.SetTurretPIDF_Enabled(false); //TODO enable this when PIDF for turret is tuned
-        theRobot.SetUpdateRoadrunnerFromWebcamEnabled(true);
+        theRobot.SetUpdateRoadrunnerFromWebcamEnabled(false);
         theRobot.SetAutoHoodMode(true);
         theRobot.SetTurretAutoResetMode(true);
 

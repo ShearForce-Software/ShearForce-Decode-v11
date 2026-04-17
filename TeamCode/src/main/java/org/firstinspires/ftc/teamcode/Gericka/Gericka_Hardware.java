@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.Action;
@@ -17,6 +18,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -1305,7 +1307,10 @@ public class Gericka_Hardware {
         }
 
         // **** INDICATOR LIGHT #3              ************
-        if (beam4IsBroken){
+        if ((beam4IsBroken) && (!beam3IsBroken) &&(!beam2IsBroken)){
+            light3.setPosition(INDICATOR_RED);
+        }
+        else if (beam4IsBroken){
             light3.setPosition(INDICATOR_GREEN);
         }
         else {
@@ -1414,15 +1419,15 @@ public class Gericka_Hardware {
         double distanceAboveLower = 0.0;
         double rpmDifferenceInRange = 0.0;
         double differenceInMeasurements = 6.0; // inches
-        if (distanceInInches >= 126) { optimumShooterRPM = 3100; }
+        if (distanceInInches >= 126) { optimumShooterRPM = 3150; }
         else if (distanceInInches >= 120) {
             distanceAboveLower = distanceInInches - 120;
-            rpmDifferenceInRange = 3100 - 3000;
-            optimumShooterRPM = 3000 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+            rpmDifferenceInRange = 3150 - 3100;
+            optimumShooterRPM = 3100 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 114) {
             distanceAboveLower = distanceInInches - 114;
-            rpmDifferenceInRange = 3000 - 2900;
+            rpmDifferenceInRange = 3100 - 2900;
             optimumShooterRPM = 2900 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 108) {
@@ -1660,7 +1665,7 @@ public class Gericka_Hardware {
             boolean beam4IsBroken = !beamBreak4.getState();
 
             if (GamePad2LeftBumper == true) {
-                intakeMotor.setPower(0);
+                intakeMotor.setPower(-INTAKE_POWER);
             }
             else if (GamePad2LeftBumper == false){
                 // if currently shooting a ball (then have room for another one to come in)
@@ -1796,18 +1801,17 @@ public class Gericka_Hardware {
         // normalize the turret angle to be -180 to +180
         while (currentTurretAngle > 180) currentTurretAngle -= 360;
         while (currentTurretAngle < -180) currentTurretAngle += 360;
-        // if can see the april tag, just use the bearing to that
-        if (getAprilTagVisible(currentAprilTargetId)){
-            bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
-            SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
-        }
         // else can't see the april tag, try using the roadrunner position and robot heading to calculate the turret angle
-        else if (useRoadrunnerForTurretAnglesEnabled) {
+        if (useRoadrunnerForTurretAnglesEnabled) {
             drive.updatePoseEstimate();
             // calculate the bearing from the front of the robot to the april tag
             bearingToAprilTag = calculateBearingToAprilTag();
             // Command the turret to turn to that angle
             SetTurretRotationAngle(bearingToAprilTag);
+        }
+        else if (getAprilTagVisible(currentAprilTargetId)){
+            bearingToAprilTag = getBearingToAprilTag(currentAprilTargetId);
+            SetTurretRotationAngle(bearingToAprilTag + currentTurretAngle);
         }
     }
 
@@ -1968,8 +1972,14 @@ public class Gericka_Hardware {
         }
     }
 
+    public void SetLifterUpWithReverseIntake(){
+        intakeMotor.setPower(-SHOOT_POWER);
+        SetLifterPosition(LIFTER_UP_POSITION);
+    }
+
     public void SetLifterUp(){
         intakeMotor.setPower(SHOOT_POWER);
+        opMode.sleep(150);
         SetLifterPosition(LIFTER_UP_POSITION);
 
         //opMode.sleep(10);
@@ -1978,10 +1988,6 @@ public class Gericka_Hardware {
     public void SetLifterDown(){
 
         SetLifterPosition(LIFTER_DOWN_POSITION);
-    }
-    public void SetLifterDownWithoutIntake(){
-        SetLifterPosition(LIFTER_DOWN_POSITION);
-
     }
     // *************************************************************************
     //     Kickstand Functions
