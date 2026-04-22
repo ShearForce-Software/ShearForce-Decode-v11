@@ -58,64 +58,6 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
 
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "BLUE");
 
-        // Constraints
-        VelConstraint fastVel = new TranslationalVelConstraint(90);
-        AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
-
-        VelConstraint normalVel = new TranslationalVelConstraint(60);
-        AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
-
-        VelConstraint slowVel = new TranslationalVelConstraint(40);
-        AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
-
-        VelConstraint superSlowVel = new TranslationalVelConstraint(40);
-        AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
-
-        // ***************************************************
-        // ****  Define Trajectories    **********************
-        // ***************************************************
-
-        /*
-        Action DriveCloseStartPositiontoBigTriangle = drive.actionBuilder(startPose)
-                .strafeToConstantHeading(new Vector2d(-11.5, -21))
-                .build();
-
-        Action DriveBigTriangleToThirdMark = drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(-15, -31), Math.toRadians(-90), slowVel, slowAccel)
-                .strafeToConstantHeading(new Vector2d(-11.5, -60), slowVel, slowAccel)
-                .build();
-
-        Action ThirdMarkToLock = drive.actionBuilder(new Pose2d(-11.5, -60, Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(-5, -40),  Math.toRadians(-180), loopVel, loopAccel)
-                .strafeToConstantHeading(new Vector2d(-4, -45),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(-2, -58),  Math.toRadians(-90), slowVel, slowAccel)
-                //.strafeToConstantHeading(new Vector2d(0, -50),loopVel, loopAccel)
-                .build();
-
-        Action LockToBigTriangle = drive.actionBuilder(new Pose2d(-2, -58, Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(0, -40),slowVel, slowAccel)
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),slowVel, superSlowAccel)
-                .build();
-
-        Action DriveBigTriangletoSecondMark = drive.actionBuilder(new Pose2d(-11.5,-21,Math.toRadians(-90)))
-                .splineToConstantHeading(new Vector2d(13.5, -20), Math.toRadians(-90), fastVel, fastAccel)
-                //.splineToConstantHeading(new Vector2d(11.5, -60), Math.toRadians(-90), normalVel, normalAccel)
-                .strafeToConstantHeading(new Vector2d(13.5, -60),slowVel, slowAccel)
-                .build();
-
-        Action DriveSecondMarktoBigTriangle = drive.actionBuilder(new Pose2d(13.5,-60,Math.toRadians(-90)))
-                //.splineToConstantHeading(new Vector2d(0, -20),  Math.toRadians(-270), intakeVel, intakeAccel)
-                .strafeToConstantHeading(new Vector2d(11.5, -30),fastVel, normalAccel)
-                //.strafeToConstantHeading(new Vector2d(-11.5, -21),specialVel, specialAccel)
-                .splineToConstantHeading(new Vector2d(-11.5, -21),  Math.toRadians(90),fastVel, slowAccel)
-                .build();
-
-        Action DriveShootingPositionToGateLock =  drive.actionBuilder(new Pose2d(-11.5, -21, Math.toRadians(-90)))
-                .strafeToConstantHeading(new Vector2d(0, -30), normalVel, normalAccel)
-                .build();
-
-         */
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
@@ -262,7 +204,11 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested())) {
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            drive.updatePoseEstimate();
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
     }

@@ -100,16 +100,18 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         // Drive to the shooting position
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveCloseStartPositionToBigTriangle));
+        drive.updatePoseEstimate();
+
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
-        sleep(500);  //TODO assess how much time is really needed here
-        // turn off intake to maximize power to the shooter
+        sleep(500);
         theRobot.SetIntakeMotor(true, true);
-        //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
-        drive.updatePoseEstimate();
+
 
         // -------------------------
         // BIG TRIANGLE -> THIRD STRIP -> WAIT
@@ -142,13 +144,12 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         );
 
         drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
+
         // -------------------------
         // BIG TRIANGLE -> SECOND MARK -> BIG TRIANGLE SHOOT
         // -------------------------
@@ -162,10 +163,8 @@ Red_Close_9Ball_withGate extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 

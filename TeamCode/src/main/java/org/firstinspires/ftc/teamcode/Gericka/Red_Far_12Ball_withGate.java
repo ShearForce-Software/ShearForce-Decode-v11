@@ -53,22 +53,6 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         blackboard.put(Gericka_Hardware.ALLIANCE_KEY, "RED");
 
         // ***************************************************
-        // ****  Define Velocity and Acceleration Constraints
-        // ***************************************************
-
-        VelConstraint fastVel = new TranslationalVelConstraint(90);
-        AccelConstraint fastAccel = new ProfileAccelConstraint(-65, 65);
-
-        VelConstraint normalVel = new TranslationalVelConstraint(60);
-        AccelConstraint normalAccel = new ProfileAccelConstraint(-30, 40);
-
-        VelConstraint slowVel = new TranslationalVelConstraint(40);
-        AccelConstraint slowAccel = new ProfileAccelConstraint(-25, 25);
-
-        VelConstraint superSlowVel = new TranslationalVelConstraint(30);
-        AccelConstraint superSlowAccel = new ProfileAccelConstraint(-15, 15);
-
-        // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
@@ -112,14 +96,16 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         // Drive to the shooting position
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
+        drive.updatePoseEstimate();
+
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
         sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
-        drive.updatePoseEstimate();
 
         // Change turret and shooter speeds for Big Triangle shots
         theRobot.SetLaunchRampPosition(theRobot.CloseLaunchHoodAngle);
@@ -143,9 +129,9 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         );
 
         drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+
         // SHOOT-3
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -161,9 +147,9 @@ Red_Far_12Ball_withGate extends LinearOpMode {
                 )
         );
         drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+
         // SHOOT-3
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -185,9 +171,8 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 

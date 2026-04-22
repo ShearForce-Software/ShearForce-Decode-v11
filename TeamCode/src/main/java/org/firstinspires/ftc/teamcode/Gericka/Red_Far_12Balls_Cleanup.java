@@ -96,12 +96,11 @@ Red_Far_12Balls_Cleanup extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
-        //Actions.runBlocking(new SleepAction(1));  //TODO why?  there is a sleep on the very next line, should only need 1 line of code
+        theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
         sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -117,10 +116,9 @@ Red_Far_12Balls_Cleanup extends LinearOpMode {
                 )
         );
         drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -137,10 +135,8 @@ Red_Far_12Balls_Cleanup extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -157,10 +153,8 @@ Red_Far_12Balls_Cleanup extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 

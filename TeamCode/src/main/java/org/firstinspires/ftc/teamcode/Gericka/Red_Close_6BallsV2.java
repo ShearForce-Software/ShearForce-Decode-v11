@@ -99,16 +99,17 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // Drive to the shooting position
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveCloseStartPositionToBigTriangle));
+        drive.updatePoseEstimate();
+
+        // turn off intake to maximize power to the shooter
+        theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
         sleep(500);
-        // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
-        //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
-        drive.updatePoseEstimate();
 
         // -------------------------
         // BIG TRIANGLE -> THIRD STRIP -> WAIT
@@ -121,15 +122,13 @@ Red_Close_6BallsV2 extends LinearOpMode {
                         new ParallelAction(theRobot.RedCloseDriveThirdMarkToBigTriangle, setIntakeOff())
                 )
         );
-
         drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
+
        /* // -------------------------
         // BIG TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
@@ -167,7 +166,11 @@ Red_Close_6BallsV2 extends LinearOpMode {
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
         telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested())) {
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            drive.updatePoseEstimate();
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
     }

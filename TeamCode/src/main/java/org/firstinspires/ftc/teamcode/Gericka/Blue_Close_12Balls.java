@@ -197,7 +197,11 @@ public class Blue_Close_12Balls extends LinearOpMode {
        telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);
        telemetry.update();
 
-        while ((getRuntime() < 29) && (!isStopRequested() )){
+        while ((getRuntime() < 29.8) && (!isStopRequested())) {
+            drive.updatePoseEstimate();
+            blackboard.put(Gericka_Hardware.FINAL_X_POSITION, drive.localizer.getPose().position.x);
+            blackboard.put(Gericka_Hardware.FINAL_Y_POSITION, drive.localizer.getPose().position.y);
+            blackboard.put(Gericka_Hardware.FINAL_HEADING_DEGREES, Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             sleep(20);
         }
 

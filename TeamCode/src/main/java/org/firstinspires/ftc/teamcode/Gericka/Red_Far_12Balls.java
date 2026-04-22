@@ -21,32 +21,6 @@ public class Red_Far_12Balls extends LinearOpMode {
 
     Gericka_Hardware theRobot = new Gericka_Hardware(false, false, this);
     Gericka_MecanumDrive drive;
-    Pose2d startPose;
-
-    // Trajectories
-    Action DriveToShootingPosition;
-
-    Action DriveToFirstMark;
-    Action ReturnFromFirstMark;
-
-    Action DriveToSecondMark;
-    Action ReturnFromSecondMark;
-
-    Action DriveToThirdMark;
-    Action DriveThirdMarkToBigTriangle;
-    Action DriveToGateLock;
-
-    public static boolean shoot3enabled = true;
-
-    // Constraints
-    VelConstraint fastVel = new TranslationalVelConstraint(85);
-    AccelConstraint fastAccel = new ProfileAccelConstraint(-60, 60);
-
-    VelConstraint intakeVel = new TranslationalVelConstraint(50);
-    AccelConstraint intakeAccel = new ProfileAccelConstraint(-30, 40);
-
-    int lifterUpSleepTime = 300;
-    int lifterDownSleepTime = 400;
 
     @Override
     public void runOpMode() {
@@ -130,14 +104,17 @@ public class Red_Far_12Balls extends LinearOpMode {
         // Drive to the shooting position
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
+        drive.updatePoseEstimate();
+
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
         theRobot.SetTurretRotationAngle(theRobot.RedFarLaunchTurretAngle);
+
         // SHOOT-3
         sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
-        drive.updatePoseEstimate();
 
         // -------------------------
         // FIRST STRIP -> BACK -> SHOOT
@@ -150,13 +127,10 @@ public class Red_Far_12Balls extends LinearOpMode {
                         new ParallelAction(theRobot.RedFarDriveFirstMarkToShootingPosition, setIntakeOff())
                 )
         );
-
-
         drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
 
         // SHOOT-3
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -173,9 +147,8 @@ public class Red_Far_12Balls extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -200,9 +173,8 @@ public class Red_Far_12Balls extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -233,7 +205,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         theRobot.SetTurretRotationAngle(0.0);
 
         // turn off intake
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
 
         Gericka_Hardware.autoTimeLeft = 30 - getRuntime();
         telemetry.addData("Time left", Gericka_Hardware.autoTimeLeft);

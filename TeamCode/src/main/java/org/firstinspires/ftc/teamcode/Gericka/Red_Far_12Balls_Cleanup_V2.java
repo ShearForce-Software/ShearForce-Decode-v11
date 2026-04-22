@@ -93,12 +93,14 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // Drive to the shooting position
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
+        drive.updatePoseEstimate();
+
         // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+        theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
         sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -114,10 +116,9 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
                 )
         );
         drive.updatePoseEstimate();
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
+
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -134,10 +135,8 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
@@ -154,10 +153,8 @@ Red_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        // turn off intake to maximize power to the shooter
-        theRobot.SetIntakeMotor(true, true);
         // SHOOT-3
-        //theRobot.ShootAutoThreeBalls();
+        theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 

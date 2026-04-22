@@ -206,10 +206,10 @@ public class Gericka_Hardware {
     public double FarLaunchHoodAngle=0.7; // References Done, needs tuning
 
 
-    public double RedFarLaunchTurretAngle = -116.0;
+    public double RedFarLaunchTurretAngle = -120.0;  // was -116 like blue but shot way left // was -122  // was -115 originally
     public double RedCloseLaunchTurretAngle = -136.0;
 
-    public double BlueFarLaunchTurretAngle = 116;
+    public double BlueFarLaunchTurretAngle = 116;    // was 117
     public double BlueCloseLaunchTurretAngle = 132;
     public boolean GamePad2LeftBumper = false;
 
@@ -337,6 +337,9 @@ public class Gericka_Hardware {
     public Action BlueFarDriveShootingPositionToSecondMark;
 
     public Action BlueFarDriveSecondMarkToShootingPosition;
+    public Action BlueFarDriveShootingPositionToThirdMark;
+
+    public Action BlueFarDriveThirdMarkToShootingPosition;
 
     public Action BlueFarDriveSecondMarkToLock;
 
@@ -874,6 +877,15 @@ public class Gericka_Hardware {
                 .build();
 
         BlueFarDriveSecondMarkToShootingPosition = drive.actionBuilder(new Pose2d(15.5, -60, Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(blueFarShootPositionSmallTriangle.position.x, blueFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
+                .build();
+
+        BlueFarDriveShootingPositionToThirdMark = drive.actionBuilder(blueFarShootPositionSmallTriangle)
+                .splineToConstantHeading(new Vector2d(-14, -31), Math.toRadians(-90), normalVel, normalAccel)
+                .strafeToConstantHeading(new Vector2d(-14, -57), normalVel, normalAccel)
+                .build();
+
+        BlueFarDriveThirdMarkToShootingPosition = drive.actionBuilder(new Pose2d(-14, -57, Math.toRadians(-90)))
                 .strafeToConstantHeading(new Vector2d(blueFarShootPositionSmallTriangle.position.x, blueFarShootPositionSmallTriangle.position.y), fastVel, normalAccel)
                 .build();
 
@@ -1625,9 +1637,12 @@ public class Gericka_Hardware {
         boolean tempLifterMode = GetAutoLifterMode();
         SetAutoLifterMode(false);
 
-        // shoot ball 1
-        SetLifterPosition(LIFTER_UP_POSITION);
-        SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        // shoot all loaded balls
+        SetLifterUp();
+        //SetLifterPosition(LIFTER_UP_POSITION);
+
+        opMode.sleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
+        //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
 
         SetLifterPosition(LIFTER_DOWN_POSITION);
 
