@@ -630,15 +630,25 @@ public class Gericka_Hardware {
     public void EndgameBuzzer(){
         boolean invalidHeading = false;
         double turretBearing = calculateBearingToAprilTag();
+
+        boolean beam2IsBroken = !beamBreak2.getState(); // Invert if 'true' means broken
+        boolean beam3IsBroken = !beamBreak3.getState();
+        boolean beam4IsBroken = !beamBreak4.getState();
+        boolean redLightOn = false;
+
+        if ((beam4IsBroken) && (!beam3IsBroken) &&(!beam2IsBroken)){
+            redLightOn = true;
+        }
+
         // check if it is possible for the turret to point at the target
         if ((turretBearing > MAX_TURRET_ANGLE) || (turretBearing < MIN_TURRET_ANGLE))
         {
             invalidHeading = true;
         }
 
-        if (invalidHeading) {
+        if (invalidHeading || redLightOn) {
             if (!opMode.gamepad1.isRumbling()) { // Check for possible overlap of rumbles.
-                opMode.gamepad1.rumbleBlips(3);
+                opMode.gamepad1.rumble(500);
             }
         }
         else if(opMode.getRuntime() < 84.5 && opMode.getRuntime() > 84.0){
@@ -1631,7 +1641,7 @@ public class Gericka_Hardware {
 
 
     public void ShootAutoBalls(){
-        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 1600;
+        final long LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS = 1400;
 
         // store the current auto lifter mode setting, then disable to ensure it doesn't interfere with logic
         boolean tempLifterMode = GetAutoLifterMode();
@@ -1645,6 +1655,8 @@ public class Gericka_Hardware {
         //SpecialSleep(LIFTER_MINIMAL_UP_DOWN_SLEEP_TIME_MILLISECONDS);
 
         SetLifterPosition(LIFTER_DOWN_POSITION);
+
+        opMode.sleep(200);
 
         // reset auto lifter mode to whatever it was before
         SetAutoLifterMode(tempLifterMode);

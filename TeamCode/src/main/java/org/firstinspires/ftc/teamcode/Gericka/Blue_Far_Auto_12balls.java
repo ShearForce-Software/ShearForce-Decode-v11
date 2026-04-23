@@ -32,6 +32,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // initialize roadrunner
         drive = new Gericka_MecanumDrive(hardwareMap, Gericka_Hardware.farBlueStartPose);
         theRobot.InitRoadRunner(drive);
+        theRobot.buildCommonAutoRoutes();
 
 
         // initialize the webcam
