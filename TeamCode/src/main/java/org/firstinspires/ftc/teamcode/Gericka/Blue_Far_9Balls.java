@@ -3,13 +3,9 @@ package org.firstinspires.ftc.teamcode.Gericka;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -32,7 +28,7 @@ Blue_Far_9Balls extends LinearOpMode {
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
-        theRobot.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(false);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
@@ -56,14 +52,16 @@ Blue_Far_9Balls extends LinearOpMode {
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                     theRobot.SetShooterPIDFCoefficients();
                 }
-                telemetry.update();
+                else {
+                    theRobot.ShowTelemetry();
+                    telemetry.update();
+                }
 
                 sleep(20);
             }
@@ -110,7 +108,7 @@ Blue_Far_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToFirstMark, setIntakeOn(), setLifterDown()),
                         //new SleepAction(0.250),
                         new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition, setIntakeOff())
                 )
@@ -128,7 +126,7 @@ Blue_Far_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, setIntakeOn(), setLifterDown()),
                         //new SleepAction(0.250),
                         new ParallelAction(theRobot.BlueFarDriveSecondMarkToShootingPosition, setIntakeOff())
                 )
@@ -218,6 +216,9 @@ Blue_Far_9Balls extends LinearOpMode {
             return false;
         }
     }
+    public Action setLifterDown() {
+        return new setLifterDown();
+    }
 
     public class SetLifterUp implements Action {
         private boolean initialized = false;
@@ -233,7 +234,7 @@ Blue_Far_9Balls extends LinearOpMode {
         }
     }
 
-    public class SetLifterDown implements Action {
+    public class setLifterDown implements Action {
         private boolean initialized = false;
 
         @Override

@@ -651,9 +651,13 @@ public class Gericka_Hardware {
                 opMode.gamepad1.rumble(500);
             }
         }
-        else if(opMode.getRuntime() < 84.5 && opMode.getRuntime() > 84.0){
+        else if(opMode.getRuntime() < 110.5 && opMode.getRuntime() > 110.0){
             opMode.gamepad1.rumble(1000);
             opMode.gamepad2.rumble(1000);
+        }
+        else if(opMode.getRuntime() < 100.5 && opMode.getRuntime() > 100){
+            opMode.gamepad1.rumble(500);
+            opMode.gamepad2.rumble(500);
         }
     }
     public void InitRoadRunner(Gericka_MecanumDrive roadrunner)
@@ -1444,12 +1448,12 @@ public class Gericka_Hardware {
         if (distanceInInches >= 126) { optimumShooterRPM = 3150; }
         else if (distanceInInches >= 120) {
             distanceAboveLower = distanceInInches - 120;
-            rpmDifferenceInRange = 3150 - 3100;
+            rpmDifferenceInRange = 3100 - 3000;
             optimumShooterRPM = 3100 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 114) {
             distanceAboveLower = distanceInInches - 114;
-            rpmDifferenceInRange = 3100 - 2900;
+            rpmDifferenceInRange = 3000 - 2900;
             optimumShooterRPM = 2900 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 108) {
@@ -1713,6 +1717,7 @@ public class Gericka_Hardware {
                 else if (intakeMotor.getPower() != 0) {
                     // if ready to turn off, leave on a tiny bit to push the last ball away
                     SpecialSleep(250);
+
                     intakeMotor.setPower(0);
                 }
             }

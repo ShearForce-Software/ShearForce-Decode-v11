@@ -71,26 +71,28 @@ public class Blue_Close_12Balls extends LinearOpMode {
             .strafeToConstantHeading(new Vector2d(-54, -16))
             .build();
 
-        theRobot.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(false);
 
     // ***************************************************
     // ****  Secondary Thread to run all the time ********
     // ***************************************************
-    Thread secondaryThread = new Thread(() -> {
-        while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
-                //control.ShowPinpointTelemetry();
-
-            theRobot.SetIndicatorLights();
+        Thread SecondaryThread = new Thread(() -> {
+            while (!isStopRequested() && getRuntime() < 30) {
+                theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
+                    theRobot.SetShooterPIDFCoefficients();
                 }
-            telemetry.update();
-            sleep(20);
-        }
-    });
-    secondaryThread.start();
+                else {
+                    theRobot.ShowTelemetry();
+                    telemetry.update();
+                }
+
+                sleep(20);
+            }
+        });
+        SecondaryThread.start();
 
     // Turret initial rough angle toward speaker (tune as needed)
     double turretTargetAngle = 142

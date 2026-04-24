@@ -55,7 +55,7 @@ public class Red_Far_12Balls extends LinearOpMode {
         // set lifter half up (so can get 3 balls loaded in robot)
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
-        theRobot.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(false);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
@@ -64,20 +64,21 @@ public class Red_Far_12Balls extends LinearOpMode {
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                     theRobot.SetShooterPIDFCoefficients();
                 }
-                telemetry.update();
+                else {
+                    theRobot.ShowTelemetry();
+                    telemetry.update();
+                }
 
                 sleep(20);
             }
         });
         SecondaryThread.start();
-
         // ***************************************************
         // ****  WAIT for START/PLAY to be pushed ************
         // ***************************************************

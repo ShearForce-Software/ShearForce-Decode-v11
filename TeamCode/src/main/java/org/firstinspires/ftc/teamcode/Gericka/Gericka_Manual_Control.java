@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Gericka_Manual_Control extends LinearOpMode {
     Gericka_Hardware theRobot;
     //public int turretTrackingID = 24; // default to Red
-    final float TURRET_ROTATION_ANGLE_INCREMENT = 7.0f;
+    final float TURRET_ROTATION_ANGLE_INCREMENT = 15.0f;
     final double shooterSpeedRPMIncrement = 50;
     boolean resetTurretEnabled = true;
 
@@ -53,6 +53,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         }
 
         // set auto settings
+
         theRobot.SetAutoShooterMode(true);  // auto adjusts speed of shooter motors based on distance
         theRobot.SetUseOnlyWebcamForDistance(false);  // true means only use webcam, false means use pinpoint and webcam for distance calculations of shooter speed
         theRobot.SetAutoLifterMode(false);   // auto lifts lifter half-way if ball detected on top of lifter arm
@@ -84,6 +85,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
+
                     theRobot.SetShooterPIDFCoefficients(); // does nothing unless shooterPIDF_Enabled and PIDF values have been changed
                     theRobot.SetTurretPIDFCoefficients();
                     // Run the Auto Lift to Midway position (if enabled)
@@ -107,6 +109,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
         waitForStart();
         resetRuntime();
         theRobot.setKickstandsUp();
+        theRobot.SetLifterDown();// setting shoot lifter down at the start.
 
 
         boolean gamepad1_optionsWasPressed = false;
@@ -361,7 +364,7 @@ public class Gericka_Manual_Control extends LinearOpMode {
                 //Set lifter position to up
             //    theRobot.SetLifterUp();
             //} else if (gamepad1.rightBumperWasReleased()) {
-            //    theRobot.SetLifterDown();
+            //    theRobot.setLifterDown();
             } else if (gamepad2.leftBumperWasPressed()) {
                 theRobot.GamePad2LeftBumper = true;
                 theRobot.SetLifterUp();

@@ -32,7 +32,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
-        theRobot.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(false);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
@@ -56,14 +56,16 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                     theRobot.SetShooterPIDFCoefficients();
                 }
-                telemetry.update();
+                else {
+                    theRobot.ShowTelemetry();
+                    telemetry.update();
+                }
 
                 sleep(20);
             }
@@ -110,9 +112,11 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarCleanUpDriveToFirstMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveFirstMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -128,9 +132,11 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarCleanUpDriveToSecondMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveSecondMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueFarCleanUpDriveSecondMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -148,9 +154,11 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveShootingPositionToCollectGateBalls, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarCleanUpDriveShootingPositionToCollectGateBalls,
                         // new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveCollectGateBallsToShootingPosition, setIntakeOn())
+                        setIntakeOff(),
+                        theRobot.BlueFarCleanUpDriveCollectGateBallsToShootingPosition
                 )
         );
         drive.updatePoseEstimate();

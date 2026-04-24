@@ -50,7 +50,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // finish initializing pinpoint / roadrunner initial position
         theRobot.SetRoadrunnerInitialPosition(Gericka_Hardware.closeRedStartPose.position.x, Gericka_Hardware.closeRedStartPose.position.y, 90);
 
-        theRobot.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(false);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
@@ -61,14 +61,16 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                     theRobot.SetShooterPIDFCoefficients();
                 }
-                telemetry.update();
+                else {
+                    theRobot.ShowTelemetry();
+                    telemetry.update();
+                }
 
                 sleep(20);
             }

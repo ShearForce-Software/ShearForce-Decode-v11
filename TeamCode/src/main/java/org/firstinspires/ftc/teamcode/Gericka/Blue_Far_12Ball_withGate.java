@@ -42,7 +42,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.buildCommonAutoRoutes();
         theRobot.WebcamInit(this.hardwareMap);
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
-        theRobot.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(false);
         theRobot.SetShooterPIDF_Enabled(true);
         theRobot.SetAutoIntakeMode(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
@@ -67,15 +67,19 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                     theRobot.SetShooterPIDFCoefficients();
                     theRobot.RunAutoIntake();
+
                 }
-                telemetry.update();
+                else {
+                    theRobot.ShowTelemetry();
+                    telemetry.update();
+                }
+
 
                 sleep(20);
             }

@@ -57,7 +57,7 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         theRobot.SetLifterPosition(theRobot.LIFTER_MID_POSITION);
 
 
-        theRobot.SetAutoLifterMode(true);
+        theRobot.SetAutoLifterMode(false);
         theRobot.SetShooterPIDF_Enabled(true);
         Gericka_Hardware.shooterF = theRobot.PIDF_F_SMALL_TRIANGLE;
 
@@ -66,14 +66,16 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         // ***************************************************
         Thread SecondaryThread = new Thread(() -> {
             while (!isStopRequested() && getRuntime() < 30) {
-                theRobot.ShowTelemetry();
                 theRobot.SetIndicatorLights();
 
                 if (isStarted()) {
                     theRobot.RunAutoLifter();
                     theRobot.SetShooterPIDFCoefficients();
                 }
-                telemetry.update();
+                else {
+                    theRobot.ShowTelemetry();
+                    telemetry.update();
+                }
 
                 sleep(20);
             }
@@ -123,9 +125,11 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveShootingPositionToFirstMark,
                         new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveFirstMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -141,9 +145,11 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveShootingPositionToSecondMark,
                         new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarDriveSecondMarkToShootingPosition, setIntakeOff())
+                        theRobot.BlueFarDriveSecondMarkToShootingPosition,
+                        setIntakeOff()
                 )
         );
         drive.updatePoseEstimate();
@@ -165,9 +171,12 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveShootingPositionToThirdMark,
                         new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarDriveThirdMarkToBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveThirdMarkToBigTriangle
+
                 )
         );
         drive.updatePoseEstimate();
