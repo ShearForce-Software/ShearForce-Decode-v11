@@ -96,7 +96,7 @@ Red_Far_9Balls extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
+        Actions.runBlocking(theRobot.RedFarDriveFarStartPositionToShootingPosition);
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
@@ -115,9 +115,11 @@ Red_Far_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedFarDriveShootingPositionToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedFarDriveShootingPositionToFirstMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.RedFarDriveFirstMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.RedFarDriveFirstMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -138,9 +140,11 @@ Red_Far_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedFarDriveShootingPositionToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedFarDriveShootingPositionToSecondMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.RedFarDriveSecondMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.RedFarDriveSecondMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -157,7 +161,7 @@ Red_Far_9Balls extends LinearOpMode {
         // SMALL TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveShootingPositionToGateLock, setIntakeOff()));
+        Actions.runBlocking(theRobot.RedFarDriveShootingPositionToGateLock);
 
         // -------------------------
         // Cleanup

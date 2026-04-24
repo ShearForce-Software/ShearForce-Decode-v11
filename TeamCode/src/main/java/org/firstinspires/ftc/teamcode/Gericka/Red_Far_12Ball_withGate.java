@@ -97,7 +97,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveFarStartPositionToShootingPosition));
+        Actions.runBlocking(theRobot.RedFarDriveFarStartPositionToShootingPosition);
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
@@ -122,11 +122,13 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedFarDriveShootingPositionToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedFarDriveShootingPositionToSecondMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.RedFarDriveSecondMarkToLock, setIntakeOff()),
+                        setIntakeOff(),
+                        theRobot.RedFarDriveSecondMarkToLock,
                         new SleepAction(1.5),
-                        new ParallelAction(theRobot.RedFarDriveLockToBigTriangle)
+                        theRobot.RedFarDriveLockToBigTriangle
                 )
         );
 
@@ -143,9 +145,11 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedFarDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedFarDriveBigTriangleToThirdMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.RedFarDriveThirdMarkToBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.RedFarDriveThirdMarkToBigTriangle
                 )
         );
         drive.updatePoseEstimate();
@@ -166,9 +170,11 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedFarDriveBigTriangleToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedFarDriveBigTriangleToFirstMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.RedFarDriveFirstMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.RedFarDriveFirstMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -185,7 +191,7 @@ Red_Far_12Ball_withGate extends LinearOpMode {
         // SMALL TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.RedFarDriveOutOfShootingPosition, setIntakeOff()));
+        Actions.runBlocking(theRobot.RedFarDriveOutOfShootingPosition);
 
         // -------------------------
         // Cleanup

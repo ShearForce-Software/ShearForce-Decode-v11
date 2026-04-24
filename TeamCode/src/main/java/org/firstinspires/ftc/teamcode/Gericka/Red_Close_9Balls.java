@@ -99,7 +99,7 @@ Red_Close_9Balls extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveCloseStartPositionToBigTriangle));
+        Actions.runBlocking(theRobot.RedCloseDriveCloseStartPositionToBigTriangle);
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
@@ -118,9 +118,11 @@ Red_Close_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedCloseDriveBigTriangleToThirdMark,
                         //new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(theRobot.RedCloseDriveThirdMarkToBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.RedCloseDriveThirdMarkToBigTriangle
                 )
         );
         drive.updatePoseEstimate();
@@ -136,9 +138,11 @@ Red_Close_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedCloseDriveBigTriangleToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedCloseDriveBigTriangleToSecondMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.RedCloseDriveSecondMarkToBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.RedCloseDriveSecondMarkToBigTriangle
                 )
         );
         drive.updatePoseEstimate();
@@ -154,7 +158,7 @@ Red_Close_9Balls extends LinearOpMode {
         // BIG TRIANGLE -> PARK NEXT TO GATE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveShootingPositionToGateLock, setIntakeOff()));
+        Actions.runBlocking(theRobot.RedCloseDriveShootingPositionToGateLock);
 
         // -------------------------
         // Cleanup
