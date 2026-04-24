@@ -103,7 +103,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.BlueCloseDriveCloseStartPositionToBigTriangle));
+        Actions.runBlocking(theRobot.BlueCloseDriveCloseStartPositionToBigTriangle);
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
@@ -122,9 +122,11 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueCloseDriveBigTriangleToThirdMark,
                         new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(theRobot.BlueCloseDriveThirdMarkToBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueCloseDriveThirdMarkToBigTriangle
                 )
         );
 
@@ -146,7 +148,7 @@ Blue_Close_6BallsV2 extends LinearOpMode {
         // BIG TRIANGLE -> PARK INSIDE BIG TRIANGLE
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.BlueCloseDriveToInsideBigTriangle, setIntakeOff()));
+        Actions.runBlocking(theRobot.BlueCloseDriveToInsideBigTriangle);
 
         // -------------------------
         // Cleanup

@@ -122,9 +122,11 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueCloseDriveBigTriangleToThirdMark,
                         new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(theRobot.BlueCloseDriveThirdMarkToLock, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueCloseDriveThirdMarkToLock
                 )
         );
         // turn off intake to save battery power
@@ -160,9 +162,11 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueCloseDriveDriveBigTriangletoSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueCloseDriveDriveBigTriangletoSecondMark,
                         new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueCloseDriveDriveSecondMarktoBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueCloseDriveDriveSecondMarktoBigTriangle
                 )
         );
         drive.updatePoseEstimate();

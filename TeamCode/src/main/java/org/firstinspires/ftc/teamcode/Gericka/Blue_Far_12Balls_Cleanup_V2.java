@@ -96,7 +96,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.BlueFarDriveStartingPositionToShootingPosition));
+        Actions.runBlocking(theRobot.BlueFarDriveStartingPositionToShootingPosition);
         // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(false, true);
 
@@ -175,7 +175,7 @@ Blue_Far_12Balls_Cleanup_V2 extends LinearOpMode {
         // SMALL TRIANGLE -> PARK
         // -------------------------
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.BlueFarCleanUpDriveOutOfSmallTriangle, setIntakeOff()));
+        Actions.runBlocking(theRobot.BlueFarCleanUpDriveOutOfSmallTriangle);
 
         // -------------------------
         // Cleanup

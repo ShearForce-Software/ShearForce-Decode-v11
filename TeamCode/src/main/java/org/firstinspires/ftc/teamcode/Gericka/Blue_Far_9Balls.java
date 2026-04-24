@@ -108,9 +108,11 @@ Blue_Far_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToFirstMark, setIntakeOn(), setLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveShootingPositionToFirstMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveFirstMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -126,9 +128,11 @@ Blue_Far_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, setIntakeOn(), setLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveShootingPositionToSecondMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarDriveSecondMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveSecondMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();

@@ -112,9 +112,11 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveToSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarCleanUpDriveToSecondMark,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveSecondMarkToShootingPosition, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueFarCleanUpDriveSecondMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -130,9 +132,11 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveToFirstMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarCleanUpDriveToFirstMark,
+                        setIntakeOff(),
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveFirstMarkToShootingPosition, setIntakeOff())
+                        theRobot.BlueFarCleanUpDriveFirstMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
@@ -148,9 +152,11 @@ Blue_Far_12Balls_Cleanup extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveShootingPositionToCollectGateBalls, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarCleanUpDriveShootingPositionToCollectGateBalls,
                         //new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueFarCleanUpDriveCollectGateBallsToShootingPosition, setIntakeOn())
+                        setIntakeOff(),
+                        theRobot.BlueFarCleanUpDriveCollectGateBallsToShootingPosition
                 )
         );
         drive.updatePoseEstimate();

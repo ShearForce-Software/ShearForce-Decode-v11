@@ -120,9 +120,11 @@ Blue_Close_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueCloseDriveBigTriangleToThirdMark,
                         new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(theRobot.BlueCloseDriveThirdMarkToBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueCloseDriveThirdMarkToBigTriangle
                 )
         );
 
@@ -141,9 +143,11 @@ Blue_Close_9Balls extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueCloseDriveDriveBigTriangletoSecondMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueCloseDriveDriveBigTriangletoSecondMark,
                         new SleepAction(0.250),
-                        new ParallelAction(theRobot.BlueCloseDriveDriveSecondMarktoBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.BlueCloseDriveDriveSecondMarktoBigTriangle
                 )
         );
         drive.updatePoseEstimate();

@@ -148,8 +148,9 @@ public class Blue_Far_Auto_12balls extends LinearOpMode {
                         setIntakeOn(),
                         theRobot.BlueFarDriveShootingPositionToSecondMark,
                         new SleepAction(0.250),
-                        theRobot.BlueFarDriveSecondMarkToShootingPosition,
-                        setIntakeOff()
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveSecondMarkToShootingPosition
+
                 )
         );
         drive.updatePoseEstimate();

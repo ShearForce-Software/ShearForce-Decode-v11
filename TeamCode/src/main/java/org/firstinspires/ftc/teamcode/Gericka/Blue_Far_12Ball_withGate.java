@@ -133,11 +133,13 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveShootingPositionToSecondMark, new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveShootingPositionToSecondMark,
                         //new SleepAction(0.100),
-                        new ParallelAction(theRobot.BlueFarDriveSecondMarkToLock),
+                        theRobot.BlueFarDriveSecondMarkToLock,
                         new SleepAction(1.5),  // HOLD GATE OPEN timer
-                        new ParallelAction(theRobot.BlueFarDriveLockToBigTriangle)
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveLockToBigTriangle
                 )
         );
         drive.updatePoseEstimate();
@@ -153,9 +155,11 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveBigTriangleToThirdMark, new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveBigTriangleToThirdMark,
                         //new SleepAction(0.100),
-                        new ParallelAction(theRobot.BlueFarDriveThirdMarkToBigTriangle)
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveThirdMarkToBigTriangle
                 )
         );
         drive.updatePoseEstimate();
@@ -176,9 +180,11 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.BlueFarDriveBigTriangleToFirstMark, new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.BlueFarDriveBigTriangleToFirstMark,
                         //new SleepAction(0.100),
-                        new ParallelAction(theRobot.BlueFarDriveFirstMarkToShootingPosition)
+                        setIntakeOff(),
+                        theRobot.BlueFarDriveFirstMarkToShootingPosition
                 )
         );
         drive.updatePoseEstimate();
