@@ -490,15 +490,14 @@ public final class Gericka_MecanumDrive {
     }
 
     private void drawPoseHistory(Canvas c) {
-        double[] xPoints = new double[poseHistory.size()];
-        double[] yPoints = new double[poseHistory.size()];
+        int PoseHistorySize = poseHistory.size();
+        double[] xPoints = new double[PoseHistorySize];
+        double[] yPoints = new double[PoseHistorySize];
 
-        int i = 0;
-        for (Pose2d t : poseHistory) {
+        for (int i = 0; i < PoseHistorySize; ++i) {
+            Pose2d t = poseHistory.get(i);
             xPoints[i] = t.position.x;
             yPoints[i] = t.position.y;
-
-            i++;
         }
 
         c.setStrokeWidth(1);

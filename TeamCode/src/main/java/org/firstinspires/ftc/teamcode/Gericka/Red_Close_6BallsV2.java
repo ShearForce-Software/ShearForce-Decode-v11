@@ -100,7 +100,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
         // -------------------------
         // Drive to the shooting position
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(theRobot.RedCloseDriveCloseStartPositionToBigTriangle));
+        Actions.runBlocking(theRobot.RedCloseDriveCloseStartPositionToBigTriangle);
         drive.updatePoseEstimate();
 
         // turn off intake to maximize power to the shooter
@@ -119,9 +119,11 @@ Red_Close_6BallsV2 extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(theRobot.RedCloseDriveBigTriangleToThirdMark, setIntakeOn(), new SetLifterDown()),
+                        setIntakeOn(),
+                        theRobot.RedCloseDriveBigTriangleToThirdMark,
                         new SleepAction(0.250), // sleep time to finish intaking the balls
-                        new ParallelAction(theRobot.RedCloseDriveThirdMarkToBigTriangle, setIntakeOff())
+                        setIntakeOff(),
+                        theRobot.RedCloseDriveThirdMarkToBigTriangle
                 )
         );
         drive.updatePoseEstimate();
