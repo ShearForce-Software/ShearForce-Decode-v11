@@ -114,7 +114,7 @@ Blue_Far_12Ball_withGate extends LinearOpMode {
         theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
-        sleep(1200);
+        sleep(theRobot.autoSleepTime);  // first time shooting give a tiny extra wait to allow shooter to spin up
         theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);

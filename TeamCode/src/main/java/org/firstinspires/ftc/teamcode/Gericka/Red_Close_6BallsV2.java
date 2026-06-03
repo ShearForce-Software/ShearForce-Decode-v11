@@ -108,7 +108,7 @@ Red_Close_6BallsV2 extends LinearOpMode {
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
-        sleep(500);
+        sleep(theRobot.autoCloseSleepTime);
         theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);

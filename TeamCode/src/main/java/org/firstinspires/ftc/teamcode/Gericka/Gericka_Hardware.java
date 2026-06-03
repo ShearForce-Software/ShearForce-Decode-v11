@@ -147,7 +147,8 @@ public class Gericka_Hardware {
     public static double turretD = 0.0;
     public static double turretF = 0.0;
     public static double turretF_spinning = 1.0;
-
+    public long autoSleepTime = 1000;
+    public long autoCloseSleepTime = 350;
     final float MAX_SHOOTER_RPM = 4500;
     final float MIN_SHOOTER_RPM = 0;
     final double YELLOW_JACKET_19_1_TICKS = 537.7; // 19.2:1 - ticks per motor shaft revolution
@@ -198,8 +199,8 @@ public class Gericka_Hardware {
     double stallTimer = 0;
 
     //CommonAngles and RPM:
-    public double FarLaunchRPM= 3000; // References Done, needs tuning
-    public double CloseLaunchRPM=2400.0; // References Done, needs tuning
+    public double FarLaunchRPM= 2950; // References Done, needs tuning
+    public double CloseLaunchRPM= 2350.0; // References Done, needs tuning
 
 
     public double CloseLaunchHoodAngle=0.5; // References Done, needs tuning
@@ -244,7 +245,7 @@ public class Gericka_Hardware {
 
     //Common Shooter Positions
     public static final Pose2d redCloseShootPositionBigTriangle = new Pose2d(-11.5, 21, Math.toRadians(90));
-    public static final Pose2d blueCloseShootPositionBigTriangle = new Pose2d(-11.5, -21, Math.toRadians(-90));
+    public static final Pose2d blueCloseShootPositionBigTriangle = new Pose2d(-7.25, -25.25, Math.toRadians(-90));
 
     public static final Pose2d redFarShootPositionSmallTriangle = new Pose2d(48, 12, Math.toRadians(90));
 
@@ -299,10 +300,12 @@ public class Gericka_Hardware {
     public Action RedFarCleanUpDriveFirstMarkToShootingPosition;
 
     public Action RedFarCleanUpDriveShootingPositionToCollectGateBalls;
+    public Action RedFarCleanUpDriveShootingPositionToCollectGateBalls2;
 
     public Action RedFarCleanUpDriveToSecondMark;
 
     public Action RedFarCleanUpDriveCollectGateBallsToShootingPosition;
+    public Action RedFarCleanUpDriveCollectGateBallsToShootingPosition2;
 
     public Action RedFarCleanUpDriveOutOfSmallTriangle;
 
@@ -327,6 +330,9 @@ public class Gericka_Hardware {
     public Action BlueCloseDriveDriveSecondMarktoBigTriangle;
 
     public Action BlueCloseDriveDriveShootingPositionToGateLock;
+    public Action BlueCloseDriveBigTriangleToFirstMark;
+    public Action BlueCLoseDriveFirstMarkToBigTriangle;
+    public Action BlueCloseDriveFirstMarkToPark;
 
     public Action BlueFarDriveStartingPositionToShootingPosition;
 
@@ -360,14 +366,19 @@ public class Gericka_Hardware {
     public Action BlueFarCleanUpDriveFirstMarkToShootingPosition;
 
     public Action BlueFarCleanUpDriveShootingPositionToCollectGateBalls;
+    public Action BlueFarCleanUpDriveShootingPositionToCollectGateBalls2;
+
 
     public Action BlueFarCleanUpDriveToSecondMark;
 
     public Action BlueFarCleanUpDriveCollectGateBallsToShootingPosition;
+    public Action BlueFarCleanUpDriveCollectGateBallsToShootingPosition2;
+
 
     public Action BlueFarCleanUpDriveOutOfSmallTriangle;
 
     public Action BlueFarCleanUpDriveSecondMarkToShootingPosition;
+    public Action BlueFarDriveTowardCenter;
 
 
 
@@ -636,7 +647,7 @@ public class Gericka_Hardware {
         boolean beam4IsBroken = !beamBreak4.getState();
         boolean redLightOn = false;
 
-        if ((beam4IsBroken) && (!beam3IsBroken) &&(!beam2IsBroken)){
+        if ((beam4IsBroken)  &&(!beam2IsBroken)){ //&& (!beam3IsBroken)
             redLightOn = true;
         }
 
@@ -793,12 +804,22 @@ public class Gericka_Hardware {
                 //.strafeToConstantHeading(new Vector2d(48, 12), fastVel, normalAccel)
                 .build();
 
+
         RedFarCleanUpDriveShootingPositionToCollectGateBalls = drive.actionBuilder(new Pose2d(48,12, Math.toRadians(90)))
-                .splineToLinearHeading(new Pose2d(25,56,Math.toRadians(30)),Math.toRadians(150), fastVel, normalAccel)
-                .strafeToLinearHeading(new Vector2d(60,58), Math.toRadians(0), normalVel, normalAccel)
+                .splineToLinearHeading(new Pose2d(30,56,Math.toRadians(30)),Math.toRadians(150), fastVel, normalAccel)
+                .strafeToLinearHeading(new Vector2d(60,60), Math.toRadians(0), normalVel, normalAccel)
                 .build();
 
-        RedFarCleanUpDriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,58,Math.toRadians(0)))
+        RedFarCleanUpDriveShootingPositionToCollectGateBalls2 = drive.actionBuilder(new Pose2d(48,12, Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(30,56,Math.toRadians(30)),Math.toRadians(150), fastVel, normalAccel)
+                .strafeToLinearHeading(new Vector2d(60,60), Math.toRadians(0), normalVel, normalAccel)
+                .build();
+
+        RedFarCleanUpDriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,60,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(48,12), Math.toRadians(90), fastVel, normalAccel)
+                .build();
+
+        RedFarCleanUpDriveCollectGateBallsToShootingPosition2 = drive.actionBuilder(new Pose2d(60,60,Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(48,12), Math.toRadians(90), fastVel, normalAccel)
                 .build();
 
@@ -870,6 +891,22 @@ public class Gericka_Hardware {
                 .strafeToConstantHeading(new Vector2d(0, -30), normalVel, normalAccel)
                 .build();
 
+
+        BlueCloseDriveBigTriangleToFirstMark = drive.actionBuilder(blueCloseShootPositionBigTriangle)
+                .strafeToConstantHeading(new Vector2d(34.75, -30), fastVel, fastAccel)
+                //.splineToConstantHeading(new Vector2d(34.75, 60), Math.toRadians(90), intakeVel, intakeAccel)
+                .strafeToConstantHeading(new Vector2d(34.75, -60), normalVel, normalAccel)
+                .build();
+
+        BlueCLoseDriveFirstMarkToBigTriangle = drive.actionBuilder(new Pose2d(34.75,-60,Math.toRadians(-90)))
+                .splineToConstantHeading(new Vector2d(blueCloseShootPositionBigTriangle.position.x, blueCloseShootPositionBigTriangle.position.y),  Math.toRadians(90),fastVel, slowAccel)
+                .build();
+
+        BlueCloseDriveFirstMarkToPark = drive.actionBuilder(new Pose2d(34.75,-60,Math.toRadians(-90)))
+                .strafeToConstantHeading(new Vector2d(18, -30), fastVel, fastAccel)
+                .build();
+
+
         //BlueFarDrive
         BlueFarDriveStartingPositionToShootingPosition = drive.actionBuilder(farBlueStartPose)
                 .strafeToConstantHeading(new Vector2d(48, -12), fastVel, fastAccel)
@@ -935,6 +972,9 @@ public class Gericka_Hardware {
         BlueFarDriveOutofShootingPosition =  drive.actionBuilder(blueFarShootPositionSmallTriangle)
                 .strafeToConstantHeading(new Vector2d(38, -12), fastVel, fastAccel)
                 .build();
+        BlueFarDriveTowardCenter = drive.actionBuilder(blueFarShootPositionSmallTriangle)
+                .strafeToConstantHeading(new Vector2d(34,-12))
+                .build();
 
 
 
@@ -951,9 +991,17 @@ public class Gericka_Hardware {
                 .build();
 
         BlueFarCleanUpDriveShootingPositionToCollectGateBalls = drive.actionBuilder(new Pose2d(48,-12, Math.toRadians(-90)))
-                .splineToLinearHeading(new Pose2d(25,-56,Math.toRadians(-30)),Math.toRadians(-150), fastVel, normalAccel)
+                .splineToLinearHeading(new Pose2d(30,-56,Math.toRadians(-30)),Math.toRadians(-150), fastVel, normalAccel)
                 //.splineToLinearHeading(new Pose2d(60,-58,Math.toRadians(0)),Math.toRadians(90), normalVel, normalAccel)
-                .strafeToLinearHeading(new Vector2d(60,-58), Math.toRadians(0), normalVel, normalAccel)
+                .strafeToLinearHeading(new Vector2d(60,-60), Math.toRadians(0), normalVel, normalAccel)
+                //.splineToConstantHeading(new Vector2d(60, -60),  Math.toRadians(0), fastVel, normalAccel)
+                //.strafeToConstantHeading(new Vector2d(60,-60), fastVel, normalAccel)
+                .build();
+
+        BlueFarCleanUpDriveShootingPositionToCollectGateBalls2 = drive.actionBuilder(new Pose2d(48,-12, Math.toRadians(-90)))
+                .splineToLinearHeading(new Pose2d(30,-56,Math.toRadians(-30)),Math.toRadians(-150), fastVel, normalAccel)
+                //.splineToLinearHeading(new Pose2d(60,-58,Math.toRadians(0)),Math.toRadians(90), normalVel, normalAccel)
+                .strafeToLinearHeading(new Vector2d(60,-60), Math.toRadians(0), normalVel, normalAccel)
                 //.splineToConstantHeading(new Vector2d(60, -60),  Math.toRadians(0), fastVel, normalAccel)
                 //.strafeToConstantHeading(new Vector2d(60,-60), fastVel, normalAccel)
                 .build();
@@ -963,7 +1011,11 @@ public class Gericka_Hardware {
                 .splineToConstantHeading(new Vector2d(15.5, -60), Math.toRadians(-90), normalVel, normalAccel)
                 .build();
 
-        BlueFarCleanUpDriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,-58,Math.toRadians(0)))
+        BlueFarCleanUpDriveCollectGateBallsToShootingPosition = drive.actionBuilder(new Pose2d(60,-60,Math.toRadians(0)))
+                .strafeToLinearHeading(new Vector2d(48,-12), Math.toRadians(-90), fastVel, normalAccel)
+                .build();
+
+        BlueFarCleanUpDriveCollectGateBallsToShootingPosition2 = drive.actionBuilder(new Pose2d(60,-60,Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(48,-12), Math.toRadians(-90), fastVel, normalAccel)
                 .build();
 
@@ -978,6 +1030,7 @@ public class Gericka_Hardware {
                 //.strafeToConstantHeading(new Vector2d(30,-12),fastVel,fastAccel)
                 //.strafeToConstantHeading(new Vector2d(48,-12),fastVel,normalAccel)
                 .build();
+
     }
 
     public void ShowRoadrunnerPosition() {
@@ -1325,15 +1378,15 @@ public class Gericka_Hardware {
         }
 
         // **** INDICATOR LIGHT #2              ************
-        if (beam3IsBroken){
+        /*if (beam3IsBroken){
             light2.setPosition(INDICATOR_GREEN);
         }
         else {
             light2.setPosition(INDICATOR_BLACK);
-        }
+        }*/
 
         // **** INDICATOR LIGHT #3              ************
-        if ((beam4IsBroken) && (!beam3IsBroken) &&(!beam2IsBroken)){
+        if ((beam4IsBroken)  &&(!beam2IsBroken)){ // && (!beam3IsBroken)
             light3.setPosition(INDICATOR_RED);
         }
         else if (beam4IsBroken){
@@ -1448,12 +1501,12 @@ public class Gericka_Hardware {
         if (distanceInInches >= 126) { optimumShooterRPM = 3150; }
         else if (distanceInInches >= 120) {
             distanceAboveLower = distanceInInches - 120;
-            rpmDifferenceInRange = 3100 - 3000;
-            optimumShooterRPM = 3100 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
+            rpmDifferenceInRange = 3000 - 2950;
+            optimumShooterRPM = 2950 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 114) {
             distanceAboveLower = distanceInInches - 114;
-            rpmDifferenceInRange = 3000 - 2900;
+            rpmDifferenceInRange = 2950 - 2900;
             optimumShooterRPM = 2900 + (distanceAboveLower / differenceInMeasurements) * rpmDifferenceInRange;
         }
         else if (distanceInInches >= 108) {

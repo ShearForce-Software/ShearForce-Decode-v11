@@ -106,8 +106,7 @@ Blue_Close_9Ball_withGate extends LinearOpMode {
 
         // SHOOT-3
         // first time shooting give a tiny extra wait to allow shooter to finish spinning up
-        sleep(500);
-        // turn off intake to maximize power to the shooter
+        sleep(theRobot.autoCloseSleepTime);        // turn off intake to maximize power to the shooter
         theRobot.SetIntakeMotor(true, true);
         //theRobot.ShootAutoThreeBalls();
         theRobot.ShootAutoBalls();

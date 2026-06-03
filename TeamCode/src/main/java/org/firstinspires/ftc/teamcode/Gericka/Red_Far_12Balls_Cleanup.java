@@ -101,7 +101,7 @@ Red_Far_12Balls_Cleanup extends LinearOpMode {
         theRobot.SetIntakeMotor(false, true);
 
         // SHOOT-3
-        sleep(1200);  // first time shooting give a tiny extra wait to allow shooter to spin up
+        sleep(theRobot.autoSleepTime);  // first time shooting give a tiny extra wait to allow shooter to spin up
         theRobot.SetIntakeMotor(true, true);
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
@@ -166,7 +166,7 @@ Red_Far_12Balls_Cleanup extends LinearOpMode {
         theRobot.ShootAutoBalls();
         theRobot.SetIntakeMotor(false, true);
 
-        // Command Turret to start storing itself at 0
+        // Command Turret to start storing itself at 0f
         theRobot.SetTurretRotationAngle(0.0);
 
         // -------------------------
