@@ -1,21 +1,72 @@
 = Shear Force Software Team To-Do List:
 
-== Tasks to be worked
+== First things first
 
-=== Testing Needed
-
-- [ ] Test & tweak new Auto small triangle shoot angle (16) until consistently making shots
-- [ ] Test turret tracking with camera reinstalled, is it better or worse?
-- [ ] Test flexible gate blocking mechanism, are misfires not happening anymore?
-- [ ] Test & tweak auto shoot routines, how fast can we make it and still get 3 shots out consistently?
-- [ ] Test gate hit then intake, do we need to just leave intake on, or can we use auto intake?
-
-=== MORE Autonomous Routes
-- [ ] Plan out what new Auto routes we need
-- [ ] Create new gate hit then cleanup route to big triangle shoot
-- [ ] Create new gate hit then cleanup route to small triangle shoot
+- [ ] Put Worlds changes in Git
 
 
+== New Programmers Getting Familiar with FTC software
+
+**July - August**: Carlos, Mary, Amelia
+
+- [ ] Create Git account, get access to team software repository
+- [ ] Create a hardware class for a demo bot
+  * Make sure also create a controlled config file for the demo bot
+  * Make sure create log file support
+  * Use Bulk Data reads for data access, store in variables
+  * Create Telemetry routine
+- [ ] Prove can commit changes to Git
+- [ ] Develop a manual control OpMode for a new demo bot using hardware class
+- [ ] Develop a basic autonomous control opMode for new demo bot using hardware class
+- [ ] Add webcam and april tag detection of obolisk to auto opMode to make it do 3 different simple routes
+- [ ] Create a new MeepMeep route for Gericka
+- [ ] Create and test a new autonomous route for Gericka
 
 
+== Collect Data to trouble-shoot odometry position issue
+
+**July - August**: Gianna
+
+- [ ] Test driving manual with logging enabled, study results for trend requiring reset of position or turret
+- [ ] Look and see if roadrunner is already writing some log data of its calculations that we could study
+- [ ] Convert ALL Motor, Servo, and sensor calls to bulk data reads and utilize variables instead of direct calls, reference: ConceptMotorBulkRead.java
+  * Make sure also include pinpoint data calls
+  * there should be zero motor, servo, or pinpoint direct reads outside of the bulk read method
+  * Retest driving manual with logging to file, see if fixes lost position data issue
+- [ ] Convert telemetry calls that have complex math calculations instead of variables to use the override value method to only run when will actually update telemetry display, reference: ConceptTelemetry.java
+  * Retest driving manual with logging to file
+  * Try commenting out: setMsTransmissionInterval at top of opMode, then retest driving manual with logging
+- [ ] if above tests haven't resolved odometry issues then work with mechanical team to try hardware changes like mounting pinpoint with shock absorbers
+- [ ] if above tests haven't resolved odometry issues then work with mechanical team to try out and compare other odometry solutions (maybe it is a pinpoint problem)
+
+== Research For Next Season: Pedro Pathing
+
+**July - August**: Shrey and maybe Gianna if odometry testing goes quick
+
+- [ ] Learn about Pedro Pathing
+- [ ] Install Pedro Pathing and tune Gericka for it
+- [ ] Create a Cleanup-V3 auto using Pedro Pathing
+- [ ] Test and compare Pedro Cleanup-V3 performance versus roadrunner performance
+- [ ] Create a version of Manual Control that uses Pedro Pathing for position determination instead of roadrunner
+- [ ] Test and compare Pedro Manual performance versus Roadrunner Manual Control
+
+
+== Preparing for Next Season: Engineering Portfolio
+
+- [ ] Collect several award winning portfolios as examples
+- [ ] Create template for next season portfolio using award winning examples
+- [ ] Create log data pages in Canva for next season
+  * Team Individual Goals and Growth Page
+  * Team Sustainability Page (finances, sponsors, recruitment)
+  * Control Award Material Page
+  * STEM Professional Connections Page
+  * Outreach Page
+  * Strategy and Planning Page (could include drive-team practice notes)
+  * Intake System Page
+  * Transfer System Page
+  * Outtake System Page
+  * Chassis & Drive Systems Page
+  * Sensor Systems Page
+
+Hello, Jared was here!
 
