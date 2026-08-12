@@ -38,13 +38,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
+import org.firstinspires.ftc.robotcore.internal.files.DataLogger;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
 
 @Config
 public class Gericka_Hardware {
@@ -235,7 +239,7 @@ public class Gericka_Hardware {
 
 
 
-
+    DataLogger datalogger;
 
     //Common Start Positions:
     public static final Pose2d closeRedStartPose = new Pose2d(-60,39,Math.toRadians(90));
@@ -380,7 +384,7 @@ public class Gericka_Hardware {
     public Action BlueFarCleanUpDriveSecondMarkToShootingPosition;
     public Action BlueFarDriveTowardCenter;
 
-
+    private GerickaDatalog logger;
 
 
     /// //////////////////////////////////////////////////////////////////
@@ -397,6 +401,7 @@ public class Gericka_Hardware {
     DigitalChannel beamBreak2;
     DigitalChannel beamBreak3;
     DigitalChannel beamBreak4;
+
 
     public Gericka_Hardware(boolean isDriverControl, boolean isFieldCentric, LinearOpMode opMode) {
         this.IsDriverControl = isDriverControl;
@@ -444,6 +449,7 @@ public class Gericka_Hardware {
         shooterMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        logger = new GerickaDatalog("robot_log");
 
         if (!this.IsDriverControl) {
             turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -595,9 +601,9 @@ public class Gericka_Hardware {
         opMode.telemetry.addData("Right Kickstand Position: ", rightKickstand.getPosition());
         opMode.telemetry.addData("Left Kickstand Position: ", leftKickstand.getPosition());
 
+
         ShowPIDF_Telemetry();
         ShowTurretPIDF_Telemetry();
-
         //opMode.telemetry.addData("imu Heading: ", GetIMU_HeadingInDegrees());
         //opMode.telemetry.addData("imu roll: ", (imu.getRobotYawPitchRollAngles().getRoll()));
         //opMode.telemetry.addData("imu pitch: ", (imu.getRobotYawPitchRollAngles().getPitch()));
@@ -609,10 +615,14 @@ public class Gericka_Hardware {
         //opMode.telemetry.addData("Auto Last Time Left: ", autoTimeLeft);
 
         opMode.telemetry.addData("Yaw Scalar: ", pinpoint.getYawScalar());
+        Write_Datalog();
 
         opMode.telemetry.update();
     }
-
+    public void Write_Datalog(){
+       logger.imuHeading.set(GetIMU_HeadingInDegrees());
+       logger.writeLine();
+    }
     public void ShowPIDF_Telemetry() {
         PIDFCoefficients shooterPIDF_Left = shooterMotorLeft.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         opMode.telemetry.addData("ShooterL PIDF: ", "p: %.3f  i: %.2f  d: %.2f  f: %.2f", shooterPIDF_Left.p, shooterPIDF_Left.i, shooterPIDF_Left.d, shooterPIDF_Left.f);

@@ -4,6 +4,8 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.internal.files.DataLogger;
+
 import java.util.Objects;
 
 @TeleOp(name = "Gericka 1 Manual Control")
@@ -74,7 +76,6 @@ public class Gericka_Manual_Control extends LinearOpMode {
         //theRobot.light1Color();
 
         theRobot.ShowTelemetry();
-
         // ***************************************************
         // ****  Secondary Thread to run all the time ********
         // ***************************************************
