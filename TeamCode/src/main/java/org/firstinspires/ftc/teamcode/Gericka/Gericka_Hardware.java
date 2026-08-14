@@ -449,7 +449,7 @@ public class Gericka_Hardware {
         shooterMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        logger = new GerickaDatalog("robot_log");
+        logger = new GerickaDatalog("shearforce_robot_log");
 
         if (!this.IsDriverControl) {
             turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -621,6 +621,16 @@ public class Gericka_Hardware {
     }
     public void Write_Datalog(){
        logger.imuHeading.set(GetIMU_HeadingInDegrees());
+        logger.roadrunnerX.set(drive.localizer.getPose().position.x);
+        logger.roadrunnerY.set(drive.localizer.getPose().position.y);
+        logger.roadrunnerHeading.set(Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
+        logger.distanceToTarget.set(distanceToTarget);
+        logger.LaunchRampPosition.set(GetLaunchRampPosition());
+        logger.shooterRPM.set(CalculateMotorRPM(shooterMotorLeft.getVelocity(), YELLOW_JACKET_1_1_TICKS));
+        logger.shooterTargetRPM.set(shooterTargetRPM);
+        logger.YawScalar.set(pinpoint.getYawScalar());
+        logger.turretTicks.set(turretMotor.getCurrentPosition());
+        logger.turrentAngle.set(getCurrentTurretAngle());
        logger.writeLine();
     }
     public void ShowPIDF_Telemetry() {
