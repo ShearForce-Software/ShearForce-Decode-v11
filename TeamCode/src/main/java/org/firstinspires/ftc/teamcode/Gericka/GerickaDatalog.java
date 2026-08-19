@@ -15,6 +15,7 @@ public class GerickaDatalog {
     private StringBuffer lineBuffer;
     private long timeBase;
 
+    public Field resetPositionCount = new Field();
     public Field imuHeading = new Field();
     public Field roadrunnerX = new Field();
     public Field roadrunnerY = new Field();
@@ -43,7 +44,30 @@ public class GerickaDatalog {
             throw new RuntimeException("Gericka Datalogger stream failed to open", e);
         }
 
+        long maxAgeMs = 7200000;
+        long currentTime = System.currentTimeMillis();
+
+        if (file.exists() && file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        long fileAgeMs = currentTime - maxAgeMs;
+
+                        if (fileAgeMs > maxAgeMs) {
+                            file.delete();
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
         // initialize all of the fields
+        resetPositionCount.set(0);
         roadrunnerX.set(0.0);
         roadrunnerY.set(0.0);
         roadrunnerHeading.set(0.0);
@@ -57,7 +81,7 @@ public class GerickaDatalog {
         imuHeading.set(0.0);
     }
     private void writeHeader() throws IOException{
-        writer.append("time(sec), imuHeading(deg)" +
+        writer.append("time(sec), resetCount, imuHeading(deg)" +
                 ", roadrunner-x, roadrunner-y, roadrunner-heading(deg)" +
                 ", distanceToTarget(in), LaunchRampPosition, shooterRPM, shooterTargetRPM" +
                 ", YawScalar" +
@@ -69,6 +93,7 @@ public class GerickaDatalog {
         try{
             lineBuffer.setLength(0);
             lineBuffer.append((System.currentTimeMillis() - timeBase)/1000.0).append(",");
+            lineBuffer.append(resetPositionCount.val).append(",");
             lineBuffer.append(imuHeading.val).append(",");
             lineBuffer.append(roadrunnerX.val).append(",");
             lineBuffer.append(roadrunnerY.val).append(",");

@@ -621,6 +621,7 @@ public class Gericka_Hardware {
     }
     public void Write_Datalog(){
        logger.imuHeading.set(GetIMU_HeadingInDegrees());
+       logger.resetPositionCount.set(resetPositionCount);
         logger.roadrunnerX.set(drive.localizer.getPose().position.x);
         logger.roadrunnerY.set(drive.localizer.getPose().position.y);
         logger.roadrunnerHeading.set(Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
@@ -2012,6 +2013,7 @@ public class Gericka_Hardware {
         drive.updatePoseEstimate();
     }
 
+    int resetPositionCount = 0;
     public void resetPositionOnly() {
         if(allianceColorString.equals("BLUE")){
             resetPositionToBlueAlliance();
@@ -2019,6 +2021,7 @@ public class Gericka_Hardware {
         else if (allianceColorString.equals("RED")){
             resetPositionToRedAlliance();
         }
+        ++resetPositionCount;
     }
 
     public void resetTurretAndPosition(){
