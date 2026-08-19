@@ -15,11 +15,18 @@ public class GerickaDatalog {
     private StringBuffer lineBuffer;
     private long timeBase;
 
+    private boolean imuOffsetPopulated = false;
+    private double imuOffset = 0.0;
+
     public Field resetPositionCount = new Field();
     public Field imuHeading = new Field();
+    public Field correctedIMU_Heading = new Field();
+    public Field imuDifference = new Field();
     public Field roadrunnerX = new Field();
     public Field roadrunnerY = new Field();
     public Field roadrunnerHeading = new Field();
+    public Field distanceToRedReset = new Field();
+    public Field distanceToBlueReset = new Field();
     public Field distanceToTarget = new Field();
     public Field LaunchRampPosition = new Field();
     public Field shooterRPM = new Field();
@@ -53,6 +60,10 @@ public class GerickaDatalog {
         roadrunnerX.set(0.0);
         roadrunnerY.set(0.0);
         roadrunnerHeading.set(0.0);
+        imuDifference.set(0.0);
+        correctedIMU_Heading.set(0.0);
+        distanceToRedReset.set(0.0);
+        distanceToBlueReset.set(0.0);
         distanceToTarget.set(0.0);
         LaunchRampPosition.set(0.0);
         shooterRPM.set(0.0);
@@ -89,8 +100,9 @@ public class GerickaDatalog {
 
     }
     private void writeHeader() throws IOException{
-        writer.append("time(sec), resetCount, imuHeading(deg)" +
-                ", roadrunner-x, roadrunner-y, roadrunner-heading(deg)" +
+        writer.append("time(sec), resetCount" +
+                ", imuHeading(deg), correctedIMU_Heading, roadrunner-heading(deg), imu-vs-rr-diff" +
+                ", roadrunner-x, roadrunner-y, distance-to-RED-reset, distance-to-BLUE-reset" +
                 ", distanceToTarget(in), LaunchRampPosition, shooterRPM, shooterTargetRPM" +
                 ", YawScalar" +
                 ", turretTicks, turrentAngle(deg) \n");
@@ -98,19 +110,58 @@ public class GerickaDatalog {
     }
 
     public void writeLine() {
+
+        if (!imuOffsetPopulated) {
+            try {
+                imuOffset = Double.parseDouble(roadrunnerHeading.val);
+                imuOffsetPopulated = true;
+           } catch (NumberFormatException ignored) { }
+        }
+
+        try {
+            // calculate the corrected IMU heading
+            double rawIMU = Double.parseDouble(imuHeading.val);
+            double correctedIMU = ((rawIMU + imuOffset + 180.0) - (360.0 * Math.floor((rawIMU + imuOffset + 180.0) / 360))) - 180.0;
+            correctedIMU_Heading.set(correctedIMU);
+
+            // calculate the difference between the roadrunner heading and the IMU heading
+            double rrHeading = Double.parseDouble(roadrunnerHeading.val);
+            double calculatedIMU_Diff = rrHeading - correctedIMU;
+            imuDifference.set(calculatedIMU_Diff);
+
+            // calculate the distance to the red reset position (62.785, -62.66) and the blue reset position (62.785, -62.66)
+            double x = Double.parseDouble(roadrunnerX.val);
+            double y = Double.parseDouble(roadrunnerY.val);
+            double calculatedDistanceToRedReset = Math.sqrt(((x - 62.785) * (x - 62.785)) + ((y - (-62.66)) * (y - (-62.66))) );
+            double calculatedDistanceToBlueReset = Math.sqrt(((x - 62.785) * (x - 62.785)) + ((y - (62.66)) * (y - (62.66))) );
+            distanceToRedReset.set(calculatedDistanceToRedReset);
+            distanceToBlueReset.set(calculatedDistanceToBlueReset);
+
+        } catch (NumberFormatException ignored) { }
+
+
         try{
             lineBuffer.setLength(0);
             lineBuffer.append((System.currentTimeMillis() - timeBase)/1000.0).append(",");
             lineBuffer.append(resetPositionCount.val).append(",");
+
             lineBuffer.append(imuHeading.val).append(",");
+            lineBuffer.append(correctedIMU_Heading.val).append(",");
+            lineBuffer.append(roadrunnerHeading.val).append(",");
+            lineBuffer.append(imuDifference.val).append(",");
+
             lineBuffer.append(roadrunnerX.val).append(",");
             lineBuffer.append(roadrunnerY.val).append(",");
-            lineBuffer.append(roadrunnerHeading.val).append(",");
+            lineBuffer.append(distanceToRedReset.val).append(",");
+            lineBuffer.append(distanceToBlueReset.val).append(",");
+
             lineBuffer.append(distanceToTarget.val).append(",");
             lineBuffer.append(LaunchRampPosition.val).append(",");
             lineBuffer.append(shooterRPM.val).append(",");
             lineBuffer.append(shooterTargetRPM.val).append(",");
+
             lineBuffer.append(YawScalar.val).append(",");
+
             lineBuffer.append(turretTicks.val).append(",");
             lineBuffer.append(turrentAngle.val).append("\n");
 
