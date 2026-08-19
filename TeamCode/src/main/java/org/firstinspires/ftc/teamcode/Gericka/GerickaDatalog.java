@@ -32,38 +32,20 @@ public class GerickaDatalog {
         File dir = new File("/sdcard/FIRST/Datalogs");
         if (!dir.exists()) dir.mkdirs();
 
+        // automatically delete any files that are more than 24 hours old
+        deleteOldFiles(dir, 24);
+
+        // create a new log file
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         File file = new File(dir, filenamePrefix + timestamp + ".csv");
+
         this.lineBuffer = new StringBuffer(256);
         this.timeBase = System.currentTimeMillis();
-
         try{
             this.writer = new FileWriter(file, false);
             writeHeader();
         } catch (IOException e) {
             throw new RuntimeException("Gericka Datalogger stream failed to open", e);
-        }
-
-        long maxAgeMs = 7200000;
-        long currentTime = System.currentTimeMillis();
-
-        if (file.exists() && file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isFile()) {
-                        long fileAgeMs = currentTime - maxAgeMs;
-
-                        if (fileAgeMs > maxAgeMs) {
-                            file.delete();
-                        }
-
-                    }
-
-                }
-
-            }
-
         }
 
         // initialize all of the fields
@@ -79,6 +61,32 @@ public class GerickaDatalog {
         turretTicks.set(0.0);
         turrentAngle.set(0.0);
         imuHeading.set(0.0);
+    }
+
+    private void deleteOldFiles(File dir, int hoursThreshold) {
+        // clean up and remove old log files to keep from filling up storage space
+
+        long currentTime = System.currentTimeMillis();
+        long maxAgeMs = currentTime - ((long)hoursThreshold * 60 * 60 * 1000);
+
+        if (dir.exists() && dir.isDirectory()) {
+            // get the list of files in this storage directory
+            File[] files = dir.listFiles();
+            if (files != null) {
+                // loop through the list of files
+                for ( File old_file : files) {
+                    if (old_file.isFile()) {
+                        long fileAgeMs = currentTime - maxAgeMs;
+                        // if the file is old
+                        if (old_file.lastModified() < maxAgeMs) {
+                            // delete the old file
+                            old_file.delete();
+                        }
+                    }
+                }
+            }
+        }
+
     }
     private void writeHeader() throws IOException{
         writer.append("time(sec), resetCount, imuHeading(deg)" +
