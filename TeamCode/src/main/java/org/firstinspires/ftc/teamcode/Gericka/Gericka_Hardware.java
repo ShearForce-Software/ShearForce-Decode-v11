@@ -1091,7 +1091,7 @@ public class Gericka_Hardware {
         // Xpod is -84.0 MM from pinpoint computer, and -109.5 mm from center point of robot
         // Ypod is aligned with pinpoint computer in X, and -198.0 mm behind the center point of robot
         double xOffset = -109.5; //mm - X pod is to the right of pinpoint and center when viewed from the top
-        double yOffset = -198.0; // mm - Y pod is -198 mm behind the center rotation point of chassis
+        double yOffset = -198; // mm - Y pod is -198 mm behind the center rotation point of chassis
         pinpoint.setOffsets(xOffset, yOffset, DistanceUnit.MM);
 
         /*

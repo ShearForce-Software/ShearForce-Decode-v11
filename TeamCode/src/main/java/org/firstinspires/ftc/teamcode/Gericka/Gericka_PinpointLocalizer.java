@@ -51,14 +51,14 @@ public final class Gericka_PinpointLocalizer implements Localizer {
          */
         // Xpod is -84.0 MM from pinpoint computer, and -109.5 mm from center point of robot
         // Ypod is aligned with pinpoint computer in X, and -198.0 mm behind the center point of robot
-        // before 8-20 yOffset was -198.0
-        double xOffset = -109.5; //mm - X pod is to the right of pinpoint when viewed from the top
-        double yOffset = -190.5; // mm - Y pod is -198 mm from center rotation point of chassis -- not sure this is correct value for pinpoint computer
+        // before 8-20 yOffset was -198.0 xoffset was 109.5
+        double xOffset = -102; //mm - X pod is to the right of pinpoint when viewed from the top
+        double yOffset = -198; // mm - Y pod is -198 mm from center rotation point of chassis -- not sure this is correct value for pinpoint computer
         driver.setOffsets(xOffset, yOffset, DistanceUnit.MM);
 
         // reverse encoder directions if needed
         initialParDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
-        initialPerpDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD; //TODO double check this value, initial calibration had FORWARD here, but Gericka_Hardware shows it as REVERSED
+        initialPerpDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED; //TODO double check this value, initial calibration had FORWARD here, but Gericka_Hardware shows it as REVERSED
 
         driver.setEncoderDirections(initialParDirection, initialPerpDirection);
 
